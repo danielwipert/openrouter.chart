@@ -1,0 +1,272 @@
+# Spec: Weekly OpenRouter Usage Breakdown (v3, final)
+
+Oct 6, 2026 · @Dan
+
+## What changed from v2
+
+This is the final spec: the v2 build plan stands, and seven gaps found in review are now closed. No code is written until Dan signs off the six decisions at the end.
+
+| # | Gap in v2 | Resolution in v3 |
+| --- | --- | --- |
+| 1 | Accuracy standard said the run "stops"; checks table said "soft" | The run always finishes. Any failed accuracy rule marks it **NOT READY TO POST** at the top of `run_report.md`. Only the hard checks stop a run. |
+| 2 | "Only complete weeks" conflicted with charting Jan 1–4 | Jan 1–4 (Thu–Sun) is charted and labeled "partial week." Shares are still valid for a partial week. The current unfinished week is always dropped. |
+| 3 | One file name (`chart_square.png`) for many charts | Every chart file is named `{dimension}_{chart}_{size}.png`, e.g. `weights_share_square.png`. Names never change week to week. |
+| 4 | Week folder could be named for the run date | Folder is named for the last complete data week, e.g. a run on Mon Oct 12 writes `output/2026-W41/`. |
+| 5 | Merging `:free` into the base model would erase the Free variant dimension | Classify records `is_free` first, then strips the suffix. |
+| 6 | One fetch call breaks once the window passes 366 days (January 2027) | Fetch splits any window into chunks of up to 366 days and joins them. |
+| 7 | Title and subtitle were hard-coded | Spec retitled for the wider scope. Every headline, subtitle and date range is filled from the data. |
+
+## Goal and audience
+
+One command, run every Monday, produces an accurate breakdown of OpenRouter token usage from 2026-01-01 to the last complete week. It splits usage by open vs closed weights, company, model family, country and six more dimensions. Each dimension feeds its own LinkedIn-ready chart.
+
+- **Audience:** AI and operations leaders scrolling LinkedIn on a phone. Most are not data scientists.
+- **Success test:** a reader gets the main point in 3 seconds without reading the caption.
+- **Stable means:** same look, same method and same file names every week. Only the data changes.
+- **Out of scope:** automatic posting to LinkedIn. Dan reviews and posts by hand.
+
+## Accuracy standard
+
+A run is **READY TO POST** only when all five rules pass. The run always finishes; a failed rule puts **NOT READY TO POST** at the top of `run_report.md` with the reason.
+
+| Rule | Target | How it's checked |
+| --- | --- | --- |
+| Every named model is labeled | 100% of top-50 tokens have a value on every required dimension; zero "unknown" | `checks.py`, every run |
+| Long tail is disclosed | The "other" share is printed on every chart | Footer shows "Top-50 coverage: x%" |
+| Matches OpenRouter | The week's top 5 models match openrouter.ai/rankings, token totals within 1% | Dan spot-checks the first Monday of each month and ticks it in the report |
+| Every label has a source | Each registry field says where it came from: catalog, rule, or manual with a link | Test fails if a source is blank |
+| Same input, same output | Rerunning on saved raw data gives identical numbers | Automated test |
+
+**Required dimensions** for phase 1 are weights and company. Each later dimension becomes required in the phase that adds it.
+
+**What this data can and can't say:** it covers public traffic on OpenRouter only. Private models, private endpoints and zero-data-retention traffic are excluded at the source, and consumer apps like ChatGPT aren't in it. Every post says "on OpenRouter," never "worldwide."
+
+## Weekly outputs
+
+Each run writes one folder named for the last complete data week (ISO week, Monday start, UTC), so past weeks are never overwritten. A run on Mon Oct 12 2026 writes `output/2026-W41/`. Rerunning the same week overwrites only that week's folder.
+
+| File | What it is | Used for |
+| --- | --- | --- |
+| `charts/{dimension}_{chart}_square.png` | 1080 x 1080 px, one per chart in the content library, e.g. `weights_share_square.png` | Main LinkedIn image |
+| `charts/{dimension}_{chart}_portrait.png` | 1080 x 1350 px version of each chart | Taller feed version |
+| `weekly.csv` | Tokens and share per week, one row per dimension + value, plus the "other" row | Checking numbers, sharing data |
+| `monthly.csv` | Same, per calendar month | Monthly recap posts |
+| `caption.md` | One draft post per chart, this week's numbers filled in | Starting point for the post |
+| `run_report.md` | READY / NOT READY, each accuracy rule, each check, coverage, new models, blank registry fields | Dan's review before posting |
+| `meta.json` | The API `meta` block (`as_of`, start and end dates) and the list of raw files used | Proof and reruns |
+
+Raw API responses are saved once in `raw/` by date (see Data pipeline) rather than copied into each week folder. Captions are templates with blanks filled from the data, such as the latest share and the change since last week; Dan edits the wording before posting.
+
+## Data pipeline
+
+The pipeline makes 4 OpenRouter calls and runs 5 steps, each in its own small Python file so one can be fixed without touching the others.
+
+1. **Fetch.** Call `GET /api/v1/datasets/rankings-daily` from `start_date=2026-01-01` to the last completed UTC day. If the window is longer than 366 days, split it into chunks of up to 366 days and join them. Save each raw response to `raw/YYYY-MM-DD/`.
+2. **Catalog.** Call `GET /api/v1/models` for each model's details (such as `hugging_face_id`, `created`, pricing, supported parameters, input modalities). Also save this week's task-type snapshot (`/api/v1/classifications/task`) and top apps (`/api/v1/datasets/app-rankings`). All saved to `raw/YYYY-MM-DD/`.
+3. **Classify.** For each model ID: record `is_free` from the `:free` suffix, then strip the suffix so variants count with their base model. Look up the base model in the registry and attach every dimension. Add new models to the registry and list blank fields for review.
+4. **Aggregate.** For each dimension, sum tokens per value per week and per month. Share = a value's tokens / all labeled tokens.
+5. **Render.** Build the charts, CSVs, captions, `meta.json` and run report from the aggregated tables.
+
+**Fixed method (never changes week to week):**
+
+- Weeks run Monday to Sunday, UTC. The current unfinished week is always dropped.
+- Jan 1–4 2026 (Thursday to Sunday) is charted as a partial week and labeled "partial week."
+- Variants like `:free` count with their base model; the free flag is kept as its own dimension.
+- Tokens are used as reported. Providers use different tokenizers, so posts compare shares and trends, not exact totals, and the footer says so.
+- Labels come only from the registry, never guessed at run time.
+
+**API limits:** the run uses 4 calls (5 once chunking starts in 2027). OpenRouter allows 30 calls per minute and 500 per day, so reruns are safe. Endpoint names and limits are confirmed against the live API in build step 2.
+
+## Model registry and dimensions
+
+Every fact about every model lives in a permanent registry of three CSV files Dan can open in Excel. A model's labels change only when Dan changes them, which keeps history stable even after a model leaves the catalog.
+
+| Dimension | Example values | Where it comes from | Phase |
+| --- | --- | --- | --- |
+| Weights | Open, closed | Manual label, else Hugging Face ID, else lab default (rules below) | 1 |
+| Company | DeepSeek, Anthropic, Google | Model ID prefix (`deepseek/...`), cleaned in `labs.csv` | 1 |
+| Country of company | China, US, France | `labs.csv`, entered once per company | 2 |
+| Model family | Claude Sonnet, Gemini Flash, Qwen | Pattern rules in `families.csv` | 2 |
+| Release date | 2026-03-02 | Catalog `created` field | 2 |
+| Price tier | Budget, mid, premium | Catalog price per million tokens, fixed cutoffs (see Decisions) | 2 |
+| Reasoning | Yes, no | Catalog supported parameters | 2 |
+| Input type | Text only, multimodal | Catalog input modalities | 2 |
+| Free variant | Yes, no | `:free` suffix, recorded before the suffix is stripped | 2 |
+| Size (open models only) | Small, medium, large | Manual, from the model card | 3 |
+
+**Registry files:**
+
+- `models.csv`: one row per base model ID, a column per dimension, a `{field}_source` column for each (catalog, rule, or manual + link), and `first_seen`.
+- `labs.csv`: one row per company: ID prefix, clean name, country, default weights (open, closed or blank).
+- `families.csv`: one row per family: a text pattern (such as `claude-sonnet`) and the family name. Patterns are checked top to bottom; the first match wins.
+
+**Weights rule, in order:** a manual label in `models.csv` wins; else a Hugging Face ID means open; else a lab default of closed in `labs.csv` means closed; else unknown, which goes on the review list and marks the run NOT READY.
+
+New models found each week are added to `models.csv` automatically with every field the catalog can fill. The run report lists the blanks for Dan.
+
+**Kept separate:** task types (coding, web search, etc.) and top apps don't split by model per day, so they are saved weekly in `raw/` and charted on their own. Task data covers only the last 7 days, so saving starts in phase 1 to build history.
+
+## Chart design
+
+The main chart is a 100% stacked area of weekly token share: open-weight on the bottom, closed-weight on top, with a dashed 50% line. Every other chart in the library uses the same frame, fonts and colors.
+
+| Element | Content | Style |
+| --- | --- | --- |
+| Headline | The finding, written from the data, e.g. "Open-weight models now carry {share}% of OpenRouter tokens" | Bold, 44 px, left-aligned |
+| Subtitle | "Weekly share of tokens, {dimension}, {first month} to {last month} {year}" | Regular, 24 px, grey |
+| Chart area | x = week, y = 0 to 100% | About 65% of the image height |
+| 50% line | Dashed reference line (two-way splits only) | Thin, dark grey |
+| Crossover marker | Dot and short label on the first week a band passed 50% | Only if a crossover exists |
+| Partial week | Jan 1–4 point marked with a light hatch and "partial week" note | Small, grey |
+| End labels | Latest share of each band at its right edge | Bold, band color |
+| Footer left | "Source: OpenRouter (openrouter.ai/rankings), as of {as\_of}. Top-50 coverage {x}%. Shares, not exact token counts." | 16 px, grey |
+| Footer right | Branding (see Decisions) | 16 px |
+
+**Style rules:**
+
+- Two colors for two-way splits: one strong (open), one muted (closed). Multi-value charts use a fixed palette of 7 (top 6 + "all others" in grey). All colors pass a color-blind check.
+- No legend box; end labels name the bands.
+- Light horizontal gridlines at 25%, 50%, 75%. No vertical gridlines, no border.
+- X-axis labeled by month (Jan, Feb, Mar), not by week.
+- Font: Inter, stored in `fonts/` so it renders the same on any computer.
+- White background, exported at 1080 x 1080 and 1080 x 1350 px.
+- Every size, color and text string lives in `style.yaml`, so the look changes without touching code.
+
+**Built with:** matplotlib. It is stable, needs no browser, and gives exact control over every element.
+
+## Content library
+
+Every run builds every chart whose dimension is live, so Dan can post on news as it happens.
+
+| Chart | Used for | Shape | Phase |
+| --- | --- | --- | --- |
+| Share over time | Weights, reasoning, free variant, input type | 100% stacked area, as designed above | 1 (weights), 2 (rest) |
+| Leaderboard | Company, family, country | Ranked horizontal bars for the latest week, change vs 4 weeks earlier | 1 (company), 2 (rest) |
+| Share race | Company, family | Top 6 + "all others" as a 100% stacked area | 2 |
+| Rank changes | Company, family | Bump chart of weekly rank, top 8 | 2 |
+| Launch curve | Release date | Each new model's share by weeks since launch, aligned at week 0 | 3 |
+| Task mix | Task types | Bars of token share by task, latest week | 3 |
+
+**Posting rotation (4 weeks):** week 1 open vs closed, week 2 company leaderboard, week 3 country share, week 4 a rotating topic (family race, launch curve or task mix).
+
+## Stability and quality checks
+
+A hard check stops the run with a plain-English message. A soft check lets the run finish but is listed in `run_report.md`; any failed accuracy rule also sets NOT READY TO POST.
+
+| Check | Type | Rule |
+| --- | --- | --- |
+| API key present | Hard | `OPENROUTER_API_KEY` is set in `.env` |
+| API responds | Hard | Status 200; retry up to 3 times, 10 seconds apart, on errors or 429s |
+| Data is fresh | Hard | `meta.end_date` is within 2 days of today |
+| No missing days | Hard | Every day from Jan 1 to the end date has rows |
+| Labels complete | Soft + NOT READY | Zero unknown values on required dimensions |
+| Sources complete | Soft + NOT READY | No blank `_source` field for a filled value |
+| Coverage | Soft | Warn if labeled tokens are under 80% of all tokens |
+| Big jump | Soft | Warn if any two-way share moves more than 10 points in one week |
+| History restated | Soft | Warn if any past week's share moved more than 1 point since the previous run (OpenRouter may restate figures) |
+
+**Code stability rules:**
+
+- Exact library versions pinned in `requirements.txt`.
+- API key only in `.env`, never in code; `.env` listed in `.gitignore`.
+- The `meta` block saved with every output, as OpenRouter asks.
+- Tests check classify and aggregate against saved sample data, so changes can't quietly break the math.
+
+## Running it weekly
+
+Run it by hand every Monday morning until there are 4 clean weeks, then consider automation. Monday is used because the previous Monday-to-Sunday week is complete by then.
+
+**Phase 1 and 2, manual:**
+
+```bash
+python run_weekly.py
+```
+
+Then: open `run_report.md`, confirm READY TO POST, look at the charts on a phone, edit `caption.md`, post.
+
+**Phase 3, automatic (optional):**
+
+| Option | How it works | Good | Watch out |
+| --- | --- | --- | --- |
+| Scheduled task | cron (Mac) or Task Scheduler (Windows) runs Mondays 8 a.m. Central | Simple, nothing new to learn | Runs only if the computer is on |
+| GitHub Actions | Free scheduled cloud job saves outputs to the repo | Runs with the laptop off | Needs a repo and the key stored as a secret |
+
+## Project folder structure
+
+One folder holds everything; each pipeline step is its own small file.
+
+```text
+openrouter-usage/
+  run_weekly.py        runs all steps in order
+  fetch.py             steps 1-2: API calls, chunking, retries, saves raw files
+  classify.py          step 3: free flag, joins to registry, adds new models
+  aggregate.py         step 4: weekly and monthly totals per dimension
+  charts/              step 5: one file per chart type (share, leaderboard, race, bump, launch, tasks)
+  write_outputs.py     step 5: CSVs, captions, meta.json, run report
+  checks.py            hard checks, soft checks, accuracy standard
+  registry/
+    models.csv         one row per base model, every dimension + sources
+    labs.csv           one row per company: name, country, default weights
+    families.csv       family name patterns, first match wins
+  style.yaml           colors, fonts, sizes, text
+  captions/            one post template per chart type
+  fonts/               Inter font files
+  tests/               sample data and tests
+  raw/YYYY-MM-DD/      every API response and catalog, by fetch date
+  output/2026-W41/     one folder per data week
+  .env                 API key (never shared)
+  .gitignore           keeps .env out of git
+  requirements.txt     pinned libraries
+```
+
+## Build plan
+
+The build runs in three phases after a sign-off gate, so Dan can post from phase 1 while later dimensions are added. Every step ends with a check Dan can run and see; a step is done only when its check passes.
+
+**Gate: spec sign-off**
+
+- [ ] **0. Approve the six decisions** in the table below. Check: every row says Approved or Changed.
+
+**Phase 1: accurate open vs closed and company charts**
+
+- [ ] **1. Set up the folder.** Virtual environment, `requirements.txt`, `.env` with the key, `.gitignore`. Check: `python -c "import pandas, matplotlib"` runs with no error.
+- [ ] **2. Fetch.** `fetch.py` for all four endpoints, with chunking and retries. Check: raw files appear in `raw/` with today's date, and endpoint names and limits match the live docs.
+- [ ] **3. Registry.** `classify.py`; fill `labs.csv` and weights for every company in 2026's top 50. Check: zero unknown weights or companies.
+- [ ] **4. Aggregate.** `aggregate.py`. Check: open share is roughly 41% in mid-March and past 50% by early June, and the latest top 5 match openrouter.ai/rankings.
+- [ ] **5. Checks.** `checks.py`. Check: a wrong key stops the run with a clear message, and a blank label sets NOT READY.
+- [ ] **6. First charts.** Weights share over time and company leaderboard. Check: Dan approves both on his phone.
+- [ ] **7. One command.** `run_weekly.py`, captions, run report, `meta.json`, tests. Check: running twice on the same raw data gives identical files.
+
+**Phase 2: more dimensions**
+
+- [ ] **8. Country and family.** Fill country in `labs.csv`; write `families.csv`. Check: zero blanks.
+- [ ] **9. Catalog dimensions.** Release date, price tier, reasoning, input type, free variant. Check: every value has a source.
+- [ ] **10. More charts.** Share race, rank changes, country leaderboard, extra share-over-time charts. Check: Dan approves each.
+
+**Phase 3: extra content and automation**
+
+- [ ] **11. Size, launch curve, task mix.** Check: at least 4 weekly task snapshots exist.
+- [ ] **12. Schedule it.** Scheduled task or GitHub Actions. Check: 2 unattended runs in a row are READY TO POST.
+
+The March and June figures in step 4 come from [an analysis of OpenRouter daily data](https://capitalandcompute.net/blog/open-source-llms-overtake-2026/); they are a sanity check, not a target.
+
+## Decisions
+
+Six choices need Dan's sign-off before build step 1. Each has a proposed default; set Status to Approved, or to Changed and edit the default cell.
+
+| Decision | Proposed default | Other options | Status |
+| --- | --- | --- | --- |
+| Branding in footer | Dan's name | Leucothea Consulting, Chorus AI, or a newsletter name | Needs Dan |
+| Brand colors | Neutral color-blind-safe pair, picked in step 6 | Dan supplies hex codes | Needs Dan |
+| Time window | 2026 year to date | Rolling 52 weeks, or from Jan 2025 | Needs Dan |
+| Price tier cutoffs | Budget under $0.50, mid $0.50–$5, premium over $5 per million tokens (input and output averaged) | Dan's own cutoffs, fixed once set | Needs Dan |
+| Country of a company | Headquarters | Where it was founded, or the parent company's country | Needs Dan |
+| Run location (phase 3) | Manual on Dan's computer | Scheduled task or GitHub Actions | Needs Dan |
+
+Once all six rows are Approved or Changed, this spec is final and build step 1 starts.
+
+## Sources
+
+- [OpenRouter Data API documentation](https://openrouter.ai/docs/cookbook/administration/data-api)
+- [Open-Source LLMs Overtook Proprietary in 2026, Capital and Compute](https://capitalandcompute.net/blog/open-source-llms-overtake-2026/)
+- Spec v2 (Oct 6, 2026), `Spec_Weekly_OpenRouter_Open_vs_Closed_Chart.md`
