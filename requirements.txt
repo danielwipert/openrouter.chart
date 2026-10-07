@@ -1,0 +1,9 @@
+# Exact versions, so every run uses the same code (spec: "Code stability rules").
+# Needs Python 3.11 or newer.
+pandas==3.0.6
+numpy==2.5.3
+matplotlib==3.11.2
+requests==2.34.2
+python-dotenv==1.2.4
+PyYAML==6.0.3
+pytest==9.1.1

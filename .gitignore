@@ -1,0 +1,15 @@
+# Secrets: the API key never goes into git
+.env
+
+# Python virtual environment and caches
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Editor and OS clutter
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
