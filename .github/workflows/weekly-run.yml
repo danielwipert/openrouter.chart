@@ -1,8 +1,14 @@
 # The weekly run: fetch, label, total, check and draw, then save everything to
-# the repo. Start it from the Actions tab with "Run workflow".
+# the repo. Runs by itself every Monday, or start it from the Actions tab with
+# "Run workflow".
 name: Weekly run
 
 on:
+  schedule:
+    # Mondays 13:07 UTC = 8:07 a.m. Central in daylight time (CDT), 7:07 a.m. in
+    # standard time (CST). GitHub schedules use UTC only; a scheduled run can
+    # start a few minutes late when GitHub is busy.
+    - cron: "7 13 * * 1"
   workflow_dispatch:
 
 permissions:
@@ -27,6 +33,8 @@ jobs:
       - name: Install libraries
         run: pip install -r requirements.txt
 
+      # A hard check (missing or rejected key, stale data, missing days) stops
+      # the run here, the run turns red, and GitHub emails you.
       - name: Run the weekly pipeline
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
@@ -41,5 +49,18 @@ jobs:
             echo "Nothing new to save."
           else
             git commit -m "Weekly run: data, registry and outputs for $(date -u +%Y-%m-%d)"
+            git pull --rebase origin "${{ github.ref_name }}"  # in case code changed meanwhile
             git push
+          fi
+
+      # NOT READY TO POST still saves everything above, then turns the run red
+      # so GitHub emails you. The report says what to fix.
+      - name: Check READY TO POST
+        run: |
+          report="$(ls -d output/*/ | sort | tail -1)run_report.md"
+          status="$(head -1 "$report")"
+          echo "$status"
+          if echo "$status" | grep -q "NOT READY"; then
+            echo "::error::$status. Open $report in the repo to see why."
+            exit 1
           fi

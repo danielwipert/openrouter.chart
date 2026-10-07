@@ -25,14 +25,20 @@ The setup check also runs on its own after every code change.
 
 ## Every Monday
 
-1. Open the **Actions** tab, click **Weekly run**, then **Run workflow**.
-2. When it's green, open `output/<week>/` in the repo (e.g. `output/2026-W41/`):
+The **Weekly run** starts by itself every Monday at 13:07 UTC (8:07 a.m. Central in summer, 7:07 a.m. in winter). You can also start it any time: **Actions** tab, **Weekly run**, **Run workflow**.
+
+- **Green tick:** READY TO POST.
+- **Red cross:** GitHub emails you. Either a hard check stopped the run (the log says why, e.g. a rejected API key), or the results were saved but are NOT READY TO POST (the run report says why).
+
+Then:
+
+1. Pull up `output/<week>/` in the repo (e.g. `output/2026-W41/`):
    - `run_report.md`: check it says **READY TO POST**. On the first Monday of the month, compare the top 5 with openrouter.ai/rankings and tick the box.
    - `charts/`: the LinkedIn images, square and portrait. Look at them on your phone.
    - `caption.md`: draft posts with this week's numbers. Edit before posting.
    - `weekly.csv`, `monthly.csv`: the numbers behind the charts.
    - `meta.json`: which data was used.
-3. If the report lists a new model with a blank label, fill it in `registry/models.csv` (with a source link) and run again.
+2. If the report lists a new model with a blank label, fill it in `registry/models.csv` (with a source link) and run again by hand.
 
 ## Running locally (optional)
 

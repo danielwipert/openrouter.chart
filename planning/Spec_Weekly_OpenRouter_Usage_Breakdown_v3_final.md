@@ -235,7 +235,7 @@ A hard check stops the run with a plain-English message. A soft check lets the r
 
 ## Running it weekly
 
-Everything runs on GitHub Actions; nothing is installed on Dan's computer (changed Oct 7, 2026). Until there are 4 clean weeks, Dan starts each Monday run by hand with the **Run workflow** button; after that, it runs on a schedule. Monday is used because the previous Monday-to-Sunday week is complete by then.
+Everything runs on GitHub Actions; nothing is installed on Dan's computer (changed Oct 7, 2026). It runs by itself every Monday (switched on Oct 7, 2026, at Dan's request); the **Run workflow** button starts an extra run any time. Monday is used because the previous Monday-to-Sunday week is complete by then.
 
 **Phase 1 and 2, started by hand:** on GitHub, open **Actions**, pick the weekly workflow, and click **Run workflow**. It runs `python run_weekly.py` in the cloud.
 
@@ -323,7 +323,12 @@ The build runs in three phases after a sign-off gate, so Dan can post from phase
   - **Launch curve:** share of all tokens for each model added to OpenRouter inside the window, by weeks since it was added (week 0 = the week of its catalog `created` date), first 16 weeks, the 5 biggest launches by peak share. Retired models get a tidied name from their slug (e.g. "Grok 4.1 Fast"). Week-1 spikes are often launch promotions (free at first).
   - **Task mix:** top 10 tasks by share of classified tokens in OpenRouter's 7-day snapshot, colored by task group (Code, Agent, Data, General) with a key. The change column appears once a snapshot from 21-35 days earlier exists.
   - A chart with no data that week (e.g. no task snapshot) is skipped, not an error; the run report lists it.
-- [ ] **12. Schedule it.** GitHub Actions, with the API key stored as a repo secret. Check: 2 unattended runs in a row are READY TO POST.
+- [ ] **12. Schedule it.** GitHub Actions, with the API key stored as a repo secret. Check: 2 unattended runs in a row are READY TO POST. Built Oct 7, 2026; the check passes after the scheduled runs on Mon Oct 12 and Oct 19.
+
+  - **Dan's decision (Oct 7, 2026):** switch the schedule on now rather than after 4 hand-run Mondays. Hand runs stay possible with the Run workflow button.
+  - Schedule: Mondays 13:07 UTC (GitHub cron is UTC only: 8:07 a.m. CDT, 7:07 a.m. CST). By then OpenRouter has published Sunday's data.
+  - A hard-check failure stops the run before anything is saved; NOT READY TO POST saves everything first and then fails the run. Either way the run is red and GitHub emails Dan.
+  - Before pushing, the run pulls in any code changes made meanwhile, so a code push on a Monday morning can't block the save.
 
 The March and June figures in step 4 come from [an analysis of OpenRouter daily data](https://capitalandcompute.net/blog/open-source-llms-overtake-2026/); they are a sanity check, not a target.
 
