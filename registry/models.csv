@@ -1,5 +1,5 @@
 model_id,company,company_source,weights,weights_source,first_seen
-alibaba/tongyi-deepresearch-30b-a3b,Alibaba,rule: labs.csv prefix alibaba,,,2025-10-22
+alibaba/tongyi-deepresearch-30b-a3b,Alibaba,rule: labs.csv prefix alibaba,open,manual: https://huggingface.co/Alibaba-NLP/Tongyi-DeepResearch-30B-A3B (weights on HF),2025-10-22
 anthropic/claude-3-5-haiku,Anthropic,rule: labs.csv prefix anthropic,closed,rule: labs.csv default for anthropic,2025-10-16
 anthropic/claude-3-7-sonnet-20250219,Anthropic,rule: labs.csv prefix anthropic,closed,rule: labs.csv default for anthropic,2025-10-06
 anthropic/claude-3.5-sonnet,Anthropic,rule: labs.csv prefix anthropic,closed,rule: labs.csv default for anthropic,2025-10-06
@@ -18,27 +18,27 @@ anthropic/claude-opus-5-20260723,Anthropic,rule: labs.csv prefix anthropic,close
 anthropic/claude-opus-5.5-20260921,Anthropic,rule: labs.csv prefix anthropic,closed,rule: labs.csv default for anthropic,2026-09-23
 anthropic/claude-sonnet-5-20260630,Anthropic,rule: labs.csv prefix anthropic,closed,rule: labs.csv default for anthropic,2026-06-30
 anthropic/claude-sonnet-5.5-20260928,Anthropic,rule: labs.csv prefix anthropic,closed,rule: labs.csv default for anthropic,2026-09-29
-arcee-ai/trinity-large-preview,Arcee AI,rule: labs.csv prefix arcee-ai,,,2026-01-28
+arcee-ai/trinity-large-preview,Arcee AI,rule: labs.csv prefix arcee-ai,open,manual: https://huggingface.co/arcee-ai/Trinity-Large-Preview (weights on HF (custom license)),2026-01-28
 arcee-ai/trinity-large-thinking,Arcee AI,rule: labs.csv prefix arcee-ai,open,catalog: hugging_face_id arcee-ai/Trinity-Large-Thinking,2026-04-02
-baai/bge-m3-20251117,BAAI,rule: labs.csv prefix baai,,,2026-06-29
-bytedance-seed/seed-2.0-mini-20260224,ByteDance,rule: labs.csv prefix bytedance-seed,,,2026-06-20
+baai/bge-m3-20251117,BAAI,rule: labs.csv prefix baai,open,manual: https://huggingface.co/BAAI/bge-m3 (weights on HF),2026-06-29
+bytedance-seed/seed-2.0-mini-20260224,ByteDance,rule: labs.csv prefix bytedance-seed,closed,manual: https://openrouter.ai/bytedance-seed/seed-2.0-mini (no Seed 2.0 weights on HF under ByteDance-Seed; API via Volcengine),2026-06-20
 cohere/north-mini-code-20260617,Cohere,rule: labs.csv prefix cohere,open,catalog: hugging_face_id CohereLabs/North-Mini-Code-1.0,2026-06-25
 deepseek/deepseek-chat-v3,DeepSeek,rule: labs.csv prefix deepseek,open,catalog: hugging_face_id deepseek-ai/DeepSeek-V3,2025-10-10
 deepseek/deepseek-chat-v3-0324,DeepSeek,rule: labs.csv prefix deepseek,open,catalog: hugging_face_id deepseek-ai/DeepSeek-V3-0324,2025-10-06
 deepseek/deepseek-chat-v3.1,DeepSeek,rule: labs.csv prefix deepseek,open,catalog: hugging_face_id deepseek-ai/DeepSeek-V3.1,2025-10-06
 deepseek/deepseek-r1-0528,DeepSeek,rule: labs.csv prefix deepseek,open,catalog: hugging_face_id deepseek-ai/DeepSeek-R1-0528,2025-10-06
-deepseek/deepseek-r1-0528-qwen3-8b,DeepSeek,rule: labs.csv prefix deepseek,,,2025-10-14
+deepseek/deepseek-r1-0528-qwen3-8b,DeepSeek,rule: labs.csv prefix deepseek,open,manual: https://huggingface.co/deepseek-ai/DeepSeek-R1-0528-Qwen3-8B (MIT weights on HF),2025-10-14
 deepseek/deepseek-v3.1-terminus,DeepSeek,rule: labs.csv prefix deepseek,open,catalog: hugging_face_id deepseek-ai/DeepSeek-V3.1-Terminus,2025-10-06
 deepseek/deepseek-v3.2-20251201,DeepSeek,rule: labs.csv prefix deepseek,open,catalog: hugging_face_id deepseek-ai/DeepSeek-V3.2,2025-12-02
 deepseek/deepseek-v3.2-exp,DeepSeek,rule: labs.csv prefix deepseek,open,catalog: hugging_face_id deepseek-ai/DeepSeek-V3.2-Exp,2025-10-06
-deepseek/deepseek-v3.2-speciale-20251201,DeepSeek,rule: labs.csv prefix deepseek,,,2025-12-03
+deepseek/deepseek-v3.2-speciale-20251201,DeepSeek,rule: labs.csv prefix deepseek,open,manual: https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Speciale (weights on HF),2025-12-03
 deepseek/deepseek-v4-flash-20260423,DeepSeek,rule: labs.csv prefix deepseek,open,catalog: hugging_face_id deepseek-ai/DeepSeek-V4-Flash,2026-04-24
 deepseek/deepseek-v4-flash-20260731,DeepSeek,rule: labs.csv prefix deepseek,open,catalog: hugging_face_id deepseek-ai/DeepSeek-V4-Flash-0731,2026-07-31
 deepseek/deepseek-v4-flash-vision-exp-20260821,DeepSeek,rule: labs.csv prefix deepseek,open,catalog: hugging_face_id deepseek-ai/DeepSeek-V4-Flash-Vision-Exp,2026-08-23
 deepseek/deepseek-v4-pro-20260423,DeepSeek,rule: labs.csv prefix deepseek,open,catalog: hugging_face_id deepseek-ai/DeepSeek-V4-Pro,2026-04-25
 deepseek/deepseek-v4-pro-20260813,DeepSeek,rule: labs.csv prefix deepseek,open,catalog: hugging_face_id deepseek-ai/DeepSeek-V4-Pro-0813,2026-08-13
 deepseek/deepseek-v4.1-flash-20260910,DeepSeek,rule: labs.csv prefix deepseek,open,catalog: hugging_face_id deepseek-ai/DeepSeek-V4.1-Flash,2026-09-10
-dots-studio/dots-3-note-preview-20260813,,,,,2026-08-27
+dots-studio/dots-3-note-preview-20260813,Dots Studio (RedNote),rule: labs.csv prefix dots-studio,open,manual: https://huggingface.co/dots-studio/dots3-note-prev (Apache-2.0 weights on HF),2026-08-27
 google/gemini-2.0-flash-001,Google,rule: labs.csv prefix google,closed,rule: labs.csv default for google,2025-10-06
 google/gemini-2.0-flash-lite-001,Google,rule: labs.csv prefix google,closed,rule: labs.csv default for google,2025-10-06
 google/gemini-2.5-flash,Google,rule: labs.csv prefix google,closed,rule: labs.csv default for google,2025-10-06
@@ -63,39 +63,39 @@ google/gemma-3-12b-it,Google,rule: labs.csv prefix google,open,catalog: hugging_
 google/gemma-3-27b-it,Google,rule: labs.csv prefix google,open,catalog: hugging_face_id google/gemma-3-27b-it,2025-10-06
 google/gemma-4-26b-a4b-it-20260403,Google,rule: labs.csv prefix google,open,catalog: hugging_face_id google/gemma-4-26B-A4B-it,2026-04-07
 google/gemma-4-31b-it-20260402,Google,rule: labs.csv prefix google,open,catalog: hugging_face_id google/gemma-4-31B-it,2026-04-16
-inclusionai/ling-2.6-1t-20260423,,,,,2026-04-23
-inclusionai/ling-2.6-flash-20260421,,,,,2026-04-22
-inclusionai/ling-3.0-flash-20260723,,,open,catalog: hugging_face_id inclusionAI/Ling-3.0-flash,2026-07-24
-inclusionai/ling-3.0-flash-fin-20260827,,,,,2026-08-28
-inclusionai/ling-3.0-flash-sante-20260904,,,,,2026-09-05
-inclusionai/ling-3.0-flash-vl-20260910,,,open,catalog: hugging_face_id inclusionAI/Ling-3.0-flash-VL,2026-09-11
-inclusionai/ling-3.1-flash-20261002,,,,,2026-10-03
-inclusionai/ring-2.6-1t-20260508,,,,,2026-05-09
-intfloat/multilingual-e5-large-20251117,,,,,2025-11-27
-kwaipilot/kat-coder-pro-v1,,,,,2025-11-11
+inclusionai/ling-2.6-1t-20260423,inclusionAI (Ant Group),rule: labs.csv prefix inclusionai,open,manual: https://huggingface.co/inclusionAI/Ling-2.6-1T (MIT weights on HF),2026-04-23
+inclusionai/ling-2.6-flash-20260421,inclusionAI (Ant Group),rule: labs.csv prefix inclusionai,open,manual: https://huggingface.co/inclusionAI/Ling-2.6-flash (MIT weights on HF),2026-04-22
+inclusionai/ling-3.0-flash-20260723,inclusionAI (Ant Group),rule: labs.csv prefix inclusionai,open,catalog: hugging_face_id inclusionAI/Ling-3.0-flash,2026-07-24
+inclusionai/ling-3.0-flash-fin-20260827,inclusionAI (Ant Group),rule: labs.csv prefix inclusionai,open,manual: https://huggingface.co/inclusionAI/Ling-3.0-flash-Fin (MIT weights on HF),2026-08-28
+inclusionai/ling-3.0-flash-sante-20260904,inclusionAI (Ant Group),rule: labs.csv prefix inclusionai,closed,manual: https://openrouter.ai/inclusionai/ling-3.0-flash-sante (low confidence; no weights on HF or ModelScope yet; sibling Fin is open),2026-09-05
+inclusionai/ling-3.0-flash-vl-20260910,inclusionAI (Ant Group),rule: labs.csv prefix inclusionai,open,catalog: hugging_face_id inclusionAI/Ling-3.0-flash-VL,2026-09-11
+inclusionai/ling-3.1-flash-20261002,inclusionAI (Ant Group),rule: labs.csv prefix inclusionai,closed,manual: https://openrouter.ai/inclusionai/ling-3.1-flash (low confidence; not on HF yet; open weights reportedly planned after free trial),2026-10-03
+inclusionai/ring-2.6-1t-20260508,inclusionAI (Ant Group),rule: labs.csv prefix inclusionai,open,manual: https://huggingface.co/inclusionAI/Ring-2.6-1T (MIT weights on HF),2026-05-09
+intfloat/multilingual-e5-large-20251117,Microsoft,rule: labs.csv prefix intfloat,open,manual: https://huggingface.co/intfloat/multilingual-e5-large (MIT weights on HF),2025-11-27
+kwaipilot/kat-coder-pro-v1,Kuaishou (Kwaipilot),rule: labs.csv prefix kwaipilot,closed,manual: https://openrouter.ai/kwaipilot/kat-coder-pro-v1 (API-only; Kwaipilot open models are KAT-Dev line),2025-11-11
 meta-llama/llama-3.1-70b-instruct,Meta,rule: labs.csv prefix meta-llama,open,catalog: hugging_face_id meta-llama/Meta-Llama-3.1-70B-Instruct,2025-12-21
 meta-llama/llama-3.1-8b-instruct,Meta,rule: labs.csv prefix meta-llama,open,catalog: hugging_face_id meta-llama/Meta-Llama-3.1-8B-Instruct,2025-10-18
 meta-llama/llama-3.3-70b-instruct,Meta,rule: labs.csv prefix meta-llama,open,catalog: hugging_face_id meta-llama/Llama-3.3-70B-Instruct,2025-10-06
 meta-llama/llama-4-maverick-17b-128e-instruct,Meta,rule: labs.csv prefix meta-llama,open,catalog: hugging_face_id meta-llama/Llama-4-Maverick-17B-128E-Instruct,2025-10-06
 meta-llama/llama-4-scout-17b-16e-instruct,Meta,rule: labs.csv prefix meta-llama,open,catalog: hugging_face_id meta-llama/Llama-4-Scout-17B-16E-Instruct,2025-10-06
-meta/muse-spark-1.1-20260709,Meta,rule: labs.csv prefix meta,,,2026-08-06
-meta/muse-spark-1.2-20260805,Meta,rule: labs.csv prefix meta,,,2026-08-24
-meta/muse-spark-1.2-contributor-20260805,Meta,rule: labs.csv prefix meta,,,2026-08-23
-meta/muse-spark-1.3-20260902,Meta,rule: labs.csv prefix meta,,,2026-09-03
-meta/muse-spark-1.3-contributor-20260902,Meta,rule: labs.csv prefix meta,,,2026-09-03
+meta/muse-spark-1.1-20260709,Meta,rule: labs.csv prefix meta,closed,manual: https://venturebeat.com/technology/goodbye-llama-meta-launches-new-proprietary-ai-model-muse-spark-first-since (Muse Spark is proprietary; no weights released),2026-08-06
+meta/muse-spark-1.2-20260805,Meta,rule: labs.csv prefix meta,closed,manual: https://venturebeat.com/technology/goodbye-llama-meta-launches-new-proprietary-ai-model-muse-spark-first-since (Muse Spark is proprietary; no weights released),2026-08-24
+meta/muse-spark-1.2-contributor-20260805,Meta,rule: labs.csv prefix meta,closed,manual: https://venturebeat.com/technology/goodbye-llama-meta-launches-new-proprietary-ai-model-muse-spark-first-since (Muse Spark is proprietary; no weights released),2026-08-23
+meta/muse-spark-1.3-20260902,Meta,rule: labs.csv prefix meta,closed,manual: https://venturebeat.com/technology/goodbye-llama-meta-launches-new-proprietary-ai-model-muse-spark-first-since (Muse Spark is proprietary; no weights released),2026-09-03
+meta/muse-spark-1.3-contributor-20260902,Meta,rule: labs.csv prefix meta,closed,manual: https://venturebeat.com/technology/goodbye-llama-meta-launches-new-proprietary-ai-model-muse-spark-first-since (Muse Spark is proprietary; served only via Meta Model API),2026-09-03
 microsoft/phi-4,Microsoft,rule: labs.csv prefix microsoft,open,catalog: hugging_face_id microsoft/phi-4,2025-11-30
 minimax/minimax-m2,MiniMax,rule: labs.csv prefix minimax,open,catalog: hugging_face_id MiniMaxAI/MiniMax-M2,2025-10-25
 minimax/minimax-m2.1,MiniMax,rule: labs.csv prefix minimax,open,catalog: hugging_face_id MiniMaxAI/MiniMax-M2.1,2025-12-23
 minimax/minimax-m2.5-20260211,MiniMax,rule: labs.csv prefix minimax,open,catalog: hugging_face_id MiniMaxAI/MiniMax-M2.5,2026-02-12
 minimax/minimax-m2.7-20260318,MiniMax,rule: labs.csv prefix minimax,open,catalog: hugging_face_id MiniMaxAI/MiniMax-M2.7,2026-03-18
 minimax/minimax-m3-20260531,MiniMax,rule: labs.csv prefix minimax,open,catalog: hugging_face_id MiniMaxAI/Minimax-M3,2026-06-01
-mistralai/codestral-2508,Mistral AI,rule: labs.csv prefix mistralai,,,2025-10-30
+mistralai/codestral-2508,Mistral AI,rule: labs.csv prefix mistralai,closed,manual: https://mistral.ai/news/codestral-25-08 (API and enterprise deployment only),2025-10-30
 mistralai/devstral-2512,Mistral AI,rule: labs.csv prefix mistralai,open,catalog: hugging_face_id mistralai/Devstral-2-123B-Instruct-2512,2025-12-10
-mistralai/devstral-small-2507,Mistral AI,rule: labs.csv prefix mistralai,,,2025-11-10
+mistralai/devstral-small-2507,Mistral AI,rule: labs.csv prefix mistralai,open,manual: https://huggingface.co/mistralai/Devstral-Small-2507 (Apache-2.0 weights on HF),2025-11-10
 mistralai/ministral-14b-2512,Mistral AI,rule: labs.csv prefix mistralai,open,catalog: hugging_face_id mistralai/Ministral-3-14B-Instruct-2512,2026-02-23
 mistralai/ministral-8b-2512,Mistral AI,rule: labs.csv prefix mistralai,open,catalog: hugging_face_id mistralai/Ministral-3-8B-Instruct-2512,2026-02-23
-mistralai/mistral-large-2512,Mistral AI,rule: labs.csv prefix mistralai,,,2026-01-30
-mistralai/mistral-medium-3.5-20260430,Mistral AI,rule: labs.csv prefix mistralai,,,2026-05-22
+mistralai/mistral-large-2512,Mistral AI,rule: labs.csv prefix mistralai,open,manual: https://huggingface.co/mistralai/Mistral-Large-3-675B-Instruct-2512 (Apache-2.0 weights on HF),2026-01-30
+mistralai/mistral-medium-3.5-20260430,Mistral AI,rule: labs.csv prefix mistralai,open,manual: https://huggingface.co/mistralai/Mistral-Medium-3.5-128B (weights on HF),2026-05-22
 mistralai/mistral-nemo,Mistral AI,rule: labs.csv prefix mistralai,open,catalog: hugging_face_id mistralai/Mistral-Nemo-Instruct-2407,2025-10-06
 mistralai/mistral-small-24b-instruct-2501,Mistral AI,rule: labs.csv prefix mistralai,open,catalog: hugging_face_id mistralai/Mistral-Small-24B-Instruct-2501,2025-10-08
 mistralai/mistral-small-3.2-24b-instruct-2506,Mistral AI,rule: labs.csv prefix mistralai,open,catalog: hugging_face_id mistralai/Mistral-Small-3.2-24B-Instruct-2506,2025-10-06
@@ -106,15 +106,15 @@ moonshotai/kimi-k2.5-0127,Moonshot AI,rule: labs.csv prefix moonshotai,open,cata
 moonshotai/kimi-k2.6-20260420,Moonshot AI,rule: labs.csv prefix moonshotai,open,catalog: hugging_face_id moonshotai/Kimi-K2.6,2026-04-20
 moonshotai/kimi-k2.7-code-20260612,Moonshot AI,rule: labs.csv prefix moonshotai,open,catalog: hugging_face_id moonshotai/Kimi-K2.7-Code,2026-06-13
 moonshotai/kimi-k3-20260715,Moonshot AI,rule: labs.csv prefix moonshotai,open,catalog: hugging_face_id moonshotai/Kimi-K3,2026-07-17
-nex-agi/deepseek-v3.1-nex-n1,,,,,2025-12-13
-nex-agi/nex-n2-mini,,,,,2026-08-15
-nex-agi/nex-n2-pro,,,,,2026-06-09
-nex-agi/nex-n2.5-pro-20260907,,,open,catalog: hugging_face_id nex-agi/Nex-N2.5-Pro,2026-09-09
+nex-agi/deepseek-v3.1-nex-n1,Nex AGI,rule: labs.csv prefix nex-agi,open,manual: https://huggingface.co/nex-agi/DeepSeek-V3.1-Nex-N1 (Apache-2.0 weights on HF),2025-12-13
+nex-agi/nex-n2-mini,Nex AGI,rule: labs.csv prefix nex-agi,open,manual: https://huggingface.co/nex-agi/Nex-N2-mini (Apache-2.0 weights on HF),2026-08-15
+nex-agi/nex-n2-pro,Nex AGI,rule: labs.csv prefix nex-agi,open,manual: https://huggingface.co/nex-agi/Nex-N2-Pro (Apache-2.0 weights on HF),2026-06-09
+nex-agi/nex-n2.5-pro-20260907,Nex AGI,rule: labs.csv prefix nex-agi,open,catalog: hugging_face_id nex-agi/Nex-N2.5-Pro,2026-09-09
 nvidia/nemotron-3-nano-30b-a3b,NVIDIA,rule: labs.csv prefix nvidia,open,catalog: hugging_face_id nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B-BF16,2025-12-16
 nvidia/nemotron-3-super-120b-a12b-20230311,NVIDIA,rule: labs.csv prefix nvidia,open,catalog: hugging_face_id nvidia/NVIDIA-Nemotron-3-Super-120B-A12B-FP8,2026-03-11
 nvidia/nemotron-3-ultra-550b-a55b-20260604,NVIDIA,rule: labs.csv prefix nvidia,open,catalog: hugging_face_id nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16,2026-06-04
 nvidia/nemotron-3.5-lightning-20260807,NVIDIA,rule: labs.csv prefix nvidia,open,catalog: hugging_face_id nvidia/NVIDIA-Nemotron-3.5-Lightning-30B-A3B-BF16,2026-08-11
-nvidia/nemotron-nano-12b-v2-vl,NVIDIA,rule: labs.csv prefix nvidia,,,2025-11-29
+nvidia/nemotron-nano-12b-v2-vl,NVIDIA,rule: labs.csv prefix nvidia,open,manual: https://huggingface.co/nvidia/NVIDIA-Nemotron-Nano-12B-v2-VL-BF16 (weights on HF),2025-11-29
 openai/gpt-4.1-2025-04-14,OpenAI,rule: labs.csv prefix openai,closed,rule: labs.csv default for openai,2025-10-06
 openai/gpt-4.1-mini-2025-04-14,OpenAI,rule: labs.csv prefix openai,closed,rule: labs.csv default for openai,2025-10-06
 openai/gpt-4.1-nano-2025-04-14,OpenAI,rule: labs.csv prefix openai,closed,rule: labs.csv default for openai,2025-10-08
@@ -164,11 +164,11 @@ openrouter/polaris-alpha,Stealth (undisclosed),rule: labs.csv prefix openrouter,
 openrouter/pony-alpha,Stealth (undisclosed),rule: labs.csv prefix openrouter,stealth,rule: labs.csv default for openrouter,2026-02-07
 openrouter/sherlock-dash-alpha,Stealth (undisclosed),rule: labs.csv prefix openrouter,stealth,rule: labs.csv default for openrouter,2025-11-15
 openrouter/sherlock-think-alpha,Stealth (undisclosed),rule: labs.csv prefix openrouter,stealth,rule: labs.csv default for openrouter,2025-11-15
-perplexity/pplx-embed-v1-0.6B,Perplexity,rule: labs.csv prefix perplexity,,,2026-05-17
-poolside/laguna-m.1-20260312,Poolside,rule: labs.csv prefix poolside,,,2026-05-01
+perplexity/pplx-embed-v1-0.6B,Perplexity,rule: labs.csv prefix perplexity,open,manual: https://huggingface.co/perplexity-ai/pplx-embed-v1-0.6b (weights on HF),2026-05-17
+poolside/laguna-m.1-20260312,Poolside,rule: labs.csv prefix poolside,open,manual: https://huggingface.co/poolside/Laguna-M.1 (Apache-2.0 weights on HF),2026-05-01
 poolside/laguna-s-2.1-20260720,Poolside,rule: labs.csv prefix poolside,open,catalog: hugging_face_id poolside/Laguna-S-2.1,2026-07-21
 poolside/laguna-xs-2.1-20260625,Poolside,rule: labs.csv prefix poolside,open,catalog: hugging_face_id poolside/Laguna-XS-2.1,2026-07-03
-poolside/laguna-xs.2-20260421,Poolside,rule: labs.csv prefix poolside,,,2026-05-27
+poolside/laguna-xs.2-20260421,Poolside,rule: labs.csv prefix poolside,open,manual: https://huggingface.co/poolside/Laguna-XS.2 (Apache-2.0 weights on HF),2026-05-27
 qwen/qwen-2.5-72b-instruct,Alibaba,rule: labs.csv prefix qwen,open,catalog: hugging_face_id Qwen/Qwen2.5-72B-Instruct,2025-11-03
 qwen/qwen-2.5-7b-instruct,Alibaba,rule: labs.csv prefix qwen,open,catalog: hugging_face_id Qwen/Qwen2.5-7B-Instruct,2025-11-08
 qwen/qwen2.5-vl-72b-instruct,Alibaba,rule: labs.csv prefix qwen,open,catalog: hugging_face_id Qwen/Qwen2.5-VL-72B-Instruct,2025-10-24
@@ -182,9 +182,9 @@ qwen/qwen3-32b-04-28,Alibaba,rule: labs.csv prefix qwen,open,catalog: hugging_fa
 qwen/qwen3-coder-30b-a3b-instruct,Alibaba,rule: labs.csv prefix qwen,open,catalog: hugging_face_id Qwen/Qwen3-Coder-30B-A3B-Instruct,2025-10-06
 qwen/qwen3-coder-480b-a35b-07-25,Alibaba,rule: labs.csv prefix qwen,open,catalog: hugging_face_id Qwen/Qwen3-Coder-480B-A35B-Instruct,2025-10-06
 qwen/qwen3-coder-next-2025-02-03,Alibaba,rule: labs.csv prefix qwen,open,catalog: hugging_face_id Qwen/Qwen3-Coder-Next,2026-02-04
-qwen/qwen3-coder-plus,Alibaba,rule: labs.csv prefix qwen,,,2025-10-12
-qwen/qwen3-embedding-4b,Alibaba,rule: labs.csv prefix qwen,,,2025-11-25
-qwen/qwen3-embedding-8b,Alibaba,rule: labs.csv prefix qwen,,,2025-11-04
+qwen/qwen3-coder-plus,Alibaba,rule: labs.csv prefix qwen,closed,manual: https://openrouter.ai/qwen/qwen3-coder-plus (low confidence; proprietary version of open Qwen3-Coder-480B; snapshot weights not released),2025-10-12
+qwen/qwen3-embedding-4b,Alibaba,rule: labs.csv prefix qwen,open,manual: https://huggingface.co/Qwen/Qwen3-Embedding-4B (Apache-2.0 weights on HF),2025-11-25
+qwen/qwen3-embedding-8b,Alibaba,rule: labs.csv prefix qwen,open,manual: https://huggingface.co/Qwen/Qwen3-Embedding-8B (Apache-2.0 weights on HF),2025-11-04
 qwen/qwen3-next-80b-a3b-instruct-2509,Alibaba,rule: labs.csv prefix qwen,open,catalog: hugging_face_id Qwen/Qwen3-Next-80B-A3B-Instruct,2025-10-19
 qwen/qwen3-next-80b-a3b-thinking-2509,Alibaba,rule: labs.csv prefix qwen,open,catalog: hugging_face_id Qwen/Qwen3-Next-80B-A3B-Thinking,2025-12-10
 qwen/qwen3-vl-235b-a22b-instruct,Alibaba,rule: labs.csv prefix qwen,open,catalog: hugging_face_id Qwen/Qwen3-VL-235B-A22B-Instruct,2025-10-06
@@ -194,20 +194,20 @@ qwen/qwen3-vl-8b-instruct,Alibaba,rule: labs.csv prefix qwen,open,catalog: huggi
 qwen/qwen3.5-35b-a3b-20260224,Alibaba,rule: labs.csv prefix qwen,open,catalog: hugging_face_id Qwen/Qwen3.5-35B-A3B,2026-03-03
 qwen/qwen3.5-397b-a17b-20260216,Alibaba,rule: labs.csv prefix qwen,open,catalog: hugging_face_id Qwen/Qwen3.5-397B-A17B,2026-02-19
 qwen/qwen3.5-9b-20260310,Alibaba,rule: labs.csv prefix qwen,open,catalog: hugging_face_id Qwen/Qwen3.5-9B,2026-03-26
-qwen/qwen3.5-flash-20260224,Alibaba,rule: labs.csv prefix qwen,,,2026-03-01
-qwen/qwen3.5-plus-20260216,Alibaba,rule: labs.csv prefix qwen,,,2026-02-28
+qwen/qwen3.5-flash-20260224,Alibaba,rule: labs.csv prefix qwen,open,manual: https://huggingface.co/Qwen/Qwen3.5-35B-A3B (low confidence; Qwen says Flash is hosted version of open 35B-A3B plus serving features),2026-03-01
+qwen/qwen3.5-plus-20260216,Alibaba,rule: labs.csv prefix qwen,open,manual: https://huggingface.co/Qwen/Qwen3.5-397B-A17B (low confidence; Qwen says Plus is hosted version of open 397B-A17B plus serving features),2026-02-28
 qwen/qwen3.6-35b-a3b-20260415,Alibaba,rule: labs.csv prefix qwen,open,catalog: hugging_face_id Qwen/Qwen3.6-35B-A3B,2026-07-18
-qwen/qwen3.6-flash,Alibaba,rule: labs.csv prefix qwen,,,2026-05-21
-qwen/qwen3.6-plus-04-02,Alibaba,rule: labs.csv prefix qwen,,,2026-04-02
-qwen/qwen3.6-plus-preview,Alibaba,rule: labs.csv prefix qwen,,,2026-03-30
-qwen/qwen3.7-flash-20260727,Alibaba,rule: labs.csv prefix qwen,,,2026-07-29
-qwen/qwen3.7-max-20260520,Alibaba,rule: labs.csv prefix qwen,,,2026-05-26
-qwen/qwen3.7-plus-20260602,Alibaba,rule: labs.csv prefix qwen,,,2026-06-09
+qwen/qwen3.6-flash,Alibaba,rule: labs.csv prefix qwen,closed,manual: https://openrouter.ai/qwen/qwen3.6-flash (low confidence; no official mapping to an open model; 3.6-35B-A3B card does not mention Flash),2026-05-21
+qwen/qwen3.6-plus-04-02,Alibaba,rule: labs.csv prefix qwen,closed,manual: https://openrouter.ai/qwen/qwen3.6-plus (API-only; open Qwen3.6 weights are only 27B and 35B-A3B),2026-04-02
+qwen/qwen3.6-plus-preview,Alibaba,rule: labs.csv prefix qwen,closed,manual: https://openrouter.ai/qwen/qwen3.6-plus (preview of API-only Qwen3.6 Plus),2026-03-30
+qwen/qwen3.7-flash-20260727,Alibaba,rule: labs.csv prefix qwen,closed,manual: https://openrouter.ai/qwen/qwen3.7-flash (no Qwen3.7 weights of any size on HF; QwenCloud API only),2026-07-29
+qwen/qwen3.7-max-20260520,Alibaba,rule: labs.csv prefix qwen,closed,manual: https://www.deeplearning.ai/the-batch/qwen3-7-max-adds-speed-and-power (proprietary API-only flagship),2026-05-26
+qwen/qwen3.7-plus-20260602,Alibaba,rule: labs.csv prefix qwen,closed,manual: https://openrouter.ai/qwen/qwen3.7-plus (no Qwen3.7 weights on HF; API only),2026-06-09
 qwen/qwen3.8-27b-20260814,Alibaba,rule: labs.csv prefix qwen,open,catalog: hugging_face_id Qwen/Qwen3.8-27B,2026-08-20
 qwen/qwen3.8-flash-20260826,Alibaba,rule: labs.csv prefix qwen,open,catalog: hugging_face_id Qwen/Qwen3.8-Flash-Next,2026-08-29
-qwen/qwen3.8-max-20260803,Alibaba,rule: labs.csv prefix qwen,,,2026-08-04
-qwen/qwen3.8-max-20260902,Alibaba,rule: labs.csv prefix qwen,,,2026-09-05
-sentence-transformers/all-minilm-l6-v2-20251117,,,,,2026-01-13
+qwen/qwen3.8-max-20260803,Alibaba,rule: labs.csv prefix qwen,open,manual: https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B (low confidence; open 2.4T-A95B is the base of Qwen3.8-Max but API adds vision input),2026-08-04
+qwen/qwen3.8-max-20260902,Alibaba,rule: labs.csv prefix qwen,closed,manual: https://openrouter.ai/qwen/qwen3.8-max-0902 (low confidence; updated API snapshot; no new weights beyond original 2.4T-A95B),2026-09-05
+sentence-transformers/all-minilm-l6-v2-20251117,Sentence Transformers (Hugging Face),rule: labs.csv prefix sentence-transformers,open,manual: https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2 (Apache-2.0 weights on HF),2026-01-13
 stealth/ox-alpha,Stealth (undisclosed),rule: labs.csv prefix stealth,stealth,rule: labs.csv default for stealth,2026-08-21
 stealth/space-bunny-alpha,Stealth (undisclosed),rule: labs.csv prefix stealth,stealth,rule: labs.csv default for stealth,2026-09-23
 stealth/union-alpha,Stealth (undisclosed),rule: labs.csv prefix stealth,stealth,rule: labs.csv default for stealth,2026-09-16
@@ -217,12 +217,12 @@ tencent/hy3-20260706,Tencent,rule: labs.csv prefix tencent,open,catalog: hugging
 tencent/hy3-preview-20260421,Tencent,rule: labs.csv prefix tencent,open,catalog: hugging_face_id tencent/Hy3-preview,2026-04-23
 tencent/hy4-preview-20260827,Tencent,rule: labs.csv prefix tencent,open,catalog: hugging_face_id tencent/Hy4-preview,2026-08-28
 thinkingmachines/inkling-20260715,Thinking Machines Lab,rule: labs.csv prefix thinkingmachines,open,catalog: hugging_face_id thinkingmachines/Inkling,2026-08-27
-tngtech/deepseek-r1t-chimera,,,,,2025-10-06
-tngtech/deepseek-r1t2-chimera,,,,,2025-10-06
-tngtech/tng-r1t-chimera,,,,,2025-12-05
-typesafe/jev-1.13-20260917,,,,,2026-09-18
-upstage/solar-mini4-20260922,Upstage,rule: labs.csv prefix upstage,,,2026-10-02
-upstage/solar-pro4-20260810,Upstage,rule: labs.csv prefix upstage,,,2026-08-12
+tngtech/deepseek-r1t-chimera,TNG Technology Consulting,rule: labs.csv prefix tngtech,open,manual: https://huggingface.co/tngtech/DeepSeek-R1T-Chimera (MIT weights on HF),2025-10-06
+tngtech/deepseek-r1t2-chimera,TNG Technology Consulting,rule: labs.csv prefix tngtech,open,manual: https://huggingface.co/tngtech/DeepSeek-TNG-R1T2-Chimera (MIT weights on HF),2025-10-06
+tngtech/tng-r1t-chimera,TNG Technology Consulting,rule: labs.csv prefix tngtech,closed,manual: https://openrouter.ai/tngtech/tng-r1t-chimera (TNG says available exclusively via Chutes and OpenRouter; no HF repo),2025-12-05
+typesafe/jev-1.13-20260917,TypeSafe AI,rule: labs.csv prefix typesafe,closed,manual: https://openrouter.ai/typesafe/jev-1.13 (API-only structured decision model; no weights on HF),2026-09-18
+upstage/solar-mini4-20260922,Upstage,rule: labs.csv prefix upstage,closed,manual: https://openrouter.ai/upstage/solar-mini4 (no weights on HF under upstage (only tokenizers and Solar Open)),2026-10-02
+upstage/solar-pro4-20260810,Upstage,rule: labs.csv prefix upstage,closed,manual: https://en.fnnews.com/news/202608140929331965 (closed commercial model; HF has only solar-pro4-tokenizer),2026-08-12
 x-ai/grok-3-mini,xAI,rule: labs.csv prefix x-ai,closed,rule: labs.csv default for x-ai,2025-10-06
 x-ai/grok-4-07-09,xAI,rule: labs.csv prefix x-ai,closed,rule: labs.csv default for x-ai,2025-10-06
 x-ai/grok-4-fast,xAI,rule: labs.csv prefix x-ai,closed,rule: labs.csv default for x-ai,2025-10-06
@@ -233,9 +233,9 @@ x-ai/grok-4.5-20260708,xAI,rule: labs.csv prefix x-ai,closed,rule: labs.csv defa
 x-ai/grok-4.6-20260810,xAI,rule: labs.csv prefix x-ai,closed,rule: labs.csv default for x-ai,2026-08-13
 x-ai/grok-4.7-20260916,xAI,rule: labs.csv prefix x-ai,closed,rule: labs.csv default for x-ai,2026-09-22
 x-ai/grok-code-fast-1,xAI,rule: labs.csv prefix x-ai,closed,rule: labs.csv default for x-ai,2025-10-06
-xiaomi/mimo-v2-flash-20251210,Xiaomi,rule: labs.csv prefix xiaomi,,,2025-12-17
-xiaomi/mimo-v2-omni-20260318,Xiaomi,rule: labs.csv prefix xiaomi,,,2026-03-19
-xiaomi/mimo-v2-pro-20260318,Xiaomi,rule: labs.csv prefix xiaomi,,,2026-03-19
+xiaomi/mimo-v2-flash-20251210,Xiaomi,rule: labs.csv prefix xiaomi,open,manual: https://huggingface.co/XiaomiMiMo/MiMo-V2-Flash (MIT weights on HF),2025-12-17
+xiaomi/mimo-v2-omni-20260318,Xiaomi,rule: labs.csv prefix xiaomi,closed,manual: https://datanorth.ai/news/xiaomi-launches-mimo-v2-pro-omni-and-tts (API-only; no MiMo-V2-Omni repo on HF),2026-03-19
+xiaomi/mimo-v2-pro-20260318,Xiaomi,rule: labs.csv prefix xiaomi,closed,manual: https://datanorth.ai/news/xiaomi-launches-mimo-v2-pro-omni-and-tts (API-only at launch; no MiMo-V2-Pro repo on HF (only later V2.5/V2.6-Pro)),2026-03-19
 xiaomi/mimo-v2.5-20260422,Xiaomi,rule: labs.csv prefix xiaomi,open,catalog: hugging_face_id XiaomiMiMo/MiMo-V2.5,2026-05-10
 xiaomi/mimo-v2.5-pro-20260422,Xiaomi,rule: labs.csv prefix xiaomi,open,catalog: hugging_face_id XiaomiMiMo/MiMo-V2.5-Pro,2026-04-23
 xiaomi/mimo-v2.6-flash-20260921,Xiaomi,rule: labs.csv prefix xiaomi,open,catalog: hugging_face_id XiaomiMiMo/MiMo-V2.6-Flash-RL,2026-09-22
@@ -246,10 +246,10 @@ z-ai/glm-4.6,Z.ai,rule: labs.csv prefix z-ai,open,catalog: hugging_face_id zai-o
 z-ai/glm-4.7-20251222,Z.ai,rule: labs.csv prefix z-ai,open,catalog: hugging_face_id zai-org/GLM-4.7,2025-12-23
 z-ai/glm-4.7-flash-20260119,Z.ai,rule: labs.csv prefix z-ai,open,catalog: hugging_face_id zai-org/GLM-4.7-Flash,2026-02-01
 z-ai/glm-5-20260211,Z.ai,rule: labs.csv prefix z-ai,open,catalog: hugging_face_id zai-org/GLM-5,2026-02-11
-z-ai/glm-5-turbo-20260315,Z.ai,rule: labs.csv prefix z-ai,,,2026-03-16
+z-ai/glm-5-turbo-20260315,Z.ai,rule: labs.csv prefix z-ai,closed,manual: https://venturebeat.com/technology/z-ai-debuts-faster-cheaper-glm-5-turbo-model-for-agents-and-claws-but-its (closed-source variant of open GLM-5),2026-03-16
 z-ai/glm-5.1-20260406,Z.ai,rule: labs.csv prefix z-ai,open,catalog: hugging_face_id zai-org/GLM-5.1,2026-04-08
 z-ai/glm-5.2-20260616,Z.ai,rule: labs.csv prefix z-ai,open,catalog: hugging_face_id zai-org/GLM-5.2,2026-06-16
 z-ai/glm-5.3-20260816,Z.ai,rule: labs.csv prefix z-ai,open,catalog: hugging_face_id zai-org/GLM-5.3,2026-08-19
 z-ai/glm-5.3-flash-20260826,Z.ai,rule: labs.csv prefix z-ai,open,catalog: hugging_face_id zai-org/GLM-5.3-Flash,2026-08-26
-z-ai/glm-5.3-flashx-20260918,Z.ai,rule: labs.csv prefix z-ai,,,2026-09-22
-z-ai/glm-5v-turbo-20260401,Z.ai,rule: labs.csv prefix z-ai,,,2026-04-05
+z-ai/glm-5.3-flashx-20260918,Z.ai,rule: labs.csv prefix z-ai,open,manual: https://huggingface.co/zai-org/GLM-5.3-Flash (low confidence; high-speed API tier of open GLM-5.3-Flash; no separate FlashX weights),2026-09-22
+z-ai/glm-5v-turbo-20260401,Z.ai,rule: labs.csv prefix z-ai,closed,manual: https://openrouter.ai/z-ai/glm-5v-turbo (proprietary Turbo tier; no weights on HF under zai-org),2026-04-05

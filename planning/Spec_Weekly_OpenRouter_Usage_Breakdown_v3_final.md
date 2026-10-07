@@ -103,7 +103,7 @@ Every fact about every model lives in a permanent registry of three CSV files Da
 
 | Dimension | Example values | Where it comes from | Phase |
 | --- | --- | --- | --- |
-| Weights | Open, closed | Manual label, else Hugging Face ID, else lab default (rules below) | 1 |
+| Weights | Open, closed, stealth | Manual label, else Hugging Face ID, else lab default (rules below) | 1 |
 | Company | DeepSeek, Anthropic, Google | Model ID prefix (`deepseek/...`), cleaned in `labs.csv` | 1 |
 | Country of company | China, US, France | `labs.csv`, entered once per company | 2 |
 | Model family | Claude Sonnet, Gemini Flash, Qwen | Pattern rules in `families.csv` | 2 |
@@ -120,7 +120,15 @@ Every fact about every model lives in a permanent registry of three CSV files Da
 - `labs.csv`: one row per company: ID prefix, clean name, country, default weights (open, closed or blank).
 - `families.csv`: one row per family: a text pattern (such as `claude-sonnet`) and the family name. Patterns are checked top to bottom; the first match wins.
 
-**Weights rule, in order:** a manual label in `models.csv` wins; else a Hugging Face ID means open; else a lab default of closed in `labs.csv` means closed; else unknown, which goes on the review list and marks the run NOT READY.
+**Weights rule, in order:** a manual label in `models.csv` wins; else a Hugging Face ID means open; else a lab default of closed (or stealth) in `labs.csv` applies; else unknown, which goes on the review list and marks the run NOT READY.
+
+**Rules added in build step 3 (Oct 7, 2026):**
+
+- **Stealth models** (`stealth/...` and OpenRouter's cloaked `openrouter/...-alpha` models) get company "Stealth (undisclosed)" and weights "stealth". These count as labeled, so they don't make a run NOT READY. The open vs closed chart leaves them out and its footer says so, e.g. "Excludes stealth models (x%)". The company leaderboard shows "Stealth (undisclosed)" as its own bar. When a stealth model's maker is revealed, Dan updates its row once and its whole history re-labels.
+- **Hosted versions of open weights count as open.** An API model that its maker describes as a hosted version of an open-weight model (e.g. Qwen3.5 Plus = Qwen3.5-397B with serving extras) is labeled open, with the open model's Hugging Face page as its source.
+- **Open means the weights for that model are downloadable.** An open sibling (another size or version) doesn't make a model open.
+- Any `:variant` suffix (e.g. `:free`, `:thinking`) is stripped so variants count with their base model; only `:free` sets `is_free`.
+- Manual labels marked "low confidence" in their source are re-checked monthly. `inclusionai/ling-3.1-flash` (closed; open weights reportedly planned) is due for a re-check around Oct 20, 2026.
 
 New models found each week are added to `models.csv` automatically with every field the catalog can fill. The run report lists the blanks for Dan.
 
@@ -139,7 +147,7 @@ The main chart is a 100% stacked area of weekly token share: open-weight on the 
 | Crossover marker | Dot and short label on the first week a band passed 50% | Only if a crossover exists |
 | Partial week | Only under the fallback: Jan 1–4 point marked with a light hatch and "partial week" note | Small, grey |
 | End labels | Latest share of each band at its right edge | Bold, band color |
-| Footer left | "Source: OpenRouter (openrouter.ai/rankings), as of {as\_of}. Top-50 coverage {x}%. Shares, not exact token counts." | 16 px, grey |
+| Footer left | "Source: OpenRouter (openrouter.ai/rankings), as of {as\_of}. Top-50 coverage {x}%. Shares, not exact token counts." The open vs closed chart adds "Excludes stealth models ({x}%)." | 16 px, grey |
 | Footer right | "Created by Daniel Wipert \| Chorus AI Systems" | 16 px, charcoal |
 
 **Style rules:**
@@ -249,7 +257,7 @@ The build runs in three phases after a sign-off gate, so Dan can post from phase
 
 - [x] **1. Set up the folder.** `requirements.txt`, `.gitignore`, the `OPENROUTER_API_KEY` GitHub secret, and a **Setup check** GitHub Actions workflow. Check: the Setup check run is green (it runs `python -c "import pandas, matplotlib"` and confirms the secret exists). Done Oct 7, 2026.
 - [x] **2. Fetch.** `fetch.py` for all four endpoints, with chunking and retries. Check: raw files appear in `raw/` with today's date, endpoint names and limits match the live docs, and we know how far back daily data goes (this decides the rolling window or the fallback). Done Oct 7, 2026.
-- [ ] **3. Registry.** `classify.py`; fill `labs.csv` and weights for every company in 2026's top 50. Check: zero unknown weights or companies.
+- [x] **3. Registry.** `classify.py`; fill `labs.csv` and weights for every company in 2026's top 50. Check: zero unknown weights or companies. Done Oct 7, 2026: 254 models (194 by rule or catalog, 60 by hand with source links), 0% unknown.
 - [ ] **4. Aggregate.** `aggregate.py`. Check: open share is roughly 41% in mid-March and past 50% by early June, and the latest top 5 match openrouter.ai/rankings.
 - [ ] **5. Checks.** `checks.py`. Check: a wrong key stops the run with a clear message, and a blank label sets NOT READY.
 - [ ] **6. First charts.** Weights share over time and company leaderboard. Check: Dan approves both on his phone.
