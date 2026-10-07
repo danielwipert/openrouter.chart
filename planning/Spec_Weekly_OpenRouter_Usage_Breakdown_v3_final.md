@@ -281,7 +281,7 @@ The build runs in three phases after a sign-off gate, so Dan can post from phase
 - [x] **4. Aggregate.** `aggregate.py`. Check: open share is roughly 41% in mid-March and past 50% by early June, and the latest top 5 match openrouter.ai/rankings. Done Oct 7, 2026: 42.4% open in the week of Mar 16, above 50% every week since Apr 27; Dan confirmed the top 5 match.
 - [x] **5. Checks.** `checks.py`. Check: a wrong key stops the run with a clear message, and a blank label sets NOT READY. Done Oct 7, 2026: a wrong key against the live API stops with "OpenRouter rejected the API key"; tests cover every hard check, NOT READY on a blank label or source, and each warning.
 - [x] **6. First charts.** Weights share over time and company leaderboard. Check: Dan approves both on a phone. Done Oct 7, 2026: approved in the dark navy theme.
-- [ ] **7. One command.** `run_weekly.py`, captions, run report, `meta.json`, tests. Check: running twice on the same raw data gives identical files.
+- [x] **7. One command.** `run_weekly.py`, captions, run report, `meta.json`, tests. Check: running twice on the same raw data gives identical files. Done Oct 7, 2026: all 11 files (outputs and registry) byte-identical on the real data, plus an end-to-end test on sample data. "New models this week" in the report means models first seen in the latest data week, so the report doesn't depend on when the run happens.
 
 **Phase 2: more dimensions**
 
