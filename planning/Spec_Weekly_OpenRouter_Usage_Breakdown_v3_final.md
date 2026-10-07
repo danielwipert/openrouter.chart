@@ -170,7 +170,14 @@ The main chart is a 100% stacked area of weekly token share: open-weight on the 
 - Callouts with thin leader lines on the chart: the 50% crossover (magenta dot) and the peak.
 - Minimal axes: no y-axis; a labeled dashed 50% line; month labels only.
 - Footer: source line on the left; the Chorus ring mark with "Daniel Wipert / Chorus AI Systems" on the right.
-- Two themes in `style.yaml`: **dark** (charcoal background, cream text, grey closed band `#4A4741`) and **light** (cream background). The `theme:` line picks one.
+- Two themes in `style.yaml`: **dark** (charcoal background, cream text) and **light** (cream background with a charcoal header block). The `theme:` line picks one.
+
+**Color pass (Oct 7, 2026):** Dan asked for more color, still sleek and very clear. This replaces "one strong, one muted":
+
+- Open band: Chorus blue as a vertical gradient (dark at the bottom, bright at the top). Closed band: Chorus yellow `#F2C400` (dark theme) or deeper gold `#DDA600` (light theme; brand yellow is too pale on cream). Blue vs yellow is the most color-blind-safe pair (ΔE 24-30 in every color-blindness simulation).
+- End values sit in pills filled with their band color; the kicker is a magenta (dark) or yellow (light) pill.
+- Notes on the chart, the 50% line and its label are charcoal, so they read on the yellow band.
+- Leaderboard bars use a blue-to-magenta gradient across the full width (longer bars reach further into magenta). The stealth bar is hatched grey. The leading named company's value sits in a yellow (dark) or charcoal (light) pill. Up/down arrows are blue/pink and always carry the ▲/▼ symbol, so the color is never the only cue.
 - Leaderboard: top 8, rank numbers, the name above each thick bar, the value at the bar's end, the change at the right; the leading named company is highlighted.
 
 **Company leaderboard (step 6):** top companies for the latest week, largest first, with the change in share points vs 4 weeks earlier ("new" if the company had no share then). "Stealth (undisclosed)" is a grey bar. If stealth is #1, the headline names the top named lab instead ("DeepSeek leads named labs on OpenRouter with 23.5% of tokens"). Headline numbers match the bar labels.

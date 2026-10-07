@@ -2,7 +2,10 @@
 4 weeks earlier (spec, "Content library"). Phase 1 draws company.
 """
 
+import numpy as np
 import pandas as pd
+from matplotlib.colors import LinearSegmentedColormap
+from matplotlib.patches import FancyBboxPatch
 
 from charts.frame import Frame
 
@@ -68,23 +71,45 @@ def render(weekly, footer_text, style, size):
 
     ax.text(right, -0.75, text["change_header"], transform=edge, ha="right", va="bottom",
             color=colors["text_muted"], fontproperties=frame.font("bold", sizes["footer"]))
+    ramp = LinearSegmentedColormap.from_list("bars", colors["bar_gradient"])
+    gradient = np.linspace(0, 1, 256).reshape(1, -1)
+    xmax = ax.get_xlim()[1]
     for i, row in rows.iterrows():
         is_top = row["value"] == top["value"]
         is_stealth = row["value"] == STEALTH
-        color = (colors["bar_muted"] if is_stealth else
-                 colors["bar_lead"] if is_top else colors["bar"])
-        ax.barh(i + 0.12, row["share"], height=0.42, color=color, linewidth=0)
+        y, h = i + 0.12, 0.44
+        bar = FancyBboxPatch((0, y - h / 2), row["share"], h, mutation_aspect=0.05,
+                             boxstyle="round,pad=0,rounding_size=0.004", linewidth=0,
+                             facecolor=colors["bar_muted"] if is_stealth else "none",
+                             hatch="///" if is_stealth else None,
+                             edgecolor=colors["text_muted"] if is_stealth else "none")
+        ax.add_patch(bar)
+        if not is_stealth:  # blue -> magenta across the full width, clipped to the bar
+            image = ax.imshow(gradient, cmap=ramp, extent=[0, xmax, y - h / 2, y + h / 2],
+                              aspect="auto", zorder=2)
+            image.set_clip_path(bar)
         # Rank number, name above the bar, value at its end, change at the right
-        ax.text(-56 / ax.bbox.width, i + 0.12, f"{i + 1:02d}", transform=edge, ha="left",
+        ax.text(-56 / ax.bbox.width, y, f"{i + 1:02d}", transform=edge, ha="left",
                 va="center", color=colors["text_muted"],
                 fontproperties=frame.font("hero", sizes["rank"]))
         name = row["value"] + (f"  ·  {text['stealth_note']}" if is_stealth else "")
         ax.text(0, i - 0.16, name, ha="left", va="bottom", color=colors["text"],
                 fontproperties=frame.font("bold" if is_top else "semibold",
                                           sizes["bar_label"]))
-        ax.text(row["share"], i + 0.12, f"  {row['share']:.1%}", ha="left", va="center",
-                color=colors["text"], fontproperties=frame.font("hero", sizes["bar_value"]))
-        ax.text(right, i + 0.12, change_text((row["share"] - row["before"]) * 100),
-                transform=edge, ha="right", va="center", color=colors["text_muted"],
-                fontproperties=frame.font("semibold", sizes["axis"]))
+        value = {"ha": "left", "va": "center", "fontproperties":
+                 frame.font("hero", sizes["bar_value"]), "zorder": 4}
+        if is_top:
+            fill, ink = colors["lead_pill"]
+            ax.annotate(f"{row['share']:.1%}", (row["share"], y), xytext=(14, 0),
+                        textcoords="offset points", color=ink, **value,
+                        bbox={"boxstyle": "round,pad=0.35,rounding_size=0.5",
+                              "facecolor": fill, "edgecolor": "none"})
+        else:
+            ax.annotate(f"{row['share']:.1%}", (row["share"], y), xytext=(10, 0),
+                        textcoords="offset points", color=colors["text"], **value)
+        points = (row["share"] - row["before"]) * 100
+        ax.text(right, y, change_text(points), transform=edge, ha="right", va="center",
+                color=(colors["text_muted"] if pd.isna(points) or round(points, 1) == 0 else
+                       colors["up"] if points > 0 else colors["down"]),
+                fontproperties=frame.font("bold", sizes["axis"]))
     return frame

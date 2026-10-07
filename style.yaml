@@ -38,37 +38,49 @@ text_sizes:
 themes:
   dark:
     background: "#1F1E1C"   # Chorus charcoal
+    header_panel: null      # color block behind the top section, or null
+    header_text: "#F4F2EE"
+    header_muted: "#A8A39A"
     text: "#F4F2EE"         # Chorus cream
     text_muted: "#A8A39A"
     grid: "#3A3834"
-    reference_line: "#F4F2EE"
-    kicker: "#F2C400"       # Chorus yellow
-    accent: "#D5006C"       # Chorus magenta
-    hero: "#33B5DE"         # bright Chorus blue for the big number on dark
-    open: "#0088B0"         # Chorus blue
-    closed: "#4A4741"       # dark warm grey (muted)
-    open_label: "#33B5DE"
-    closed_label: "#A8A39A"
-    bar: "#0088B0"
+    kicker_fill: "#D5006C"  # magenta pill
+    kicker_text: "#FFFFFF"
+    accent: "#D5006C"
+    hero: "#33B5DE"
+    open: "#0088B0"
+    open_gradient: ["#00607E", "#33B5DE"]   # bottom -> top of the open band
+    closed: "#F2C400"       # Chorus yellow
+    open_pill: ["#0088B0", "#FFFFFF"]       # [fill, text]
+    closed_pill: ["#F2C400", "#1F1E1C"]
+    bar_gradient: ["#0088B0", "#D5006C"]    # bars: blue -> magenta, left to right
     bar_muted: "#4A4741"
-    bar_lead: "#33B5DE"
+    lead_pill: ["#F2C400", "#1F1E1C"]
+    up: "#33B5DE"
+    down: "#F0519A"
     stripe: ["#0088B0", "#D5006C", "#F2C400"]
   light:
     background: "#F4F2EE"   # Chorus cream
+    header_panel: "#1F1E1C" # charcoal color block behind the top section
+    header_text: "#F4F2EE"
+    header_muted: "#B9B4AA"
     text: "#1F1E1C"
     text_muted: "#6B675F"
     grid: "#DEDAD2"
-    reference_line: "#1F1E1C"
-    kicker: "#D5006C"
+    kicker_fill: "#F2C400"
+    kicker_text: "#1F1E1C"
     accent: "#D5006C"
-    hero: "#0088B0"
+    hero: "#F2C400"
     open: "#0088B0"
-    closed: "#CFCAC0"
-    open_label: "#006F90"
-    closed_label: "#6B675F"
-    bar: "#0088B0"
+    open_gradient: ["#006F90", "#2BA9D3"]
+    closed: "#DDA600"       # deeper gold: Chorus yellow is too pale on cream
+    open_pill: ["#0088B0", "#FFFFFF"]
+    closed_pill: ["#DDA600", "#1F1E1C"]
+    bar_gradient: ["#0088B0", "#D5006C"]
     bar_muted: "#CFCAC0"
-    bar_lead: "#006F90"
+    lead_pill: ["#1F1E1C", "#F2C400"]
+    up: "#006F90"
+    down: "#B8005D"
     stripe: ["#0088B0", "#D5006C", "#F2C400"]
 
 layout:

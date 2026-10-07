@@ -64,10 +64,10 @@ class Frame:
     def width_of(self, artist):
         return artist.get_window_extent(self.renderer).width
 
-    def _rect(self, x, y, w, h, color):
+    def _rect(self, x, y, w, h, color, zorder=1):
         self.fig.add_artist(Rectangle((x / self.width, y / self.height), w / self.width,
                                       h / self.height, transform=self.fig.transFigure,
-                                      color=color, linewidth=0))
+                                      color=color, linewidth=0, zorder=zorder))
 
     def _stripe(self):
         """The Chorus color stripe across the top edge."""
@@ -80,11 +80,13 @@ class Frame:
     # --- top block -------------------------------------------------------------
 
     def kicker(self, text):
-        """Small all-caps label above the headline."""
+        """Small all-caps label in a colored pill above the headline."""
         size = self.sizes["kicker"]
-        self.text(self.margin["left"], self.cursor, text, "bold", size, self.colors["kicker"],
-                  va="top")
-        self.cursor -= size * LINE_HEIGHT + 4
+        self.text(self.margin["left"] + 10, self.cursor - size * 0.55, text, "bold", size,
+                  self.colors["kicker_text"], va="center",
+                  bbox={"boxstyle": "round,pad=0.45,rounding_size=0.9",
+                        "facecolor": self.colors["kicker_fill"], "edgecolor": "none"})
+        self.cursor -= size * LINE_HEIGHT + 22
 
     def hero(self, number, headline):
         """A huge number with the headline set beside it."""
@@ -103,22 +105,21 @@ class Frame:
         block = len(lines) * hsize * LINE_HEIGHT
         cap_mid = self.cursor - size * 0.40  # middle of the number's digits
         self.text(x, cap_mid + block / 2, "\n".join(lines), "display", hsize,
-                  self.colors["text"], va="top")
+                  self.colors["header_text"], va="top")
         self.cursor -= size * 0.95
 
-    def headline(self, text):
-        size = self.sizes["headline"]
-        lines = textwrap.wrap(text, 34)
-        self.text(self.margin["left"], self.cursor, "\n".join(lines), "display", size,
-                  self.colors["text"], va="top")
-        self.cursor -= len(lines) * size * LINE_HEIGHT + 12
-
     def subtitle(self, text):
+        """Subtitle, then the color block behind the whole top section (if the theme has one)."""
         size = self.sizes["subtitle"]
         self.cursor -= 6
         self.text(self.margin["left"], self.cursor, text, "regular", size,
-                  self.colors["text_muted"], va="top")
-        self.cursor -= size * LINE_HEIGHT + self.style["layout"]["gap_after_subtitle"]
+                  self.colors["header_muted"], va="top")
+        self.cursor -= size * LINE_HEIGHT
+        if self.colors.get("header_panel"):
+            self.cursor -= 30
+            self._rect(0, self.cursor, self.width, self.height - self.cursor,
+                       self.colors["header_panel"], zorder=-1)
+        self.cursor -= self.style["layout"]["gap_after_subtitle"]
 
     # --- chart and footer --------------------------------------------------------
 
