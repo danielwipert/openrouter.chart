@@ -15,6 +15,7 @@
   "raw_files": [
     "raw/2026-10-07/app_rankings.json",
     "raw/2026-10-07/fetch_summary.json",
+    "raw/2026-10-07/hf_sizes.json",
     "raw/2026-10-07/models.json",
     "raw/2026-10-07/rankings_daily_01.json",
     "raw/2026-10-07/task_classifications.json"

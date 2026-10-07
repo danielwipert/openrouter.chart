@@ -53,7 +53,8 @@ def spread_labels(wanted, gap, low=0.0, high=1.0):
     return out
 
 
-def title(weekly, monthly, spec):
+def title(data, spec):
+    weekly, monthly = data["weekly"], data["monthly"]
     table, top = race_table(weekly, spec["dimension"], spec["stealth_value"])
     name, before, after = biggest_gainer(table, top)
     if after > before and before < 0.005:
@@ -64,7 +65,8 @@ def title(weekly, monthly, spec):
     return spec["title_flat"].format(name=top[0], after=round(table[top[0]].iloc[-1] * 100))
 
 
-def render(weekly, monthly, footer_text, style, size, spec):
+def render(data, footer_text, style, size, spec):
+    weekly, monthly = data["weekly"], data["monthly"]
     colors = style["colors"]
     sizes = style["text_sizes"]
     stealth = spec["stealth_value"]
@@ -73,7 +75,7 @@ def render(weekly, monthly, footer_text, style, size, spec):
     xn = mdates.date2num(x)
     last_week_end = x[-1] + pd.Timedelta(days=6)
 
-    title_text = title(weekly, monthly, spec)
+    title_text = title(data, spec)
 
     frame = Frame(style, size)
     frame.title(title_text)

@@ -130,6 +130,17 @@ charts:
     stealth_note: true
     title: "{share}% of OpenRouter tokens go to models that can reason"
     subtitle: "Weekly share of tokens, with v without reasoning, {first} to {last}"
+  size_share:
+    kind: share
+    dimension: size
+    values: [Large, Medium, Small]
+    labels: ["Large", "Medium", "Small"]
+    fills: ["#0088B0", "#6FCDE3", "#C6EBF4"]
+    inks: ["#FFFFFF", "#00546D", "#00546D"]
+    stealth_note: false
+    extra_note: "Open-weight models only. Small: under 30B parameters; Medium: 30B-200B; Large: over 200B (total parameters, from Hugging Face)."
+    title: "{share}% of open-weight tokens on OpenRouter go to Large models"
+    subtitle: "Weekly share of open-weight tokens by model size, {first} to {last}"
   company_leaderboard:
     kind: leaderboard
     dimension: company
@@ -186,3 +197,16 @@ charts:
     title_newcomer: "{name} went from outside the top 10 to No.\u00a0{after} among model families"
     title_steady: "{name} holds No.\u00a01 among model families"
     subtitle: "Monthly rank by share of tokens, named model families, {first} to {last}"
+  launch_curve:
+    kind: launch
+    stealth_note: false
+    x_label: "Weeks since the model was added to OpenRouter"
+    title: "{name} hit {peak}% of OpenRouter tokens {when}"
+    subtitle: "Share of tokens by weeks since launch, top {n} launches of the past year"
+  task_mix:
+    kind: tasks
+    groups: [code, agent, data, general]
+    stealth_note: false
+    extra_note: "Tasks come from OpenRouter's sampled classification of the last 7 days; unclassified traffic is excluded."
+    title: "{name} is the top use of OpenRouter, with {share}% of classified tokens"
+    subtitle: "% of classified tokens by task, 7 days to {as_of}"

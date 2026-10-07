@@ -41,13 +41,15 @@ def headline_story(ranks, names, spec):
     return leader, spec["title_steady"].format(name=leader)
 
 
-def title(weekly, monthly, spec):
+def title(data, spec):
+    weekly, monthly = data["weekly"], data["monthly"]
     ranks = monthly_ranks(monthly, spec["dimension"], spec["stealth_value"])
     names = list(ranks.iloc[-1].sort_values().index[:spec["top"]])
     return headline_story(ranks, names, spec)[1]
 
 
-def render(weekly, monthly, footer_text, style, size, spec):
+def render(data, footer_text, style, size, spec):
+    weekly, monthly = data["weekly"], data["monthly"]
     colors = style["colors"]
     sizes = style["text_sizes"]
     ranks = monthly_ranks(monthly, spec["dimension"], spec["stealth_value"])

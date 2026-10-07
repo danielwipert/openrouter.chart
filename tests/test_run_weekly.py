@@ -7,6 +7,7 @@ import pandas as pd
 
 import charts
 import run_weekly
+import sizes
 
 FETCH_DAY = date(2026, 10, 14)
 
@@ -29,8 +30,17 @@ def make_raw(root):
     meta = {"as_of": f"{FETCH_DAY}T02:00:00.000Z", "version": "v1",
             "start_date": start.isoformat(), "end_date": end.isoformat()}
     (folder / "rankings_daily_01.json").write_text(json.dumps({"data": rows, "meta": meta}))
-    facts = {"created": 1735689600, "pricing": {"prompt": "0.000001", "completion": "0.000002"},
+    # created 2026-01-01: inside the window, so the launch curve has a model to draw
+    facts = {"created": 1767225600, "pricing": {"prompt": "0.000001", "completion": "0.000002"},
              "supported_parameters": ["reasoning"], "architecture": {"input_modalities": ["text"]}}
+    (folder / "task_classifications.json").write_text(json.dumps({"data": {
+        "as_of": (FETCH_DAY - timedelta(days=1)).isoformat(), "window_days": 7,
+        "classifications": [{"tag": "code:x", "display_name": "Coding", "macro_category": "code",
+                             "token_share": 0.6},
+                            {"tag": "agent:y", "display_name": "Agents", "macro_category": "agent",
+                             "token_share": 0.4}],
+        "macro_categories": [{"key": "code", "label": "Code", "token_share": 0.6},
+                             {"key": "agent", "label": "Agent", "token_share": 0.4}]}}))
     (folder / "models.json").write_text(json.dumps({"data": [
         {"id": "ds/v3", "canonical_slug": "ds/v3", "hugging_face_id": "ds/V3", **facts},
         {"id": "oa/gpt", "canonical_slug": "oa/gpt", "hugging_face_id": None, **facts}]}))
@@ -57,7 +67,8 @@ def make_registry(root):
     return reg
 
 
-def test_same_raw_data_gives_identical_files(tmp_path):
+def test_same_raw_data_gives_identical_files(tmp_path, monkeypatch):
+    monkeypatch.setattr(sizes, "hf_lookup", lambda repo: 7_000_000_000)  # 7B: Small
     folder, reg = make_raw(tmp_path), make_registry(tmp_path)
     out_a, checks_a = run_weekly.run(folder, reg, tmp_path / "a")
     out_b, _ = run_weekly.run(folder, reg, tmp_path / "b")

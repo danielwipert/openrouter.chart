@@ -1,6 +1,6 @@
 # READY TO POST (2026-W40)
 
-- **PASS** Labels complete: Zero unknown values on company, weights, country, family, release_date, price_tier, reasoning, input_type
+- **PASS** Labels complete: Zero unknown values on company, weights, country, family, release_date, price_tier, reasoning, input_type, size
 - **PASS** Sources complete: Every label has a source
 - **PASS** Same input, same output: Re-aggregating the same data gave identical numbers
 - **PASS** Long tail disclosed: Top-50 coverage for the footer: 93.9%
@@ -44,6 +44,8 @@
 - charts/input_type_share_portrait.png
 - charts/reasoning_share_square.png
 - charts/reasoning_share_portrait.png
+- charts/size_share_square.png
+- charts/size_share_portrait.png
 - charts/company_leaderboard_square.png
 - charts/company_leaderboard_portrait.png
 - charts/country_leaderboard_square.png
@@ -56,3 +58,9 @@
 - charts/company_ranks_portrait.png
 - charts/family_ranks_square.png
 - charts/family_ranks_portrait.png
+- charts/launch_curve_square.png
+- charts/launch_curve_portrait.png
+- charts/task_mix_square.png
+- charts/task_mix_portrait.png
+
+Task snapshots saved so far: 1 (the task mix change column needs one from about 4 weeks earlier)

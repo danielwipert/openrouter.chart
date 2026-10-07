@@ -22,10 +22,11 @@ import classify
 import fetch
 
 DIMENSIONS = ["weights", "company", "country", "family",  # live dimensions
-              "price_tier", "reasoning", "input_type", "free"]
+              "price_tier", "reasoning", "input_type", "free", "size"]
 # Values counted in a dimension's tokens but left out of its share split
 EXCLUDED_FROM_SHARE = {"weights": {"stealth"}, "price_tier": {"Undisclosed"},
-                       "reasoning": {"Undisclosed"}, "input_type": {"Undisclosed"}}
+                       "reasoning": {"Undisclosed"}, "input_type": {"Undisclosed"},
+                       "size": {"n/a"}}  # size splits open-weight tokens only
 NOT_LABELED = {classify.OTHER, classify.UNKNOWN}
 
 

@@ -78,12 +78,14 @@ def label_spot(bottom, top, start_fraction=0.35, end_fraction=0.85):
     return first + int(np.argmax(thickness))
 
 
-def title(weekly, monthly, spec):
+def title(data, spec):
+    weekly, monthly = data["weekly"], data["monthly"]
     focus = weekly_shares(weekly, spec["dimension"], spec["values"])[spec["values"][0]]
     return spec["title"].format(share=round(focus.iloc[-1] * 100))
 
 
-def render(weekly, monthly, footer_text, style, size, spec):
+def render(data, footer_text, style, size, spec):
+    weekly, monthly = data["weekly"], data["monthly"]
     colors = style["colors"]
     sizes = style["text_sizes"]
     values = spec["values"]
@@ -94,7 +96,7 @@ def render(weekly, monthly, footer_text, style, size, spec):
     last_week_end = x[-1] + pd.Timedelta(days=6)
 
     frame = Frame(style, size)
-    frame.title(title(weekly, monthly, spec))
+    frame.title(title(data, spec))
     frame.subtitle(spec["subtitle"].format(first=x[0].strftime("%b %Y"),
                                            last=last_week_end.strftime("%b %Y")))
     frame.units(style["layout"]["units"])

@@ -67,6 +67,15 @@ Source: OpenRouter (openrouter.ai/rankings), as of Oct 7, 2026.
 Data: OpenRouter public traffic only. Shares, not exact token counts.
 Source: OpenRouter (openrouter.ai/rankings), as of Oct 7, 2026.
 
+## size_share
+
+95% of open-weight tokens on OpenRouter go to Large models.
+
+[One or two sentences on why it matters.]
+
+Data: OpenRouter public traffic only. Shares, not exact token counts.
+Source: OpenRouter (openrouter.ai/rankings), as of Oct 7, 2026.
+
 ## country_leaderboard
 
 Chinese labs carry 49.0% of OpenRouter tokens.
@@ -106,6 +115,24 @@ Source: OpenRouter (openrouter.ai/rankings), as of Oct 7, 2026.
 ## family_ranks
 
 DeepSeek Flash went from outside the top 10 to No. 1 among model families.
+
+[One or two sentences on why it matters.]
+
+Data: OpenRouter public traffic only. Shares, not exact token counts.
+Source: OpenRouter (openrouter.ai/rankings), as of Oct 7, 2026.
+
+## launch_curve
+
+Grok 4.1 Fast hit 25% of OpenRouter tokens one week after launch.
+
+[One or two sentences on why it matters.]
+
+Data: OpenRouter public traffic only. Shares, not exact token counts.
+Source: OpenRouter (openrouter.ai/rankings), as of Oct 7, 2026.
+
+## task_mix
+
+Workflow Execution is the top use of OpenRouter, with 24% of classified tokens.
 
 [One or two sentences on why it matters.]
 

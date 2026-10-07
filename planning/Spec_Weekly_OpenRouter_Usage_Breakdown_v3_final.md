@@ -317,7 +317,12 @@ The build runs in three phases after a sign-off gate, so Dan can post from phase
 
 **Phase 3: extra content and automation**
 
-- [ ] **11. Size, launch curve, task mix.** Check: at least 4 weekly task snapshots exist.
+- [ ] **11. Size, launch curve, task mix.** Check: at least 4 weekly task snapshots exist. Built Oct 7, 2026; the check passes once 4 Mondays have run (about Nov 2; the run report counts the snapshots).
+
+  - **Size (Dan's decision): total parameters.** Small under 30B, Medium 30B-200B, Large over 200B; mixture-of-experts models count all their parameters. Values come from Hugging Face's `safetensors.total` for the repo named in each open model's weights source (129 of 131 automatically; BGE-M3 and Mistral Large 3 by hand from their model cards). Each lookup is saved in that week's `raw/` folder (`hf_sizes.json`), so reruns make no network calls. Closed and stealth models get "n/a" and are left out of the split. Size is a required label: new open models are sized automatically each week. New chart: `size_share` (open-weight tokens by size).
+  - **Launch curve:** share of all tokens for each model added to OpenRouter inside the window, by weeks since it was added (week 0 = the week of its catalog `created` date), first 16 weeks, the 5 biggest launches by peak share. Retired models get a tidied name from their slug (e.g. "Grok 4.1 Fast"). Week-1 spikes are often launch promotions (free at first).
+  - **Task mix:** top 10 tasks by share of classified tokens in OpenRouter's 7-day snapshot, colored by task group (Code, Agent, Data, General) with a key. The change column appears once a snapshot from 21-35 days earlier exists.
+  - A chart with no data that week (e.g. no task snapshot) is skipped, not an error; the run report lists it.
 - [ ] **12. Schedule it.** GitHub Actions, with the API key stored as a repo secret. Check: 2 unattended runs in a row are READY TO POST.
 
 The March and June figures in step 4 come from [an analysis of OpenRouter daily data](https://capitalandcompute.net/blog/open-source-llms-overtake-2026/); they are a sanity check, not a target.

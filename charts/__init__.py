@@ -6,10 +6,11 @@ change week to week.
 
 from datetime import datetime
 
-from charts import leaderboard, race, ranks, share
+from charts import launch, leaderboard, race, ranks, share, tasks
 from charts.frame import load_style
 
-KINDS = {"share": share, "leaderboard": leaderboard, "race": race, "ranks": ranks}
+KINDS = {"share": share, "leaderboard": leaderboard, "race": race, "ranks": ranks,
+         "launch": launch, "tasks": tasks}
 SIZES = ["square", "portrait"]
 
 
@@ -33,15 +34,30 @@ def footer_text(weekly, as_of, style, stealth_note, extra_note=""):
     return text
 
 
-def render_all(weekly, monthly, as_of, out_dir, style=None):
-    """Draw every chart at every size into out_dir. Returns the file paths."""
+def has_data(module, data, spec):
+    """False when a chart has nothing to draw this week (it is then skipped)."""
+    if "dimension" in spec and spec["kind"] in ("share", "leaderboard", "race"):
+        rows = data["weekly"]
+        if not (rows["dimension"].eq(spec["dimension"]) & rows["share"].notna()).any():
+            return False
+    return getattr(module, "available", lambda d: True)(data)
+
+
+def render_all(data, as_of, out_dir, style=None):
+    """Draw every chart at every size into out_dir. Returns the file paths.
+
+    data holds weekly, monthly, rows (per-model rows in the window), models
+    (the registry) and folder (the raw folder), as each chart needs."""
     style = style or load_style()
+    weekly = data["weekly"]
     paths = []
     for name, spec in style["charts"].items():
         module = KINDS[spec["kind"]]
+        if not has_data(module, data, spec):
+            continue  # no data for this chart this week; the run report lists it
         footer = footer_text(weekly, as_of, style, spec.get("stealth_note", False),
                              spec.get("extra_note", ""))
         for size in SIZES:
-            frame = module.render(weekly, monthly, footer, style, size, spec)
+            frame = module.render(data, footer, style, size, spec)
             paths.append(frame.save(out_dir / f"{name}_{size}.png"))
     return paths

@@ -26,10 +26,12 @@ from pathlib import Path
 
 import pandas as pd
 
+import sizes
+
 REGISTRY_DIR = Path("registry")
 RAW_DIR = Path("raw")
-REQUIRED = ["company", "weights", "country", "family",  # required dimensions (phases 1-2)
-            "release_date", "price_tier", "reasoning", "input_type"]
+REQUIRED = ["company", "weights", "country", "family",  # required dimensions (phases 1-3)
+            "release_date", "price_tier", "reasoning", "input_type", "size"]
 MODEL_COLUMNS = (["model_id"] + [c for field in REQUIRED for c in (field, f"{field}_source")]
                  + ["first_seen"])
 # Price tier cutoffs in $ per million tokens, input and output averaged (spec, Decisions)
@@ -253,6 +255,7 @@ def run(folder, registry_dir=REGISTRY_DIR):
     families = read_csv(registry_dir / "families.csv")
     models, new_ids = update_registry(models, labs, load_catalog(folder),
                                       first_seen_dates(rankings), families)
+    models = sizes.fill_sizes(models, folder)
     save_models(models, registry_dir)
     return classify(rankings, models), models, new_ids
 

@@ -67,15 +67,17 @@ def test_every_theme_renders(tmp_path):
     style = phase1_style()
     for theme in style["themes"]:
         style["theme"], style["colors"] = theme, style["themes"][theme]
-        assert len(charts.render_all(weekly_table(), None, "2026-10-07T00:00:00Z",
+        assert len(charts.render_all({"weekly": weekly_table(), "monthly": None}, "2026-10-07T00:00:00Z",
                                      tmp_path / theme, style)) == 4
 
 
 def test_render_all_writes_fixed_names_and_same_bytes_twice(tmp_path):
     weekly = weekly_table()
-    first = charts.render_all(weekly, None, "2026-10-07T02:44:49.638Z", tmp_path / "a",
+    first = charts.render_all({"weekly": weekly, "monthly": None}, "2026-10-07T02:44:49.638Z",
+                              tmp_path / "a",
                               phase1_style())
-    second = charts.render_all(weekly, None, "2026-10-07T02:44:49.638Z", tmp_path / "b",
+    second = charts.render_all({"weekly": weekly, "monthly": None}, "2026-10-07T02:44:49.638Z",
+                               tmp_path / "b",
                                phase1_style())
     assert sorted(p.name for p in first) == [
         "company_leaderboard_portrait.png", "company_leaderboard_square.png",

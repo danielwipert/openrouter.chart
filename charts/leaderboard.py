@@ -31,7 +31,8 @@ def headline(table, spec):
     return template.format(name=name, share=f"{top['share'] * 100:.1f}")
 
 
-def title(weekly, monthly, spec):
+def title(data, spec):
+    weekly, monthly = data["weekly"], data["monthly"]
     return headline(latest_and_before(weekly, spec["dimension"])[1], spec)
 
 
@@ -43,7 +44,8 @@ def change_text(points):
     return f"{'+' if points > 0 else '−'}{abs(points):.1f}"
 
 
-def render(weekly, monthly, footer_text, style, size, spec):
+def render(data, footer_text, style, size, spec):
+    weekly, monthly = data["weekly"], data["monthly"]
     colors = style["colors"]
     sizes = style["text_sizes"]
     latest, table = latest_and_before(weekly, spec["dimension"])
