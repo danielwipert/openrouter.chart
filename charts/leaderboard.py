@@ -1,12 +1,10 @@
 """Leaderboard: ranked horizontal bars for the latest week, with the change vs
-4 weeks earlier (spec, "Content library"). Phase 1 draws company.
+4 weeks earlier (spec, "Content library"). Draws company and country.
 """
 
 import pandas as pd
 
 from charts.frame import Frame
-
-STEALTH = "Stealth (undisclosed)"
 
 
 def latest_and_before(weekly, dimension, weeks_back=4):
@@ -20,16 +18,21 @@ def latest_and_before(weekly, dimension, weeks_back=4):
     return latest, table.reset_index(drop=True)
 
 
-def leader(table):
-    """The top company, skipping stealth. Returns (row, stealth_is_on_top)."""
-    named = table[table["value"] != STEALTH]
-    return named.iloc[0], table.iloc[0]["value"] == STEALTH
+def leader(table, stealth_value):
+    """The top named value, skipping stealth. Returns (row, stealth_is_on_top)."""
+    named = table[table["value"] != stealth_value]
+    return named.iloc[0], table.iloc[0]["value"] == stealth_value
 
 
-def headline(table, text):
-    top, stealth_on_top = leader(table)
-    template = text["title_stealth_top"] if stealth_on_top else text["title"]
-    return template.format(company=top["value"], share=f"{top['share'] * 100:.1f}")
+def headline(table, spec):
+    top, stealth_on_top = leader(table, spec["stealth_value"])
+    name = spec.get("demonyms", {}).get(top["value"], top["value"])
+    template = spec["title_stealth_top"] if stealth_on_top else spec["title"]
+    return template.format(name=name, share=f"{top['share'] * 100:.1f}")
+
+
+def title(weekly, monthly, spec):
+    return headline(latest_and_before(weekly, spec["dimension"])[1], spec)
 
 
 def change_text(points):
@@ -40,19 +43,18 @@ def change_text(points):
     return f"{'+' if points > 0 else '−'}{abs(points):.1f}"
 
 
-def render(weekly, footer_text, style, size):
-    text = style["text"]["company_leaderboard"]
+def render(weekly, monthly, footer_text, style, size, spec):
     colors = style["colors"]
     sizes = style["text_sizes"]
-    latest, table = latest_and_before(weekly, "company")
+    latest, table = latest_and_before(weekly, spec["dimension"])
     rows = table.head(style["layout"]["leaderboard_rows"]).reset_index(drop=True)
-    top, _ = leader(table)
+    top, _ = leader(table, spec["stealth_value"])
     week_start = pd.Timestamp(latest)
     week_end = week_start + pd.Timedelta(days=6)
 
     frame = Frame(style, size)
-    frame.title(headline(table, text))
-    frame.subtitle(text["subtitle"].format(
+    frame.title(headline(table, spec))
+    frame.subtitle(spec["subtitle"].format(
         week=f"{week_start.strftime('%b %-d')} to {week_end.strftime('%b %-d, %Y')}"))
     frame.footer(footer_text)
     frame.cursor -= 44  # room for the axis numbers above the bars
@@ -78,16 +80,17 @@ def render(weekly, footer_text, style, size):
     ax.set_yticks([])
 
     edge = ax.get_yaxis_transform()
-    ax.text(1.0 + 130 / ax.bbox.width, 1.0 + 8 / ax.bbox.height, text["change_header"],
+    right = 1.0 + 130 / ax.bbox.width
+    ax.text(right, 1.0 + 8 / ax.bbox.height, style["layout"]["change_header"],
             transform=ax.transAxes, ha="right", va="bottom", color=colors["text_muted"],
             fontproperties=frame.font("regular", sizes["axis"]))
     for i, row in rows.iterrows():
         is_top = row["value"] == top["value"]
-        is_stealth = row["value"] == STEALTH
+        is_stealth = row["value"] == spec["stealth_value"]
         color = (colors["bar_muted"] if is_stealth else
                  colors["bar_lead"] if is_top else colors["bar"])
         ax.barh(i, row["share"], height=0.62, color=color, linewidth=0, zorder=2)
-        name = text["stealth_label"] if is_stealth else row["value"]
+        name = spec["stealth_label"] if is_stealth else row["value"]
         ax.text(-16 / ax.bbox.width, i, name, transform=edge, ha="right", va="center",
                 color=colors["text"],
                 fontproperties=frame.font("semibold" if is_top else "regular",
@@ -98,8 +101,7 @@ def render(weekly, footer_text, style, size):
                     fontproperties=frame.font("semibold" if is_top else "regular",
                                               sizes["bar_value"]))
         points = (row["share"] - row["before"]) * 100
-        ax.text(1.0 + 130 / ax.bbox.width, i, change_text(points), transform=edge,
-                ha="right", va="center",
+        ax.text(right, i, change_text(points), transform=edge, ha="right", va="center",
                 color=(colors["text_muted"] if pd.isna(points) or round(points, 1) == 0 else
                        colors["up"] if points > 0 else colors["down"]),
                 fontproperties=frame.font("medium", sizes["bar_value"]))

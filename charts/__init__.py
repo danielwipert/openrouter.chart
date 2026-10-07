@@ -1,17 +1,15 @@
-"""Pipeline step 5 (charts): build every live chart at both LinkedIn sizes.
+"""Pipeline step 5 (charts): build every chart in style.yaml at both LinkedIn sizes.
 
-Files are named {dimension}_{chart}_{size}.png and never change week to week.
+Files are named {chart}_{size}.png (e.g. weights_share_square.png) and never
+change week to week.
 """
 
 from datetime import datetime
 
-from charts import leaderboard, share
+from charts import leaderboard, race, ranks, share
 from charts.frame import load_style
 
-CHARTS = {  # file name prefix -> (chart module, adds the stealth note to the footer)
-    "weights_share": (share, True),
-    "company_leaderboard": (leaderboard, False),
-}
+KINDS = {"share": share, "leaderboard": leaderboard, "race": race, "ranks": ranks}
 SIZES = ["square", "portrait"]
 
 
@@ -21,7 +19,7 @@ def latest_rows(weekly, dimension="weights"):
     return rows.set_index("value")["share_of_all"]
 
 
-def footer_text(weekly, as_of, style, stealth_note):
+def footer_text(weekly, as_of, style, stealth_note, extra_note=""):
     share_of_all = latest_rows(weekly)
     coverage = 1 - share_of_all.get("other", 0) - share_of_all.get("unknown", 0)
     as_of_text = datetime.fromisoformat(as_of.replace("Z", "+00:00")).strftime("%b %-d, %Y")
@@ -30,16 +28,20 @@ def footer_text(weekly, as_of, style, stealth_note):
     if stealth_note:
         stealth = share_of_all.get("stealth", 0)
         text += " " + style["text"]["footer_stealth"].format(stealth=f"{stealth * 100:.0f}")
+    if extra_note:
+        text = extra_note + " " + text
     return text
 
 
-def render_all(weekly, as_of, out_dir, style=None):
+def render_all(weekly, monthly, as_of, out_dir, style=None):
     """Draw every chart at every size into out_dir. Returns the file paths."""
     style = style or load_style()
     paths = []
-    for name, (module, stealth_note) in CHARTS.items():
-        footer = footer_text(weekly, as_of, style, stealth_note)
+    for name, spec in style["charts"].items():
+        module = KINDS[spec["kind"]]
+        footer = footer_text(weekly, as_of, style, spec.get("stealth_note", False),
+                             spec.get("extra_note", ""))
         for size in SIZES:
-            frame = module.render(weekly, footer, style, size)
+            frame = module.render(weekly, monthly, footer, style, size, spec)
             paths.append(frame.save(out_dir / f"{name}_{size}.png"))
     return paths

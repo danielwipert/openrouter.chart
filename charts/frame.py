@@ -11,6 +11,7 @@ from pathlib import Path
 import matplotlib
 
 matplotlib.use("Agg")  # draw to files only; no screen needed
+matplotlib.rcParams["text.parse_math"] = False  # "$0.50" is money, not a formula
 import matplotlib.pyplot as plt  # noqa: E402
 import yaml  # noqa: E402
 from matplotlib.font_manager import FontProperties  # noqa: E402
@@ -66,8 +67,12 @@ class Frame:
     # --- top block -------------------------------------------------------------
 
     def title(self, text):
-        size = self.sizes["title"]
-        lines = textwrap.wrap(text, self.style["layout"]["title_wrap"])
+        """Bold title; a long one gets a smaller size so it fits on two lines."""
+        size, wrap = self.sizes["title"], self.style["layout"]["title_wrap"]
+        lines = textwrap.wrap(text, wrap)
+        while len(lines) > 2 and size > 34:
+            size -= 4
+            lines = textwrap.wrap(text, int(wrap * self.sizes["title"] / size))
         self.text(self.margin["left"], self.cursor, "\n".join(lines), "bold", size,
                   self.colors["text"], va="top")
         self.cursor -= len(lines) * size * LINE_HEIGHT + 10

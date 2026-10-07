@@ -306,7 +306,14 @@ The build runs in three phases after a sign-off gate, so Dan can post from phase
   - **Free variant** = Free vs Paid from the `:free` suffix on each traffic row; it isn't stored in the registry.
   - Stealth models get "Undisclosed" for price tier, reasoning and input type, and are left out of those splits, as for weights.
   - 51 retired models (4.9% of tokens) aren't in today's catalog. Their four values were researched by hand from OpenRouter's model pages and archived price lists, each with a source link; 4 are marked low confidence (prices that changed while live).
-- [ ] **10. More charts.** Share race, rank changes, country leaderboard, extra share-over-time charts. Check: Dan approves each.
+- [ ] **10. More charts.** Share race, rank changes, country leaderboard, extra share-over-time charts. Check: Dan approves each. Built Oct 7, 2026 (awaiting Dan's approval): 11 charts x 2 sizes per week, each defined by one entry under `charts:` in `style.yaml`.
+
+  - **Share over time** (weights, price tier, free, input type, reasoning): labels sit on each band where it is thickest; the latest share of the bottom band is in a marker; two-way splits add the dashed 50% line and the crossover note.
+  - **Leaderboard** (company, country): country titles use the adjective ("Chinese labs"); stealth shows as "Undisclosed (stealth models)".
+  - **Share race** (company, family): **today's** top six by share, plus stealth (grey) and all others (light grey). Labels sit at the right edge with a color swatch and are spaced so they never overlap. The title names the biggest gainer (first 4 weeks vs last 4 weeks), or "went from almost nothing" if it started near zero.
+  - **Rank changes** (company, family): **monthly** rank (full months only; weekly ranks were too jumpy to read), today's top eight named, ranks 1-10 shown. Today's top three plus the title's subject are colored; the rest are grey. The title is the biggest visible climber, or a newcomer that reached the top, never a fall described as a climb.
+  - Multi-value colors: Chorus blue `#0088B0`, orange `#EB6834`, aqua `#1BAF7A`, yellow `#EDA100`, deep magenta `#C2185B`, violet `#4A3AA7`, then stealth grey `#A6A6A6` and all-others grey `#DCDCDC`. Passes the color-blind check (worst neighbouring pair ΔE 9.1); labels are always black text beside a color swatch.
+  - `caption.md` has a draft for every chart: the two full templates plus a short one (`captions/short.md`) using each chart's own title.
 
 **Phase 3: extra content and automation**
 

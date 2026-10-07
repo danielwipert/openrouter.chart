@@ -9,10 +9,12 @@ from pathlib import Path
 
 import pandas as pd
 
+import charts
 import checks
 import classify
 from charts import leaderboard, share
 
+STEALTH = "Stealth (undisclosed)"  # company value for stealth models
 CAPTIONS_DIR = Path(__file__).resolve().parent / "captions"
 LICENSE_LINE = ("# Source: OpenRouter (openrouter.ai/rankings), as of {as_of}. "
                 "Licensed under CC BY 4.0.\n")
@@ -73,12 +75,12 @@ def weights_caption(weekly, df, as_of_text):
 
 def company_caption(weekly, as_of_text):
     latest, table = leaderboard.latest_and_before(weekly, "company")
-    top, stealth_on_top = leaderboard.leader(table)
-    named = table[table["value"] != leaderboard.STEALTH].head(5).reset_index(drop=True)
+    top, stealth_on_top = leaderboard.leader(table, STEALTH)
+    named = table[table["value"] != STEALTH].head(5).reset_index(drop=True)
     top5 = "\n".join(f"{i + 1}. {row['value']}: {row['share']:.1%} "
                      f"({points((row['share'] - row['before']) * 100)})"
                      for i, row in named.iterrows())
-    stealth = table[table["value"] == leaderboard.STEALTH]
+    stealth = table[table["value"] == STEALTH]
     stealth_line = (f"Stealth models (maker not yet revealed) took {stealth['share'].iloc[0]:.1%}"
                     + (", more than any named lab." if stealth_on_top else ".")
                     if len(stealth) else "")
@@ -91,11 +93,22 @@ def company_caption(weekly, as_of_text):
                            week=week, top5=top5, stealth_line=stealth_line, as_of=as_of_text)
 
 
-def write_captions(weekly, df, as_of_text, path):
+def short_caption(chart_title, as_of_text):
+    template = (CAPTIONS_DIR / "short.md").read_text(encoding="utf-8")
+    return template.format(title=chart_title, as_of=as_of_text)
+
+
+def write_captions(weekly, monthly, df, as_of_text, path, style=None):
+    style = style or charts.load_style()
     parts = ["# Draft captions", "",
              "Templates are in captions/. Edit the wording before posting.", "",
              "## weights_share", "", weights_caption(weekly, df, as_of_text).strip(), "",
              "## company_leaderboard", "", company_caption(weekly, as_of_text).strip(), ""]
+    for name, spec in style["charts"].items():
+        if name in ("weights_share", "company_leaderboard"):
+            continue
+        chart_title = charts.KINDS[spec["kind"]].title(weekly, monthly, spec)
+        parts += [f"## {name}", "", short_caption(chart_title, as_of_text).strip(), ""]
     path.write_text("\n".join(parts), encoding="utf-8")
 
 
@@ -148,6 +161,6 @@ def write_all(out_dir, folder, weekly, monthly, df, models, check_list, chart_pa
     out_dir.mkdir(parents=True, exist_ok=True)
     write_csv(weekly, out_dir / "weekly.csv", as_of)
     write_csv(monthly, out_dir / "monthly.csv", as_of)
-    write_captions(weekly, df, as_of_text, out_dir / "caption.md")
+    write_captions(weekly, monthly, df, as_of_text, out_dir / "caption.md")
     write_report(check_list, models, weekly, chart_paths, out_dir / "run_report.md")
     write_meta(folder, checks.load_metas(folder), weekly, out_dir / "meta.json")

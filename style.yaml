@@ -53,9 +53,17 @@ themes:
     up: "#0088B0"
     down: "#C2185B"
     stripe: ["#0088B0", "#D5006C", "#F2C400"]   # Chorus rings in the footer mark
+    # Multi-value charts: 6 colors in a fixed order (color-blind checked), then
+    # a neutral grey for stealth and a light grey for "all others".
+    categorical: ["#0088B0", "#EB6834", "#1BAF7A", "#EDA100", "#C2185B", "#4A3AA7"]
+    stealth_fill: "#A6A6A6"
+    others_fill: "#DCDCDC"
+    line_muted: "#C8C8C8"
 
 layout:
   title_wrap: 33          # characters per title line
+  units: "% of tokens"
+  change_header: "vs 4 wks ago"
   chart_height: 0.60      # share of the image height for the chart area
   gap_after_subtitle: 34
   leaderboard_rows: 10
@@ -65,17 +73,116 @@ text:
   footer_stealth: "Excludes stealth models ({stealth}% of tokens in the latest week)."
   branding_name: "Daniel Wipert"
   branding_company: "Chorus AI Systems"
+
+# One entry per chart. File names are {chart}_{size}.png and never change.
+# kind: share (100% stacked area), leaderboard (bars, latest week),
+#       race (top 6 + stealth + all others, stacked), ranks (monthly rank lines)
+charts:
   weights_share:
+    kind: share
+    dimension: weights
+    values: [open, closed]                 # bottom band first
+    labels: ["Open-weight", "Closed-weight"]
+    fills: ["#6FCDE3", "#F6A6AE"]
+    inks: ["#0088B0", "#C2185B"]           # label colors written on each band
+    stealth_note: true
     title: "Open-weight models now carry {share}% of OpenRouter tokens"
     subtitle: "Weekly share of tokens, open v closed weights, {first} to {last}"
-    units: "% of tokens"
-    open: "Open-weight"
-    closed: "Closed-weight"
-    crossover_bubble: "{date}"
     crossover_note: "Open-weight models passed half of all tokens in the week of {date}, and have stayed above it since"
+  price_tier_share:
+    kind: share
+    dimension: price_tier
+    values: [Budget, Mid, Premium]
+    labels: ["Budget", "Mid", "Premium"]
+    fills: ["#0088B0", "#6FCDE3", "#C6EBF4"]
+    inks: ["#FFFFFF", "#00546D", "#00546D"]
+    stealth_note: true
+    extra_note: "Budget: under $0.50 per million tokens; Mid: $0.50-$5; Premium: over $5 (input and output price averaged)."
+    title: "Budget models now carry {share}% of OpenRouter tokens"
+    subtitle: "Weekly share of tokens by price tier, {first} to {last}"
+  free_share:
+    kind: share
+    dimension: free
+    values: [Free, Paid]
+    labels: ["Free versions", "Paid"]
+    fills: ["#6FCDE3", "#F6A6AE"]
+    inks: ["#0088B0", "#C2185B"]
+    stealth_note: false
+    title: "Free model versions carry {share}% of OpenRouter tokens"
+    subtitle: "Weekly share of tokens, free v paid versions, {first} to {last}"
+  input_type_share:
+    kind: share
+    dimension: input_type
+    values: [Multimodal, Text only]
+    labels: ["Multimodal", "Text only"]
+    fills: ["#6FCDE3", "#F6A6AE"]
+    inks: ["#0088B0", "#C2185B"]
+    stealth_note: true
+    title: "Multimodal models carry {share}% of OpenRouter tokens"
+    subtitle: "Weekly share of tokens by input type, {first} to {last}"
+  reasoning_share:
+    kind: share
+    dimension: reasoning
+    values: ["Yes", "No"]
+    labels: ["Can reason", "No reasoning mode"]
+    fills: ["#6FCDE3", "#F6A6AE"]
+    inks: ["#0088B0", "#C2185B"]
+    stealth_note: true
+    title: "{share}% of OpenRouter tokens go to models that can reason"
+    subtitle: "Weekly share of tokens, with v without reasoning, {first} to {last}"
   company_leaderboard:
-    title: "{company} leads OpenRouter with {share}% of tokens"
-    title_stealth_top: "{company} leads the named labs on OpenRouter with {share}% of tokens"
-    subtitle: "% of tokens by company, {week}"
-    change_header: "vs 4 wks ago"
+    kind: leaderboard
+    dimension: company
+    stealth_value: "Stealth (undisclosed)"
     stealth_label: "Stealth (maker undisclosed)"
+    title: "{name} leads OpenRouter with {share}% of tokens"
+    title_stealth_top: "{name} leads the named labs on OpenRouter with {share}% of tokens"
+    subtitle: "% of tokens by company, {week}"
+  country_leaderboard:
+    kind: leaderboard
+    dimension: country
+    stealth_value: "Undisclosed"
+    stealth_label: "Undisclosed (stealth models)"
+    demonyms: {China: Chinese, United States: American, France: French, Germany: German,
+               South Korea: South Korean, Canada: Canadian}
+    title: "{name} labs carry {share}% of OpenRouter tokens"
+    title_stealth_top: "{name} labs carry {share}% of OpenRouter tokens, more than any other named country"
+    subtitle: "% of tokens by country of the lab's headquarters, {week}"
+  company_race:
+    kind: race
+    dimension: company
+    stealth_value: "Stealth (undisclosed)"
+    stealth_label: "Stealth"
+    others_label: "All others"
+    title: "{name} rose from {before}% to {after}% of OpenRouter tokens in a year"
+    subtitle: "Weekly share of tokens, today's top six companies, {first} to {last}"
+    title_flat: "{name} leads OpenRouter with {after}% of tokens"
+    title_from_zero: "{name} went from almost nothing to {after}% of OpenRouter tokens in a year"
+  family_race:
+    kind: race
+    dimension: family
+    stealth_value: "Stealth (undisclosed)"
+    stealth_label: "Stealth"
+    others_label: "All others"
+    title: "{name} rose from {before}% to {after}% of OpenRouter tokens in a year"
+    subtitle: "Weekly share of tokens, today's top six families, {first} to {last}"
+    title_flat: "{name} leads OpenRouter with {after}% of tokens"
+    title_from_zero: "{name} went from almost nothing to {after}% of OpenRouter tokens in a year"
+  company_ranks:
+    kind: ranks
+    dimension: company
+    stealth_value: "Stealth (undisclosed)"
+    top: 8
+    title: "{name} climbed from No.\u00a0{before} to No.\u00a0{after} among OpenRouter's labs"
+    title_newcomer: "{name} went from outside the top 10 to No.\u00a0{after} among OpenRouter's labs"
+    title_steady: "{name} holds No.\u00a01 among OpenRouter's labs"
+    subtitle: "Monthly rank by share of tokens, named companies, {first} to {last}"
+  family_ranks:
+    kind: ranks
+    dimension: family
+    stealth_value: "Stealth (undisclosed)"
+    top: 8
+    title: "{name} climbed from No.\u00a0{before} to No.\u00a0{after} among model families"
+    title_newcomer: "{name} went from outside the top 10 to No.\u00a0{after} among model families"
+    title_steady: "{name} holds No.\u00a01 among model families"
+    subtitle: "Monthly rank by share of tokens, named model families, {first} to {last}"

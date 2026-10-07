@@ -1,7 +1,7 @@
 import pandas as pd
 
 import charts
-from charts import leaderboard, share
+from charts import leaderboard, race, ranks, share
 
 
 def weekly_table():
@@ -36,10 +36,10 @@ def test_leaderboard_change_and_headline():
     latest, table = leaderboard.latest_and_before(weekly_table(), "company")
     assert list(table["value"]) == ["Stealth (undisclosed)", "DeepSeek", "OpenAI"]
     # ties sort by name; stealth on top -> headline names the top named lab
-    text = {"title": "{company} leads with {share}%",
-            "title_stealth_top": "{company} leads named labs with {share}%"}
-    assert leaderboard.headline(table, text) == "DeepSeek leads named labs with 30.0%"
-    top, stealth_on_top = leaderboard.leader(table)
+    spec = {"stealth_value": "Stealth (undisclosed)", "title": "{name} leads with {share}%",
+            "title_stealth_top": "{name} leads named labs with {share}%"}
+    assert leaderboard.headline(table, spec) == "DeepSeek leads named labs with 30.0%"
+    top, stealth_on_top = leaderboard.leader(table, "Stealth (undisclosed)")
     assert (top["value"], top["share"], stealth_on_top) == ("DeepSeek", 0.3, True)
     assert leaderboard.change_text(-5.0) == "−5.0"
     assert leaderboard.change_text(2.25) == "+2.2"
@@ -55,20 +55,60 @@ def test_footer_text_has_source_coverage_and_stealth_note():
     assert "Excludes stealth models (15% of tokens in the latest week)" in text
 
 
-def test_every_theme_renders(tmp_path):
+def phase1_style():
+    """Only the charts this small sample can feed (weights and company)."""
     style = charts.load_style()
+    style["charts"] = {k: v for k, v in style["charts"].items()
+                       if k in ("weights_share", "company_leaderboard")}
+    return style
+
+
+def test_every_theme_renders(tmp_path):
+    style = phase1_style()
     for theme in style["themes"]:
         style["theme"], style["colors"] = theme, style["themes"][theme]
-        assert len(charts.render_all(weekly_table(), "2026-10-07T00:00:00Z", tmp_path / theme,
-                                     style)) == 4
+        assert len(charts.render_all(weekly_table(), None, "2026-10-07T00:00:00Z",
+                                     tmp_path / theme, style)) == 4
 
 
 def test_render_all_writes_fixed_names_and_same_bytes_twice(tmp_path):
     weekly = weekly_table()
-    first = charts.render_all(weekly, "2026-10-07T02:44:49.638Z", tmp_path / "a")
-    second = charts.render_all(weekly, "2026-10-07T02:44:49.638Z", tmp_path / "b")
+    first = charts.render_all(weekly, None, "2026-10-07T02:44:49.638Z", tmp_path / "a",
+                              phase1_style())
+    second = charts.render_all(weekly, None, "2026-10-07T02:44:49.638Z", tmp_path / "b",
+                               phase1_style())
     assert sorted(p.name for p in first) == [
         "company_leaderboard_portrait.png", "company_leaderboard_square.png",
         "weights_share_portrait.png", "weights_share_square.png"]
     for a, b in zip(first, second):
         assert a.read_bytes() == b.read_bytes()
+
+
+# --- Race and ranks ------------------------------------------------------------
+
+def test_spread_labels_keeps_a_minimum_gap_and_stays_in_range():
+    placed = race.spread_labels([0.10, 0.11, 0.12, 0.98], gap=0.05)
+    gaps = sorted(placed)
+    assert all(b - a >= 0.05 - 1e-9 for a, b in zip(gaps, gaps[1:]))
+    assert max(placed) <= 1.0 and min(placed) >= 0.0
+
+
+def test_race_table_adds_stealth_and_others_to_100():
+    table, top = race.race_table(weekly_table(), "company", "Stealth (undisclosed)")
+    assert top == ["DeepSeek", "OpenAI"]
+    assert (table.sum(axis=1).round(9) == 1).all()
+    name, before, after = race.biggest_gainer(table, top)
+    assert name == "OpenAI" and after > before
+
+
+def test_ranks_title_tells_a_story_that_is_on_the_chart():
+    monthly = pd.DataFrame([
+        {"period": p, "dimension": "family", "value": v, "share": s, "partial": False}
+        for p, shares in [("2026-01-01", {"A": 0.5, "B": 0.3, "C": 0.2}),
+                          ("2026-02-01", {"B": 0.5, "A": 0.3, "C": 0.1, "D": 0.1})]
+        for v, s in shares.items()])
+    table = ranks.monthly_ranks(monthly, "family", "Stealth (undisclosed)")
+    spec = {"title": "{name} climbed from {before} to {after}",
+            "title_newcomer": "{name} new at {after}", "title_steady": "{name} holds"}
+    names = list(table.iloc[-1].sort_values().index)
+    assert ranks.headline_story(table, names, spec) == ("B", "B climbed from 2 to 1")

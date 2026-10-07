@@ -5,6 +5,7 @@ from datetime import date, timedelta
 
 import pandas as pd
 
+import charts
 import run_weekly
 
 FETCH_DAY = date(2026, 10, 14)
@@ -63,11 +64,10 @@ def test_same_raw_data_gives_identical_files(tmp_path):
 
     assert out_a.name == "2026-W41"  # Oct 5-11, the last complete week before Oct 14
     files = sorted(p.relative_to(out_a) for p in out_a.rglob("*") if p.is_file())
-    assert [str(f) for f in files] == [
-        "caption.md", "charts/company_leaderboard_portrait.png",
-        "charts/company_leaderboard_square.png", "charts/weights_share_portrait.png",
-        "charts/weights_share_square.png", "meta.json", "monthly.csv", "run_report.md",
-        "weekly.csv"]
+    chart_names = sorted(f"charts/{name}_{size}.png" for name in charts.load_style()["charts"]
+                         for size in ("square", "portrait"))
+    assert [str(f) for f in files] == sorted(
+        ["caption.md", "meta.json", "monthly.csv", "run_report.md", "weekly.csv"] + chart_names)
     for f in files:
         assert (out_a / f).read_bytes() == (out_b / f).read_bytes(), f
 

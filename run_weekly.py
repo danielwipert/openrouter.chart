@@ -41,7 +41,7 @@ def run(folder, registry_dir=classify.REGISTRY_DIR, output_dir=OUTPUT_DIR, style
     out_dir = output_dir / label
     as_of = checks.load_metas(folder)[-1]["as_of"]
     as_of_text = datetime.fromisoformat(as_of.replace("Z", "+00:00")).strftime("%b %-d, %Y")
-    chart_paths = charts.render_all(weekly, as_of, out_dir / "charts", style)
+    chart_paths = charts.render_all(weekly, monthly, as_of, out_dir / "charts", style)
     write_outputs.write_all(out_dir, folder, weekly, monthly, df, models, check_list,
                             chart_paths, as_of, as_of_text)
     return out_dir, check_list

@@ -36,5 +36,23 @@
 
 - charts/weights_share_square.png
 - charts/weights_share_portrait.png
+- charts/price_tier_share_square.png
+- charts/price_tier_share_portrait.png
+- charts/free_share_square.png
+- charts/free_share_portrait.png
+- charts/input_type_share_square.png
+- charts/input_type_share_portrait.png
+- charts/reasoning_share_square.png
+- charts/reasoning_share_portrait.png
 - charts/company_leaderboard_square.png
 - charts/company_leaderboard_portrait.png
+- charts/country_leaderboard_square.png
+- charts/country_leaderboard_portrait.png
+- charts/company_race_square.png
+- charts/company_race_portrait.png
+- charts/family_race_square.png
+- charts/family_race_portrait.png
+- charts/company_ranks_square.png
+- charts/company_ranks_portrait.png
+- charts/family_ranks_square.png
+- charts/family_ranks_portrait.png

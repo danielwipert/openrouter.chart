@@ -1,12 +1,15 @@
 """Share over time: 100% stacked area of weekly token share (spec, "Chart design").
 
-Phase 1 draws weights: open-weight on the bottom, closed-weight on top,
-with a dashed 50% line. Stealth models are left out of the split.
+One function draws every share chart in style.yaml (weights, price tier, free,
+input type, reasoning): bands bottom to top in the configured order, labels
+written on the bands, the latest share of the bottom band in a marker, and for
+two-way splits a dashed 50% line with the crossover marked.
 """
 
 import textwrap
 
 import matplotlib.dates as mdates
+import numpy as np
 import pandas as pd
 from matplotlib.patches import Ellipse
 
@@ -15,9 +18,10 @@ from charts.frame import Frame
 
 def weekly_shares(weekly, dimension, values):
     rows = weekly[(weekly["dimension"] == dimension) & weekly["value"].isin(values)]
-    table = rows.pivot(index="period", columns="value", values="share").fillna(0)
+    table = rows.pivot(index="period", columns="value", values="share")
+    table = table.reindex(columns=values).fillna(0)
     table.index = pd.to_datetime(table.index)
-    return table[values].sort_index()
+    return table.sort_index()
 
 
 def lasting_crossover(series):
@@ -41,6 +45,17 @@ def month_ticks(ax, start, end, frame):
     ax.tick_params(axis="x", length=6, width=1, color=frame.colors["text_muted"], pad=8)
 
 
+def percent_axis(ax, frame, pad=10):
+    """0-100 axis on the right, grey numbers, no tick marks."""
+    ax.set_ylim(0, 1)
+    ax.yaxis.tick_right()
+    ax.set_yticks([0, 0.25, 0.5, 0.75, 1], ["0", "25", "50", "75", "100"])
+    for label in ax.get_yticklabels():
+        label.set_fontproperties(frame.font("regular", frame.sizes["axis"]))
+        label.set_color(frame.colors["text_muted"])
+    ax.tick_params(axis="y", length=0, pad=pad)
+
+
 def bubble(ax, frame, x, y, text, color, radius_px):
     """A filled circle on the data with white text inside (like a year marker)."""
     px_per_x = ax.bbox.width / (ax.get_xlim()[1] - ax.get_xlim()[0])
@@ -52,67 +67,84 @@ def bubble(ax, frame, x, y, text, color, radius_px):
             fontproperties=frame.font("semibold", frame.sizes["bubble"]), clip_on=False)
 
 
-def render(weekly, footer_text, style, size):
-    text = style["text"]["weights_share"]
+def label_spot(bottom, top, start_fraction=0.35, end_fraction=0.85):
+    """Index of the week where a band is thickest, looking at the later part of
+    the chart (labels read best near the present) but not at its right edge."""
+    first, last = int(len(bottom) * start_fraction), int(len(bottom) * end_fraction)
+    thickness = (top - bottom)[first:last]
+    if thickness.max() < 0.15:  # thin band late on: use its thickest week anywhere
+        first = int(len(bottom) * 0.05)
+        thickness = (top - bottom)[first:last]
+    return first + int(np.argmax(thickness))
+
+
+def title(weekly, monthly, spec):
+    focus = weekly_shares(weekly, spec["dimension"], spec["values"])[spec["values"][0]]
+    return spec["title"].format(share=round(focus.iloc[-1] * 100))
+
+
+def render(weekly, monthly, footer_text, style, size, spec):
     colors = style["colors"]
     sizes = style["text_sizes"]
-    shares = weekly_shares(weekly, "weights", ["open", "closed"])
-    x, open_, closed = shares.index, shares["open"], shares["closed"]
+    values = spec["values"]
+    shares = weekly_shares(weekly, spec["dimension"], values)
+    x = shares.index
     xn = mdates.date2num(x)
+    focus = shares[values[0]]
     last_week_end = x[-1] + pd.Timedelta(days=6)
 
     frame = Frame(style, size)
-    frame.title(text["title"].format(share=round(open_.iloc[-1] * 100)))
-    frame.subtitle(text["subtitle"].format(first=x[0].strftime("%b %Y"),
+    frame.title(title(weekly, monthly, spec))
+    frame.subtitle(spec["subtitle"].format(first=x[0].strftime("%b %Y"),
                                            last=last_week_end.strftime("%b %Y")))
-    frame.units(text["units"])
+    frame.units(style["layout"]["units"])
     frame.footer(footer_text)
     ax = frame.chart_area(right_px=96, below_px=66)
-
-    # Bands, with a white line between them and white gridlines on top
-    ax.fill_between(xn, 0, open_, color=colors["open"], linewidth=0, zorder=1)
-    ax.fill_between(xn, open_, 1, color=colors["closed"], linewidth=0, zorder=1)
-    ax.plot(xn, open_, color=colors["background"], linewidth=2.5, zorder=2)
-    for y in (0.25, 0.75):
-        ax.axhline(y, color=colors["background"], linewidth=1.2, alpha=0.9, zorder=2)
-    ax.axhline(0.5, color=colors["reference_line"], linewidth=1.6, linestyle=(0, (5, 3)),
-               zorder=3)
-
     ax.set_xlim(xn[0], xn[-1])
-    ax.set_ylim(0, 1)
-    ax.yaxis.tick_right()
-    ax.set_yticks([0, 0.25, 0.5, 0.75, 1], ["0", "25", "50", "75", "100"])
-    for label in ax.get_yticklabels():
-        label.set_fontproperties(frame.font("regular", sizes["axis"]))
-        label.set_color(colors["text_muted"])
-    ax.tick_params(axis="y", length=0, pad=48)  # room for the end marker
+    percent_axis(ax, frame, pad=48)  # room for the end marker
     month_ticks(ax, x[0], x[-1], frame)
 
-    # Labels written on the bands
-    i_open = int(len(xn) * 0.72)
-    ax.text(xn[i_open], open_.iloc[i_open] * 0.42, text["open"], ha="center", va="center",
-            color=colors["open_dark"], fontproperties=frame.font("bold", sizes["label"]),
-            zorder=4)
-    i_closed = int(len(xn) * 0.62)
-    ax.text(xn[i_closed], (1 + open_.iloc[i_closed]) / 2 + 0.03, text["closed"],
-            ha="center", va="center", color=colors["closed_dark"],
-            fontproperties=frame.font("bold", sizes["label"]), zorder=4)
+    # Bands, a white line between each, white gridlines on top
+    bottom = np.zeros(len(x))
+    edges = []
+    for value, fill in zip(values, spec["fills"]):
+        top = bottom + shares[value].to_numpy()
+        ax.fill_between(xn, bottom, top, color=fill, linewidth=0, zorder=1)
+        edges.append((bottom, top))
+        bottom = top
+    for lower, _ in edges[1:]:
+        ax.plot(xn, lower, color=colors["background"], linewidth=2.5, zorder=2)
+    for y in (0.25, 0.75):
+        ax.axhline(y, color=colors["background"], linewidth=1.2, alpha=0.9, zorder=2)
 
-    # Latest share in a marker at the right edge
-    bubble(ax, frame, xn[-1], open_.iloc[-1], f"{open_.iloc[-1]:.0%}", colors["open_dark"], 33)
+    # Labels written on each band, where it is thickest
+    for (lower, upper), label, ink in zip(edges, spec["labels"], spec["inks"]):
+        i = label_spot(lower, upper)
+        if upper[i] - lower[i] > 0.07:
+            y = (lower[i] + upper[i]) / 2
+            if len(values) == 2 and abs(y - 0.5) < 0.05:  # step off the dashed 50% line
+                y = 0.5 + 0.06 if y >= 0.5 else 0.5 - 0.06
+            ax.text(xn[i], y, label, ha="center", va="center",
+                    color=ink, fontproperties=frame.font("bold", sizes["label"]), zorder=4)
 
-    # Crossover: marker with the date, plus a short note with an arrow
-    week = lasting_crossover(open_)
-    if week is not None:
-        wx = mdates.date2num(week)
-        bubble(ax, frame, wx, 0.5, text["crossover_bubble"].format(date=week.strftime("%b %-d")),
-               colors["accent"], 36)
-        note = textwrap.fill(text["crossover_note"].format(date=week.strftime("%b %-d")), 34)
-        ax.text(0.03, 0.95, "→", transform=ax.transAxes, ha="left", va="top",
-                color=colors["accent"], fontproperties=frame.font("bold", sizes["annotation"]),
-                zorder=5)
-        ax.text(0.03 + 26 / ax.bbox.width, 0.95, note, transform=ax.transAxes, ha="left",
-                va="top", color=colors["text"], linespacing=1.25, zorder=5,
-                fontproperties=frame.font("regular", sizes["annotation"]))
+    # Latest share of the bottom band in a marker at the right edge
+    marker_y = min(max(focus.iloc[-1], 0.07), 0.92)  # keep clear of the 0 and 100 labels
+    bubble(ax, frame, xn[-1], marker_y, f"{focus.iloc[-1]:.0%}", spec["inks"][0]
+           if spec["inks"][0] != "#FFFFFF" else colors["open_dark"], 33)
 
+    # Two-way splits: dashed 50% line, crossover marker and note
+    if len(values) == 2:
+        ax.axhline(0.5, color=colors["reference_line"], linewidth=1.6, linestyle=(0, (5, 3)),
+                   zorder=3)
+        week = lasting_crossover(focus)
+        if week is not None and week != x[0] and spec.get("crossover_note"):
+            date = week.strftime("%b %-d")
+            bubble(ax, frame, mdates.date2num(week), 0.5, date, colors["accent"], 36)
+            note = textwrap.fill(spec["crossover_note"].format(date=date), 34)
+            ax.text(0.03, 0.95, "→", transform=ax.transAxes, ha="left", va="top",
+                    color=colors["accent"], zorder=5,
+                    fontproperties=frame.font("bold", sizes["annotation"]))
+            ax.text(0.03 + 26 / ax.bbox.width, 0.95, note, transform=ax.transAxes, ha="left",
+                    va="top", color=colors["text"], linespacing=1.25, zorder=5,
+                    fontproperties=frame.font("regular", sizes["annotation"]))
     return frame
