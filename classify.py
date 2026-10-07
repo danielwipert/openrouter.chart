@@ -6,6 +6,9 @@ For each model in the rankings:
   2. Add models not yet in registry/models.csv, filling every field the rules can.
   3. Attach the registry's labels. A blank label becomes 'unknown'.
 
+Country comes from labs.csv (headquarters). Family comes from the first
+matching pattern in families.csv.
+
 Weights rule, in order (spec, "Model registry and dimensions"):
   a manual label in models.csv wins; else a Hugging Face ID in the catalog means
   open; else the lab's default in labs.csv (closed, or stealth); else blank,
@@ -16,6 +19,7 @@ model's labels change only when Dan edits the CSV.
 """
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -23,9 +27,9 @@ import pandas as pd
 
 REGISTRY_DIR = Path("registry")
 RAW_DIR = Path("raw")
-REQUIRED = ["company", "weights"]  # required dimensions in phase 1
-MODEL_COLUMNS = ["model_id", "company", "company_source",
-                 "weights", "weights_source", "first_seen"]
+REQUIRED = ["company", "weights", "country", "family"]  # required dimensions (phases 1-2)
+MODEL_COLUMNS = ["model_id", "company", "company_source", "weights", "weights_source",
+                 "country", "country_source", "family", "family_source", "first_seen"]
 OTHER = "other"  # the API's row for everything outside the daily top 50
 UNKNOWN = "unknown"
 
@@ -89,9 +93,29 @@ def weights_rule(model_id, catalog, labs):
     return "", ""
 
 
-def update_registry(models, labs, catalog, first_seen):
+def country_rule(model_id, labs):
+    prefix = model_id.split("/")[0]
+    lab = labs.get(prefix)
+    if lab and lab.get("country"):
+        return lab["country"], f"rule: labs.csv prefix {prefix}"
+    return "", ""
+
+
+def family_rule(model_id, families):
+    """First pattern in families.csv that matches the model ID wins."""
+    for row in families:
+        if re.search(row["pattern"], model_id):
+            return row["family"], f"rule: families.csv pattern {row['pattern']}"
+    return "", ""
+
+
+def update_registry(models, labs, catalog, first_seen, families=None):
     """Add new models and fill blank fields. Returns (models, list of new model IDs)."""
     labs = {row["prefix"]: row for row in labs.to_dict("records")}
+    families = [] if families is None else families.to_dict("records")
+    for column in MODEL_COLUMNS:  # registries from before a dimension existed
+        if column not in models:
+            models[column] = ""
     known = set(models["model_id"])
     new_ids = sorted(set(first_seen) - known)
     new_rows = pd.DataFrame([{"model_id": m, "first_seen": first_seen[m]} for m in new_ids],
@@ -104,6 +128,10 @@ def update_registry(models, labs, catalog, first_seen):
         if not row["weights"]:
             models.loc[i, ["weights", "weights_source"]] = weights_rule(
                 row["model_id"], catalog, labs)
+        if not row["country"]:
+            models.loc[i, ["country", "country_source"]] = country_rule(row["model_id"], labs)
+        if not row["family"]:
+            models.loc[i, ["family", "family_source"]] = family_rule(row["model_id"], families)
     return models.sort_values("model_id", ignore_index=True), new_ids
 
 
@@ -146,8 +174,9 @@ def run(folder, registry_dir=REGISTRY_DIR):
     rankings = load_rankings(folder)
     models = read_csv(registry_dir / "models.csv")
     labs = read_csv(registry_dir / "labs.csv")
+    families = read_csv(registry_dir / "families.csv")
     models, new_ids = update_registry(models, labs, load_catalog(folder),
-                                      first_seen_dates(rankings))
+                                      first_seen_dates(rankings), families)
     save_models(models, registry_dir)
     return classify(rankings, models), models, new_ids
 

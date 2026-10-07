@@ -39,14 +39,16 @@ def make_registry(root):
     reg.mkdir()
     pd.DataFrame([
         {"prefix": "ds", "company": "DS Lab", "company_source": "manual: https://x",
-         "country": "", "country_source": "", "default_weights": "", "default_weights_source": ""},
+         "country": "China", "country_source": "manual: https://x", "default_weights": "", "default_weights_source": ""},
         {"prefix": "oa", "company": "OA Lab", "company_source": "manual: https://x",
-         "country": "", "country_source": "", "default_weights": "closed",
+         "country": "United States", "country_source": "manual: https://x", "default_weights": "closed",
          "default_weights_source": "manual: https://x"},
         {"prefix": "stealth", "company": "Stealth (undisclosed)", "company_source": "manual: https://x",
-         "country": "", "country_source": "", "default_weights": "stealth",
+         "country": "Undisclosed", "country_source": "manual: https://x", "default_weights": "stealth",
          "default_weights_source": "manual: https://x"},
     ]).to_csv(reg / "labs.csv", index=False)
+    (reg / "families.csv").write_text("pattern,family\n^stealth/,Stealth (undisclosed)\n"
+                                      "^ds/,DS\n^oa/,OA GPT\n")
     (reg / "models.csv").write_text(
         "model_id,company,company_source,weights,weights_source,first_seen\n")
     return reg

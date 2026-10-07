@@ -13,7 +13,8 @@ def rows(day, **tokens_by_label):
         weights, company = key.split("_")
         model_id = "other" if weights == "other" else f"{company}/{weights}"
         out.append({"date": day, "slug": model_id, "model_id": model_id, "tokens": tokens,
-                    "is_free": False, "weights": weights, "company": company})
+                    "is_free": False, "weights": weights, "company": company,
+                    "country": company, "family": company})
     return out
 
 

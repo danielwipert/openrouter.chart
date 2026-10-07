@@ -1,6 +1,6 @@
 # READY TO POST (2026-W40)
 
-- **PASS** Labels complete: Zero unknown values on company, weights
+- **PASS** Labels complete: Zero unknown values on company, weights, country, family
 - **PASS** Sources complete: Every label has a source
 - **PASS** Same input, same output: Re-aggregating the same data gave identical numbers
 - **PASS** Long tail disclosed: Top-50 coverage for the footer: 93.9%

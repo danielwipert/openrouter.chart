@@ -18,7 +18,7 @@ def blank_sources(table, fields, key):
 
 
 def test_every_model_label_has_a_source():
-    assert blank_sources(MODELS, ["company", "weights"], "model_id") == []
+    assert blank_sources(MODELS, classify.REQUIRED, "model_id") == []
 
 
 def test_every_lab_field_has_a_source():
@@ -26,7 +26,7 @@ def test_every_lab_field_has_a_source():
 
 
 def test_manual_sources_include_a_link():
-    for table, fields in [(MODELS, ["company", "weights"]), (LABS, ["company", "country", "default_weights"])]:
+    for table, fields in [(MODELS, classify.REQUIRED), (LABS, ["company", "country", "default_weights"])]:
         for field in fields:
             manual = table[table[f"{field}_source"].str.startswith("manual:")]
             assert manual[f"{field}_source"].str.contains("http").all(), field
@@ -40,3 +40,14 @@ def test_values_are_from_the_allowed_lists():
 def test_one_row_per_model_and_per_prefix():
     assert MODELS["model_id"].is_unique
     assert LABS["prefix"].is_unique
+
+
+def test_no_blank_required_labels():
+    for field in classify.REQUIRED:
+        assert (MODELS[field] != "").all(), field
+
+
+def test_every_family_pattern_is_used():
+    families = classify.read_csv(classify.REGISTRY_DIR / "families.csv")
+    used = set(MODELS["family"])
+    assert set(families["family"]) <= used | {"Stealth (undisclosed)"}

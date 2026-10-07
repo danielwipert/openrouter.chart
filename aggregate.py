@@ -21,7 +21,7 @@ import pandas as pd
 import classify
 import fetch
 
-DIMENSIONS = ["weights", "company"]  # live dimensions in phase 1
+DIMENSIONS = ["weights", "company", "country", "family"]  # live dimensions
 # Values counted in a dimension's tokens but left out of its share split
 EXCLUDED_FROM_SHARE = {"weights": {"stealth"}}
 NOT_LABELED = {classify.OTHER, classify.UNKNOWN}

@@ -1,37 +1,37 @@
 prefix,company,company_source,country,country_source,default_weights,default_weights_source
-alibaba,Alibaba,manual: https://www.alibabacloud.com,,,,
-anthropic,Anthropic,manual: https://www.anthropic.com,,,closed,manual: https://www.anthropic.com/claude (API-only; no public weights)
-arcee-ai,Arcee AI,manual: https://www.arcee.ai,,,,
-baai,BAAI,manual: https://www.baai.ac.cn/en,,,,
-bytedance-seed,ByteDance,manual: https://seed.bytedance.com,,,,
-cohere,Cohere,manual: https://cohere.com,,,,
-deepseek,DeepSeek,manual: https://www.deepseek.com,,,,
-dots-studio,Dots Studio (RedNote),manual: https://huggingface.co/dots-studio,,,,
-google,Google,manual: https://deepmind.google,,,closed,manual: https://deepmind.google/models/gemini/ (Gemini is API-only; open Gemma models carry a Hugging Face ID)
-inclusionai,inclusionAI (Ant Group),manual: https://huggingface.co/inclusionAI,,,,
-intfloat,Microsoft,manual: https://huggingface.co/intfloat/multilingual-e5-large (Microsoft researchers' account),,,,
-kwaipilot,Kuaishou (Kwaipilot),manual: https://huggingface.co/Kwaipilot,,,,
-meta,Meta,manual: https://ai.meta.com,,,,
-meta-llama,Meta,manual: https://ai.meta.com,,,,
-microsoft,Microsoft,manual: https://www.microsoft.com/en-us/ai,,,,
-minimax,MiniMax,manual: https://www.minimax.io,,,,
-mistralai,Mistral AI,manual: https://mistral.ai,,,,
-moonshotai,Moonshot AI,manual: https://www.moonshot.ai,,,,
-nex-agi,Nex AGI,manual: https://huggingface.co/nex-agi,,,,
-nvidia,NVIDIA,manual: https://www.nvidia.com/en-us/ai/,,,,
-openai,OpenAI,manual: https://openai.com,,,closed,manual: https://platform.openai.com/docs/models (GPT models are API-only; open gpt-oss models carry a Hugging Face ID)
-openrouter,Stealth (undisclosed),manual: https://openrouter.ai/docs/guides/routing/model-variants (cloaked '-alpha' test models; maker undisclosed),,,stealth,manual: https://openrouter.ai/docs/guides/routing/model-variants (maker and weights undisclosed)
-perplexity,Perplexity,manual: https://www.perplexity.ai,,,,
-poolside,Poolside,manual: https://poolside.ai,,,,
-qwen,Alibaba,manual: https://qwen.ai,,,,
-sentence-transformers,Sentence Transformers (Hugging Face),manual: https://huggingface.co/sentence-transformers,,,,
-stealth,Stealth (undisclosed),manual: https://openrouter.ai/rankings (stealth test models; maker undisclosed),,,stealth,manual: https://openrouter.ai/rankings (maker and weights undisclosed)
-stepfun,StepFun,manual: https://www.stepfun.com,,,,
-tencent,Tencent,manual: https://hunyuan.tencent.com,,,,
-thinkingmachines,Thinking Machines Lab,manual: https://thinkingmachines.ai,,,,
-tngtech,TNG Technology Consulting,manual: https://www.tngtech.com,,,,
-typesafe,TypeSafe AI,manual: https://openrouter.ai/typesafe/jev-1.13,,,,
-upstage,Upstage,manual: https://www.upstage.ai,,,,
-x-ai,xAI,manual: https://x.ai,,,closed,manual: https://x.ai/api (Grok models are API-only)
-xiaomi,Xiaomi,manual: https://mimo.xiaomi.com,,,,
-z-ai,Z.ai,manual: https://z.ai,,,,
+alibaba,Alibaba,manual: https://www.alibabacloud.com,China,manual: https://en.wikipedia.org/wiki/Alibaba_Group (headquarters),,
+anthropic,Anthropic,manual: https://www.anthropic.com,United States,manual: https://en.wikipedia.org/wiki/Anthropic (headquarters),closed,manual: https://www.anthropic.com/claude (API-only; no public weights)
+arcee-ai,Arcee AI,manual: https://www.arcee.ai,United States,manual: https://www.arcee.ai/about (headquarters),,
+baai,BAAI,manual: https://www.baai.ac.cn/en,China,manual: https://en.wikipedia.org/wiki/Beijing_Academy_of_Artificial_Intelligence (headquarters),,
+bytedance-seed,ByteDance,manual: https://seed.bytedance.com,China,manual: https://en.wikipedia.org/wiki/ByteDance (headquarters),,
+cohere,Cohere,manual: https://cohere.com,Canada,manual: https://en.wikipedia.org/wiki/Cohere (headquarters),,
+deepseek,DeepSeek,manual: https://www.deepseek.com,China,manual: https://en.wikipedia.org/wiki/DeepSeek (headquarters),,
+dots-studio,Dots Studio (RedNote),manual: https://huggingface.co/dots-studio,China,manual: https://en.wikipedia.org/wiki/Xiaohongshu (headquarters),,
+google,Google,manual: https://deepmind.google,United States,manual: https://en.wikipedia.org/wiki/Google (headquarters),closed,manual: https://deepmind.google/models/gemini/ (Gemini is API-only; open Gemma models carry a Hugging Face ID)
+inclusionai,inclusionAI (Ant Group),manual: https://huggingface.co/inclusionAI,China,manual: https://en.wikipedia.org/wiki/Ant_Group (headquarters),,
+intfloat,Microsoft,manual: https://huggingface.co/intfloat/multilingual-e5-large (Microsoft researchers' account),United States,manual: https://en.wikipedia.org/wiki/Microsoft (headquarters),,
+kwaipilot,Kuaishou (Kwaipilot),manual: https://huggingface.co/Kwaipilot,China,manual: https://en.wikipedia.org/wiki/Kuaishou (headquarters),,
+meta,Meta,manual: https://ai.meta.com,United States,manual: https://en.wikipedia.org/wiki/Meta_Platforms (headquarters),,
+meta-llama,Meta,manual: https://ai.meta.com,United States,manual: https://en.wikipedia.org/wiki/Meta_Platforms (headquarters),,
+microsoft,Microsoft,manual: https://www.microsoft.com/en-us/ai,United States,manual: https://en.wikipedia.org/wiki/Microsoft (headquarters),,
+minimax,MiniMax,manual: https://www.minimax.io,China,manual: https://en.wikipedia.org/wiki/MiniMax_(company),,
+mistralai,Mistral AI,manual: https://mistral.ai,France,manual: https://en.wikipedia.org/wiki/Mistral_AI (headquarters),,
+moonshotai,Moonshot AI,manual: https://www.moonshot.ai,China,manual: https://en.wikipedia.org/wiki/Moonshot_AI (headquarters),,
+nex-agi,Nex AGI,manual: https://huggingface.co/nex-agi,China,manual: https://huggingface.co/nex-agi (Shanghai Innovation Institute alliance),,
+nvidia,NVIDIA,manual: https://www.nvidia.com/en-us/ai/,United States,manual: https://en.wikipedia.org/wiki/Nvidia (headquarters),,
+openai,OpenAI,manual: https://openai.com,United States,manual: https://en.wikipedia.org/wiki/OpenAI (headquarters),closed,manual: https://platform.openai.com/docs/models (GPT models are API-only; open gpt-oss models carry a Hugging Face ID)
+openrouter,Stealth (undisclosed),manual: https://openrouter.ai/docs/guides/routing/model-variants (cloaked '-alpha' test models; maker undisclosed),Undisclosed,manual: https://openrouter.ai/rankings (stealth: maker undisclosed),stealth,manual: https://openrouter.ai/docs/guides/routing/model-variants (maker and weights undisclosed)
+perplexity,Perplexity,manual: https://www.perplexity.ai,United States,manual: https://en.wikipedia.org/wiki/Perplexity_AI (headquarters),,
+poolside,Poolside,manual: https://poolside.ai,United States,manual: https://salestools.io/en/report/poolside-headquarters (low confidence; San Francisco per 2025 reports; a 2024 report said it planned to move HQ to Paris),,
+qwen,Alibaba,manual: https://qwen.ai,China,manual: https://en.wikipedia.org/wiki/Alibaba_Group (headquarters),,
+sentence-transformers,Sentence Transformers (Hugging Face),manual: https://huggingface.co/sentence-transformers,United States,manual: https://en.wikipedia.org/wiki/Hugging_Face (headquarters),,
+stealth,Stealth (undisclosed),manual: https://openrouter.ai/rankings (stealth test models; maker undisclosed),Undisclosed,manual: https://openrouter.ai/rankings (stealth: maker undisclosed),stealth,manual: https://openrouter.ai/rankings (maker and weights undisclosed)
+stepfun,StepFun,manual: https://www.stepfun.com,China,manual: https://www.stepfun.com (Shanghai),,
+tencent,Tencent,manual: https://hunyuan.tencent.com,China,manual: https://en.wikipedia.org/wiki/Tencent (headquarters),,
+thinkingmachines,Thinking Machines Lab,manual: https://thinkingmachines.ai,United States,manual: https://en.wikipedia.org/wiki/Thinking_Machines_Lab (headquarters),,
+tngtech,TNG Technology Consulting,manual: https://www.tngtech.com,Germany,manual: https://en.wikipedia.org/wiki/TNG_Technology_Consulting (headquarters),,
+typesafe,TypeSafe AI,manual: https://openrouter.ai/typesafe/jev-1.13,United States,manual: https://openrouter.ai/typesafe/jev-1.13 (San Francisco),,
+upstage,Upstage,manual: https://www.upstage.ai,South Korea,manual: https://en.wikipedia.org/wiki/Upstage_(company),,
+x-ai,xAI,manual: https://x.ai,United States,manual: https://en.wikipedia.org/wiki/XAI_(company),closed,manual: https://x.ai/api (Grok models are API-only)
+xiaomi,Xiaomi,manual: https://mimo.xiaomi.com,China,manual: https://en.wikipedia.org/wiki/Xiaomi (headquarters),,
+z-ai,Z.ai,manual: https://z.ai,China,manual: https://en.wikipedia.org/wiki/Zhipu_AI (headquarters),,

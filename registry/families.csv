@@ -1,0 +1,85 @@
+pattern,family
+^stealth/,Stealth (undisclosed)
+^openrouter/,Stealth (undisclosed)
+^anthropic/.*opus,Claude Opus
+^anthropic/.*sonnet,Claude Sonnet
+^anthropic/.*haiku,Claude Haiku
+^anthropic/.*fable,Claude Fable
+^google/gemini-.*flash-lite,Gemini Flash-Lite
+^google/gemini-.*flash,Gemini Flash
+^google/gemini-.*pro,Gemini Pro
+^google/gemini-embedding,Gemini Embedding
+^google/gemma,Gemma
+^openai/gpt-oss,gpt-oss
+^openai/gpt-.*codex,GPT Codex
+^openai/gpt-.*-(mini|nano),GPT Mini & Nano
+^openai/gpt-.*-sol,GPT Sol
+^openai/gpt-.*-luna,GPT Luna
+^openai/gpt-.*-terra,GPT Terra
+^openai/gpt-.*-astra,GPT Astra
+^openai/gpt-,GPT
+^openai/o[0-9],OpenAI o-series
+^openai/text-embedding,OpenAI Embeddings
+^deepseek/deepseek-v4.*flash,DeepSeek Flash
+^deepseek/deepseek-v4.*pro,DeepSeek Pro
+^deepseek/deepseek-r1,DeepSeek R1
+^deepseek/deepseek-,DeepSeek V3
+^qwen/qwen3-embedding,Qwen Embedding
+^qwen/qwen3-coder,Qwen Coder
+^qwen/.*-max,Qwen Max
+^qwen/.*-plus,Qwen Plus
+^qwen/.*-flash,Qwen Flash
+^qwen/qwen[0-9.]*-vl-,Qwen VL
+^qwen/,Qwen
+^alibaba/tongyi-deepresearch,Tongyi DeepResearch
+^z-ai/glm-.*flash,GLM Flash
+^z-ai/glm-.*turbo,GLM Turbo
+^z-ai/glm-.*air,GLM Air
+^z-ai/glm-,GLM
+^moonshotai/kimi,Kimi
+^minimax/,MiniMax
+^xiaomi/mimo-.*pro,MiMo Pro
+^xiaomi/mimo-.*flash,MiMo Flash
+^xiaomi/mimo-.*omni,MiMo Omni
+^xiaomi/mimo-,MiMo
+^x-ai/grok-code,Grok Code
+^x-ai/grok-.*mini,Grok Mini
+^x-ai/grok-.*fast,Grok Fast
+^x-ai/grok-,Grok
+^meta/muse-spark,Muse Spark
+^meta-llama/llama,Llama
+^mistralai/codestral,Codestral
+^mistralai/devstral,Devstral
+^mistralai/ministral,Ministral
+^mistralai/mistral-large,Mistral Large
+^mistralai/mistral-medium,Mistral Medium
+^mistralai/mistral-small,Mistral Small
+^mistralai/mistral-nemo,Mistral Nemo
+^nvidia/nemotron-.*nano,Nemotron Nano
+^nvidia/nemotron-.*super,Nemotron Super
+^nvidia/nemotron-.*ultra,Nemotron Ultra
+^nvidia/nemotron-.*lightning,Nemotron Lightning
+^tencent/hy,Hunyuan
+^inclusionai/ring,Ring
+^inclusionai/ling-.*flash,Ling Flash
+^inclusionai/ling,Ling
+^poolside/laguna-xs,Laguna XS
+^poolside/laguna-s,Laguna S
+^poolside/laguna-m,Laguna M
+^stepfun/step,Step
+^nex-agi/,Nex
+^tngtech/,Chimera
+^upstage/solar-pro,Solar Pro
+^upstage/solar-mini,Solar Mini
+^arcee-ai/trinity,Trinity
+^bytedance-seed/seed,Seed
+^cohere/north,North
+^dots-studio/dots,dots
+^kwaipilot/kat-coder,KAT-Coder
+^thinkingmachines/inkling,Inkling
+^typesafe/jev,Jev
+^microsoft/phi,Phi
+^baai/bge,BGE
+^intfloat/,E5
+^sentence-transformers/,MiniLM
+^perplexity/pplx-embed,pplx-embed

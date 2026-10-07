@@ -119,6 +119,7 @@ Every fact about every model lives in a permanent registry of three CSV files Da
 - `models.csv`: one row per base model ID, a column per dimension, a `{field}_source` column for each (catalog, rule, or manual + link), and `first_seen`.
 - `labs.csv`: one row per company: ID prefix, clean name, country, default weights (open, closed or blank).
 - `families.csv`: one row per family: a text pattern (such as `claude-sonnet`) and the family name. Patterns are checked top to bottom; the first match wins.
+- **Family rule (step 8, Dan's choice): brand + tier.** Where a lab sells named tiers, each tier is its own family (Claude Opus / Sonnet / Haiku / Fable, Gemini Pro / Flash / Flash-Lite, GPT / GPT Mini & Nano / GPT Codex / GPT Sol / Luna / Terra / Astra, Qwen Max / Plus / Flash / Coder / VL, DeepSeek Pro / Flash / V3 / R1). Labs with one line stay one family (Kimi, MiniMax, Hunyuan). Patterns are regular expressions matched against the full model ID (e.g. `^anthropic/.*sonnet`), so one lab's pattern can't catch another lab's model.
 
 **Weights rule, in order:** a manual label in `models.csv` wins; else a Hugging Face ID means open; else a lab default of closed (or stealth) in `labs.csv` applies; else unknown, which goes on the review list and marks the run NOT READY.
 
@@ -285,7 +286,7 @@ The build runs in three phases after a sign-off gate, so Dan can post from phase
 
 **Phase 2: more dimensions**
 
-- [ ] **8. Country and family.** Fill country in `labs.csv`; write `families.csv`. Check: zero blanks.
+- [x] **8. Country and family.** Fill country in `labs.csv`; write `families.csv`. Check: zero blanks. Done Oct 7, 2026: all 36 labs have a headquarters country with a source link (stealth = "Undisclosed"; Poolside = United States, low confidence). 85 patterns give 83 families for all 254 models. Country and family are now required labels.
 - [ ] **9. Catalog dimensions.** Release date, price tier, reasoning, input type, free variant. Check: every value has a source.
 - [ ] **10. More charts.** Share race, rank changes, country leaderboard, extra share-over-time charts. Check: Dan approves each.
 
