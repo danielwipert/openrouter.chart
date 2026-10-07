@@ -297,7 +297,15 @@ The build runs in three phases after a sign-off gate, so Dan can post from phase
 **Phase 2: more dimensions**
 
 - [x] **8. Country and family.** Fill country in `labs.csv`; write `families.csv`. Check: zero blanks. Done Oct 7, 2026: all 36 labs have a headquarters country with a source link (stealth = "Undisclosed"; Poolside = United States, low confidence). 85 patterns give 83 families for all 254 models. Country and family are now required labels.
-- [ ] **9. Catalog dimensions.** Release date, price tier, reasoning, input type, free variant. Check: every value has a source.
+- [x] **9. Catalog dimensions.** Release date, price tier, reasoning, input type, free variant. Check: every value has a source. Done Oct 7, 2026: 0% unknown on all eight required labels.
+
+  - **Release date** = the date the model was added to OpenRouter (catalog `created`), not the maker's announcement. Stealth models: the first day they appear in the data.
+  - **Price tier** = input and output price per million tokens, averaged (embedding models: input price only), frozen when the model is first labeled. Models offered only free ($0) are Budget.
+  - **Reasoning** = the model *supports* a reasoning mode (catalog `supported_parameters`), not that the traffic used it. Almost every model now does (99% of tokens in Sep 2026), so this split is weak as a chart.
+  - **Input type** = Text only vs Multimodal (catalog `input_modalities`; file input counts as multimodal).
+  - **Free variant** = Free vs Paid from the `:free` suffix on each traffic row; it isn't stored in the registry.
+  - Stealth models get "Undisclosed" for price tier, reasoning and input type, and are left out of those splits, as for weights.
+  - 51 retired models (4.9% of tokens) aren't in today's catalog. Their four values were researched by hand from OpenRouter's model pages and archived price lists, each with a source link; 4 are marked low confidence (prices that changed while live).
 - [ ] **10. More charts.** Share race, rank changes, country leaderboard, extra share-over-time charts. Check: Dan approves each.
 
 **Phase 3: extra content and automation**
