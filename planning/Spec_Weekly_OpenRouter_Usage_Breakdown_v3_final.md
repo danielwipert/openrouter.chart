@@ -21,8 +21,8 @@ This is the final spec: the v2 build plan stands, and seven gaps found in review
 The time window decision changed from "2026 year to date" to **rolling 52 weeks**. That replaces two v3 resolutions:
 
 - **Gap 2 (partial week):** every charted week is a full Monday–Sunday week, so the partial-week label is no longer used. It only comes back under the fallback below.
-- **Gap 6 (chunking):** 52 weeks is 364 days, which fits in one call. Fetch still splits any window over 366 days, as a safeguard.
-- **Fallback:** if the API has no daily data before 2026-01-01, the window starts at 2026-01-01 and grows each week until 52 full weeks exist (about January 2027), then rolls. While that holds, Jan 1–4 is charted and labeled "partial week."
+- **Gap 6 (chunking):** fetch downloads the 52 full weeks plus any days of the current week up to yesterday (needed for the freshness check). On a Monday that is 364 days and one call; later in the week it can pass 366 days, so fetch still splits the window into chunks.
+- **Fallback (not needed):** step 2 confirmed the daily dataset starts on 2025-01-01, so the full rolling window is available. The fallback was: if the API has no daily data before 2026-01-01, the window starts at 2026-01-01 and grows each week until 52 full weeks exist (about January 2027), then rolls. While that holds, Jan 1–4 is charted and labeled "partial week."
 
 ## Goal and audience
 
@@ -75,6 +75,15 @@ The pipeline makes 4 OpenRouter calls and runs 5 steps, each in its own small Py
 4. **Aggregate.** For each dimension, sum tokens per value per week and per month. Share = a value's tokens / all labeled tokens.
 5. **Render.** Build the charts, CSVs, captions, `meta.json` and run report from the aggregated tables.
 
+**Confirmed in build step 2 (Oct 7, 2026), from the live docs and API:**
+
+- Endpoint names match: `/datasets/rankings-daily`, `/models`, `/classifications/task`, `/datasets/app-rankings`. Limits are 30 calls per minute and 500 per day.
+- Daily rankings start on 2025-01-01, cover the top 50 models per day plus one `other` row, and reject windows over 366 days.
+- Rankings rows name models by `model_permaslug` (e.g. `openai/gpt-4o-2024-05-13`). This matches the catalog's `canonical_slug` field, not its `id`. Classify (step 3) joins on `canonical_slug`.
+- In the catalog, `:free` appears only in `id`; the `canonical_slug` of a free variant has no suffix. Whether rankings rows can tell free traffic apart is checked against real data in step 3, before the Free variant dimension (step 9) is built.
+- Rankings and app rankings need the API key; the model catalog is public.
+- The data is licensed CC BY 4.0. Charts carry the citation line; files that republish the data itself (such as a shared `weekly.csv`) also add "Licensed under CC BY 4.0."
+
 **Fixed method (never changes week to week):**
 
 - Weeks run Monday to Sunday, UTC. The current unfinished week is always dropped.
@@ -84,7 +93,7 @@ The pipeline makes 4 OpenRouter calls and runs 5 steps, each in its own small Py
 - Tokens are used as reported. Providers use different tokenizers, so posts compare shares and trends, not exact totals, and the footer says so.
 - Labels come only from the registry, never guessed at run time.
 
-**API limits:** the run uses 4 calls. OpenRouter allows 30 calls per minute and 500 per day, so reruns are safe. Endpoint names and limits are confirmed against the live API in build step 2.
+**API limits:** the run uses 4 calls (5 when the window is split). OpenRouter allows 30 calls per minute and 500 per day, so reruns are safe. Endpoint names and limits are confirmed against the live API in build step 2.
 
 ## Model registry and dimensions
 

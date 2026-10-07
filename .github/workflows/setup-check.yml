@@ -1,5 +1,5 @@
 # Build step 1 check: install the pinned libraries on a clean cloud machine
-# and confirm they import. Runs on every push, or by hand from the Actions tab.
+# confirm they import, and run the tests. Runs on every push, or by hand from the Actions tab.
 name: Setup check
 
 on:
@@ -24,6 +24,9 @@ jobs:
 
       - name: Step 1 check
         run: python -c "import pandas, matplotlib; print('OK')"
+
+      - name: Run tests
+        run: pytest -q
 
       - name: API key secret is set
         env:

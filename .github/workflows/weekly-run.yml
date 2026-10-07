@@ -1,0 +1,45 @@
+# The weekly run. For now (build step 2) it only fetches data; later steps add
+# the rest of the pipeline. Start it from the Actions tab with "Run workflow".
+name: Weekly run
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write  # lets the run save raw/ and output/ back to the repo
+
+concurrency:
+  group: weekly-run  # never two runs at once
+
+jobs:
+  weekly-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install libraries
+        run: pip install -r requirements.txt
+
+      - name: Fetch OpenRouter data
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: python fetch.py
+
+      - name: Save results to the repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add raw/
+          if git diff --cached --quiet; then
+            echo "Nothing new to save."
+          else
+            git commit -m "Weekly run: raw data for $(date -u +%Y-%m-%d)"
+            git push
+          fi
