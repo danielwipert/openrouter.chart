@@ -40,6 +40,14 @@ Then:
    - `meta.json`: which data was used.
 2. If the report lists a new model with a blank label, fill it in `registry/models.csv` (with a source link) and run again by hand.
 
+## The website
+
+**https://danielwipert.github.io/openrouter.chart/** shows the newest READY TO POST week's charts, the headline numbers, the method, CSV downloads and an archive of past weeks.
+
+- It republishes itself after every successful Weekly run (the **Publish website** workflow). A NOT READY week is never published; the site keeps the last good week.
+- Wording and sections: `site/site.yaml`. Look: `site/site.css`. Page layout: `site/template.html`.
+- One-time setup: **Settings > Pages > Build and deployment > Source: GitHub Actions**.
+
 ## Running locally (optional)
 
 Not needed. If you ever want to: install Python 3.11+, run `pip install -r requirements.txt`, copy `.env.example` to `.env` with your key in it, then run `python run_weekly.py` (or `python run_weekly.py --no-fetch` to rebuild from the newest saved data).

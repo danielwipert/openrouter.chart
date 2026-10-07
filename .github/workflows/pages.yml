@@ -1,0 +1,61 @@
+# Publish the website to GitHub Pages: https://danielwipert.github.io/openrouter.chart/
+# Runs after every successful Weekly run, when the site's code changes, or by hand.
+# Only READY TO POST weeks are published (site_build.py), and a red Weekly run
+# publishes nothing, so the site always shows the last good week.
+name: Publish website
+
+on:
+  workflow_run:
+    workflows: ["Weekly run"]
+    types: [completed]
+  push:
+    branches: [claude/inspiring-allen-yq2pp3]
+    paths: ["site/**", "site_build.py", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code (including the newest weekly results)
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install libraries
+        run: pip install -r requirements.txt
+
+      - name: Build the website
+        run: python site_build.py
+
+      - uses: actions/configure-pages@v5
+
+      - name: Package the website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

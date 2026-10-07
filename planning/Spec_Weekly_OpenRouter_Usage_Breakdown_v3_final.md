@@ -347,6 +347,17 @@ Six choices need Dan's sign-off before build step 1. Each has a proposed default
 
 Once all six rows are Approved or Changed, this spec is final and build step 1 starts.
 
+## Public website (added Oct 7, 2026)
+
+Dan asked for a public website showing every chart, updated weekly. It lives at https://danielwipert.github.io/openrouter.chart/ (GitHub Pages; the repo is public).
+
+- `site_build.py` builds `_site/` from `output/`: the newest READY TO POST week at the root, every READY week at `weeks/<week>/`, plus fonts, stylesheet and script. **Only READY TO POST weeks are published**, so a NOT READY week never replaces a good one.
+- The **Publish website** workflow runs after every successful Weekly run (and when the site code changes, or by hand), builds the site and deploys it. `_site/` is not saved in git.
+- Page: sticky top bar (Chorus ring mark, section links, week picker); the featured chart's finding as the headline; four headline numbers with their change vs last week (open-weight share, top named lab, Chinese labs, Budget models); the featured chart with "the week in brief" from its draft caption; sections of chart cards (Who's winning, Models and launches, Cost and usage); a method summary, CSV downloads and an archive. Click a chart for full size (arrow keys step through); every chart has square and portrait PNG downloads and a copy-link button. Link previews (LinkedIn) use the featured chart.
+- Look matches the charts: Fira Sans, white page, Chorus blue and magenta accents. Works at phone width.
+- Wording, sections, the four numbers and chart labels live in `site/site.yaml`.
+- One-time setup by Dan: Settings > Pages > Source: GitHub Actions.
+
 ## Sources
 
 - [OpenRouter Data API documentation](https://openrouter.ai/docs/cookbook/administration/data-api)

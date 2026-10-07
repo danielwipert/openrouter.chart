@@ -1,0 +1,67 @@
+# Wording and layout of the public website (built by site_build.py).
+# Change text here; no code changes needed.
+
+site_url: "https://danielwipert.github.io/openrouter.chart/"
+name: "OpenRouter Weekly"
+tagline: "Who's winning the AI model race on OpenRouter, in charts. Updated every Monday."
+author: "Daniel Wipert"
+company: "Chorus AI Systems"
+repo_url: "https://github.com/danielwipert/openrouter.chart"
+featured_chart: weights_share
+
+# The four numbers under the headline. dimension/value come from weekly.csv.
+stats:
+  - label: "Open-weight share"
+    dimension: weights
+    value: open
+    note: "of tokens to disclosed models"
+  - label: "Top named lab"
+    dimension: company
+    value: top_named        # the largest company that isn't stealth
+    note: "share of tokens"
+  - label: "Chinese labs"
+    dimension: country
+    value: China
+    note: "share of tokens"
+  - label: "Budget models"
+    dimension: price_tier
+    value: Budget
+    note: "under $0.50 per million tokens"
+
+sections:
+  - id: winning
+    title: "Who's winning"
+    intro: "Labs and countries ranked by share of tokens, and how the race has moved over the past year."
+    charts: [company_leaderboard, company_race, company_ranks, country_leaderboard]
+  - id: models
+    title: "Models and launches"
+    intro: "Model families rather than labs, how fast new models take off, and how big the open-weight models are."
+    charts: [family_race, family_ranks, launch_curve, size_share]
+  - id: usage
+    title: "Cost and usage"
+    intro: "What the tokens cost, what people use them for, what goes in, and whether they're free."
+    charts: [price_tier_share, task_mix, input_type_share, free_share, reasoning_share]
+
+# Short label under each chart (the chart itself carries its headline)
+labels:
+  weights_share: "Open v closed weights, weekly share of tokens"
+  size_share: "Open-weight tokens by model size, weekly"
+  company_leaderboard: "Share of tokens by company, latest week"
+  company_race: "Today's top six companies, weekly share over a year"
+  company_ranks: "Monthly rank of the top companies"
+  country_leaderboard: "Share of tokens by country of the lab, latest week"
+  family_race: "Today's top six model families, weekly share over a year"
+  family_ranks: "Monthly rank of the top model families"
+  launch_curve: "The year's biggest launches, by weeks since launch"
+  price_tier_share: "Budget, Mid and Premium models, weekly share"
+  task_mix: "What tokens are used for, last 7 days"
+  input_type_share: "Text-only v multimodal models, weekly share"
+  free_share: "Free v paid model versions, weekly share"
+  reasoning_share: "Models with v without a reasoning mode, weekly share"
+
+method:
+  - "Data: OpenRouter's public daily rankings (top 50 models per day plus an 'other' row), its model catalog and its weekly task classification. Public traffic only; private and zero-data-retention traffic is excluded, and apps like ChatGPT aren't in it."
+  - "Weeks run Monday to Sunday (UTC). Charts cover the last 52 complete weeks."
+  - "Every model is labeled from a hand-checked registry (company, open or closed weights, country, family, price tier and more), and every label has a source."
+  - "Stealth models are unreleased models tested under code names. Their makers are undisclosed, so they're left out of open-vs-closed and similar splits; the footers say how big they are."
+  - "Providers count tokens differently, so the charts compare shares and trends, not exact totals."

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>$page_title</title>
+<meta name="description" content="$description">
+<meta property="og:type" content="website">
+<meta property="og:title" content="$headline">
+<meta property="og:description" content="$description">
+<meta property="og:url" content="$page_url">
+<meta property="og:image" content="$og_image">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="$og_image">
+<link rel="icon" href="${assets}favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="${assets}site.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a class="brand" href="${home}">
+      $logo
+      <span class="brand-name">$site_name</span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      $nav_links
+    </nav>
+    <label class="week-picker">
+      <span class="sr-only">Choose a week</span>
+      <select id="week-select" aria-label="Choose a week">
+        $week_options
+      </select>
+    </label>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <p class="kicker"><span class="kicker-rule"></span>$kicker</p>
+    <h1>$headline</h1>
+    <p class="lede">$tagline</p>
+    <div class="stats">
+      $stat_cards
+    </div>
+  </section>
+
+  <section class="featured wrap" aria-label="Featured chart">
+    $featured
+  </section>
+
+  $sections
+
+  <section class="wrap panel" id="method">
+    <div class="panel-grid">
+      <div>
+        <h2>How it's made</h2>
+        <ul class="method">
+          $method_items
+        </ul>
+      </div>
+      <div>
+        <h2>Get the data</h2>
+        <p class="muted">The numbers behind every chart for $week_range.</p>
+        <div class="downloads">
+          <a class="button" href="${week_base}weekly.csv" download>Weekly CSV</a>
+          <a class="button" href="${week_base}monthly.csv" download>Monthly CSV</a>
+        </div>
+        <h2 class="archive-title">Archive</h2>
+        <ul class="archive">
+          $archive_links
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      $logo
+      <div>
+        <strong>$author</strong>
+        <span class="muted">$company</span>
+      </div>
+    </div>
+    <p class="muted small">
+      Source: OpenRouter (<a href="https://openrouter.ai/rankings">openrouter.ai/rankings</a>), as of $as_of.
+      Data licensed under CC BY 4.0. Built with open code on
+      <a href="$repo_url">GitHub</a>. Last updated $updated.
+    </p>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lb-close" aria-label="Close">&times;</button>
+  <button class="lb-prev" aria-label="Previous chart">&#8249;</button>
+  <figure>
+    <img id="lb-img" alt="">
+    <figcaption id="lb-caption"></figcaption>
+  </figure>
+  <button class="lb-next" aria-label="Next chart">&#8250;</button>
+</div>
+
+<script src="${assets}site.js"></script>
+</body>
+</html>

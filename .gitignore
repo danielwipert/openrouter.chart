@@ -13,3 +13,6 @@ __pycache__/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Website build output (published by GitHub Pages, not saved in git)
+_site/
