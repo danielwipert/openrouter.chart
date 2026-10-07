@@ -36,12 +36,13 @@ def test_leaderboard_change_and_headline():
     latest, table = leaderboard.latest_and_before(weekly_table(), "company")
     assert list(table["value"]) == ["Stealth (undisclosed)", "DeepSeek", "OpenAI"]
     # ties sort by name; stealth on top -> headline names the top named lab
-    text = {"headline": "{company} leads with {share}%",
-            "headline_stealth_top": "{company} leads named labs with {share}%"}
-    assert leaderboard.headline(table, text) == "DeepSeek leads named labs with 30.0%"
-    assert leaderboard.change_text(-5.0) == "▼ 5.0 pts"
-    assert leaderboard.change_text(float("nan")) == "new"
-    assert leaderboard.change_text(0.01) == "no change"
+    text = {"headline": "{company} leads", "headline_stealth_top": "{company} leads named labs"}
+    assert leaderboard.headline(table, text) == "DeepSeek leads named labs"
+    top, stealth_on_top = leaderboard.leader(table)
+    assert (top["value"], top["share"], stealth_on_top) == ("DeepSeek", 0.3, True)
+    assert leaderboard.change_text(-5.0) == "▼ 5.0"
+    assert leaderboard.change_text(float("nan")) == "NEW"
+    assert leaderboard.change_text(0.01) == "–"
 
 
 def test_footer_text_has_source_coverage_and_stealth_note():
@@ -50,6 +51,14 @@ def test_footer_text_has_source_coverage_and_stealth_note():
     assert "as of Oct 7, 2026" in text
     assert "Top-50 coverage 95%" in text
     assert "Excludes stealth models (15% of tokens in the latest week)" in text
+
+
+def test_both_themes_render(tmp_path):
+    for theme in ("dark", "light"):
+        style = charts.load_style()
+        style["theme"], style["colors"] = theme, style["themes"][theme]
+        assert len(charts.render_all(weekly_table(), "2026-10-07T00:00:00Z", tmp_path / theme,
+                                     style)) == 4
 
 
 def test_render_all_writes_fixed_names_and_same_bytes_twice(tmp_path):

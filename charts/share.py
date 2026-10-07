@@ -32,9 +32,18 @@ def month_ticks(ax, start, end, frame):
               for i, m in enumerate(months)]
     ax.set_xticks(months, labels)
     for label in ax.get_xticklabels():
-        label.set_fontproperties(frame.font("regular", frame.style["text_sizes"]["axis"]))
+        label.set_fontproperties(frame.font("regular", frame.sizes["axis"]))
         label.set_color(frame.colors["text_muted"])
-    ax.tick_params(axis="x", length=0, pad=8)
+    ax.tick_params(axis="x", length=0, pad=10)
+
+
+def callout(ax, frame, xy, text, offset, ha):
+    """Annotation with a thin leader line, in the text color."""
+    ax.annotate(text, xy, xytext=offset, textcoords="offset points", ha=ha, va="bottom",
+                color=frame.colors["text"], linespacing=1.2,
+                fontproperties=frame.font("semibold", frame.sizes["callout"]),
+                arrowprops={"arrowstyle": "-", "color": frame.colors["text"], "lw": 1,
+                            "shrinkA": 4, "shrinkB": 8})
 
 
 def render(weekly, footer_text, style, size):
@@ -46,46 +55,50 @@ def render(weekly, footer_text, style, size):
     last_week_end = x[-1] + pd.Timedelta(days=6)
 
     frame = Frame(style, size)
-    frame.headline(text["headline"].format(share=round(open_.iloc[-1] * 100)))
+    frame.kicker(text["kicker"])
+    frame.hero(text["hero"].format(share=round(open_.iloc[-1] * 100)), text["headline"])
     frame.subtitle(text["subtitle"].format(first=x[0].strftime("%b %Y"),
                                            last=last_week_end.strftime("%b %Y")))
     frame.footer(footer_text)
-    ax = frame.chart_area(left_px=56, right_px=style["layout"]["end_label_space"], below_px=76)
+    ax = frame.chart_area(left_px=0, right_px=style["layout"]["end_label_space"], below_px=70)
 
     ax.stackplot(x, open_, closed, colors=[colors["open"], colors["closed"]], linewidth=0)
-    ax.plot(x, open_, color=colors["background"], linewidth=2)  # 2px gap between bands
-    for y in (0.25, 0.75):
-        ax.axhline(y, color=colors["background"], linewidth=1, alpha=0.6)
-    ax.axhline(0.5, color=colors["reference_line"], linewidth=1.5, linestyle=(0, (6, 4)))
+    ax.plot(x, open_, color=colors["background"], linewidth=2.5)  # gap between bands
+    ax.axhline(0.5, color=colors["reference_line"], linewidth=1.2, linestyle=(0, (5, 4)),
+               alpha=0.8)
+    ax.text(x[0], 0.5, " 50%", va="bottom", ha="left", color=colors["text"],
+            fontproperties=frame.font("semibold", sizes["axis"]))
 
     ax.set_xlim(x[0], x[-1])
     ax.set_ylim(0, 1)
-    ax.set_yticks([0, 0.25, 0.5, 0.75, 1], ["0%", "25%", "50%", "75%", "100%"])
-    for label in ax.get_yticklabels():
-        label.set_fontproperties(frame.font("regular", sizes["axis"]))
-        label.set_color(colors["text_muted"])
-    ax.tick_params(axis="y", length=0, pad=10)
+    ax.set_yticks([])
     month_ticks(ax, x[0], x[-1], frame)
 
-    # End labels: latest share of each band at its right edge, in the band's color
+    # End labels: latest share of each band at its right edge
     edge = ax.get_yaxis_transform()
     for name, mid, value, color in [
             (text["open"], open_.iloc[-1] / 2, open_.iloc[-1], colors["open_label"]),
             (text["closed"], open_.iloc[-1] + closed.iloc[-1] / 2, closed.iloc[-1],
              colors["closed_label"])]:
-        ax.text(1.03, mid, f"{value:.0%}\n{name}", transform=edge, va="center", ha="left",
-                color=color, fontproperties=frame.font("bold", sizes["end_label"]),
-                linespacing=1.1)
+        ax.text(1.04, mid + 0.02, f"{value:.0%}", transform=edge, va="bottom", ha="left",
+                color=color, fontproperties=frame.font("hero", sizes["end_label"] * 1.4))
+        ax.text(1.04, mid, name.upper(), transform=edge, va="top", ha="left", color=color,
+                fontproperties=frame.font("bold", sizes["kicker"]))
 
-    # Crossover marker: dot and short label where open-weight passed 50% for good
+    # Crossover: magenta dot where open passed 50% for good, with a callout
     week = lasting_crossover(open_)
     if week is not None:
-        ax.plot([week], [0.5], "o", markersize=pt(14), color=colors["accent"],
-                markeredgecolor=colors["background"], markeredgewidth=2, zorder=5)
-        # Label sits inside the open band, just below and right of the dot
-        ax.annotate(text["crossover"].format(date=week.strftime("%b %-d")), (week, 0.5),
-                    xytext=(10, -14), textcoords="offset points", ha="left", va="top",
-                    color=colors["background"],
-                    fontproperties=frame.font("semibold", sizes["marker"]))
+        ax.plot([week], [0.5], "o", markersize=pt(18), color=colors["accent"],
+                markeredgecolor=colors["background"], markeredgewidth=2.5, zorder=5)
+        callout(ax, frame, (week, 0.5),
+                text["crossover"].format(date=week.strftime("%b %-d")), (-30, 70), "right")
+
+    # Peak: the highest open share in the window
+    peak_week = open_.idxmax()
+    if peak_week != x[-1]:
+        ax.plot([peak_week], [open_.max()], "o", markersize=pt(10), color=colors["text"],
+                zorder=5)
+        callout(ax, frame, (peak_week, open_.max()),
+                text["peak"].format(share=round(open_.max() * 100)), (0, 34), "center")
 
     return frame

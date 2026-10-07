@@ -162,7 +162,18 @@ The main chart is a 100% stacked area of weekly token share: open-weight on the 
 - White background, exported at 1080 x 1080 and 1080 x 1350 px.
 - Every size, color and text string lives in `style.yaml`, so the look changes without touching code.
 
-**Company leaderboard (step 6):** top 10 companies for the latest week, largest first, with the change in share points vs 4 weeks earlier ("new" if the company had no share then). "Stealth (undisclosed)" is a grey bar. If stealth is #1, the headline names the top named lab instead ("DeepSeek leads named labs on OpenRouter with 23.5% of tokens"). Headline numbers match the bar labels.
+**Redesign (Oct 7, 2026, step 6):** Dan asked for a bolder, magazine-style look (Bloomberg Businessweek as the reference). This replaces the plain header and colors above:
+
+- Chorus color stripe (blue, magenta, yellow) across the top edge.
+- Small all-caps kicker (e.g. "OPEN VS CLOSED · OPENROUTER") in yellow (dark theme) or magenta (light theme).
+- A huge hero number (Inter Display Black, 200 px) with the headline set beside it, e.g. "72%" + "of tokens now run on open-weight models".
+- Callouts with thin leader lines on the chart: the 50% crossover (magenta dot) and the peak.
+- Minimal axes: no y-axis; a labeled dashed 50% line; month labels only.
+- Footer: source line on the left; the Chorus ring mark with "Daniel Wipert / Chorus AI Systems" on the right.
+- Two themes in `style.yaml`: **dark** (charcoal background, cream text, grey closed band `#4A4741`) and **light** (cream background). The `theme:` line picks one.
+- Leaderboard: top 8, rank numbers, the name above each thick bar, the value at the bar's end, the change at the right; the leading named company is highlighted.
+
+**Company leaderboard (step 6):** top companies for the latest week, largest first, with the change in share points vs 4 weeks earlier ("new" if the company had no share then). "Stealth (undisclosed)" is a grey bar. If stealth is #1, the headline names the top named lab instead ("DeepSeek leads named labs on OpenRouter with 23.5% of tokens"). Headline numbers match the bar labels.
 
 **Built with:** matplotlib. It is stable, needs no browser, and gives exact control over every element.
 
