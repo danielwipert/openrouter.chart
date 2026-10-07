@@ -41,7 +41,7 @@ A run is **READY TO POST** only when all five rules pass. The run always finishe
 | --- | --- | --- |
 | Every named model is labeled | 100% of top-50 tokens have a value on every required dimension; zero "unknown" | `checks.py`, every run |
 | Long tail is disclosed | The "other" share is printed on every chart | Footer shows "Top-50 coverage: x%" |
-| Matches OpenRouter | The week's top 5 models match openrouter.ai/rankings, token totals within 1% | Dan spot-checks the first Monday of each month and ticks it in the report. The run can't see the tick, so this rule doesn't change the READY status; Dan doesn't post until he has ticked it on those Mondays |
+| Matches OpenRouter | The week's top 5 models match openrouter.ai/rankings, token totals within 1% | Dan spot-checks the first Monday of each month and ticks it in the report. The run can't see the tick, so this rule doesn't change the READY status; on those Mondays, Dan ticks it before posting |
 | Every label has a source | Each registry field says where it came from: catalog, rule, or manual with a link | Test fails if a source is blank |
 | Same input, same output | Rerunning on saved raw data gives identical numbers | Automated test, plus a re-aggregation check in every run |
 
