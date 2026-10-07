@@ -4,7 +4,7 @@ Oct 6, 2026 · @Dan
 
 ## What changed from v2
 
-This is the final spec: the v2 build plan stands, and seven gaps found in review are now closed. No code is written until Dan signs off the six decisions at the end.
+This is the final spec: the v2 build plan stands, and seven gaps found in review are now closed. The six decisions at the end were signed off on Oct 7, 2026; see "Decision sign-off changes" below for what they changed.
 
 | # | Gap in v2 | Resolution in v3 |
 | --- | --- | --- |
@@ -16,9 +16,17 @@ This is the final spec: the v2 build plan stands, and seven gaps found in review
 | 6 | One fetch call breaks once the window passes 366 days (January 2027) | Fetch splits any window into chunks of up to 366 days and joins them. |
 | 7 | Title and subtitle were hard-coded | Spec retitled for the wider scope. Every headline, subtitle and date range is filled from the data. |
 
+## Decision sign-off changes (Oct 7, 2026)
+
+The time window decision changed from "2026 year to date" to **rolling 52 weeks**. That replaces two v3 resolutions:
+
+- **Gap 2 (partial week):** every charted week is a full Monday–Sunday week, so the partial-week label is no longer used. It only comes back under the fallback below.
+- **Gap 6 (chunking):** 52 weeks is 364 days, which fits in one call. Fetch still splits any window over 366 days, as a safeguard.
+- **Fallback:** if the API has no daily data before 2026-01-01, the window starts at 2026-01-01 and grows each week until 52 full weeks exist (about January 2027), then rolls. While that holds, Jan 1–4 is charted and labeled "partial week."
+
 ## Goal and audience
 
-One command, run every Monday, produces an accurate breakdown of OpenRouter token usage from 2026-01-01 to the last complete week. It splits usage by open vs closed weights, company, model family, country and six more dimensions. Each dimension feeds its own LinkedIn-ready chart.
+One command, run every Monday, produces an accurate breakdown of OpenRouter token usage over the last 52 complete weeks (rolling window). It splits usage by open vs closed weights, company, model family, country and six more dimensions. Each dimension feeds its own LinkedIn-ready chart.
 
 - **Audience:** AI and operations leaders scrolling LinkedIn on a phone. Most are not data scientists.
 - **Success test:** a reader gets the main point in 3 seconds without reading the caption.
@@ -61,7 +69,7 @@ Raw API responses are saved once in `raw/` by date (see Data pipeline) rather th
 
 The pipeline makes 4 OpenRouter calls and runs 5 steps, each in its own small Python file so one can be fixed without touching the others.
 
-1. **Fetch.** Call `GET /api/v1/datasets/rankings-daily` from `start_date=2026-01-01` to the last completed UTC day. If the window is longer than 366 days, split it into chunks of up to 366 days and join them. Save each raw response to `raw/YYYY-MM-DD/`.
+1. **Fetch.** Call `GET /api/v1/datasets/rankings-daily` for the rolling window: from the Monday 52 weeks before the last complete week through the last completed UTC day (see the fallback under Decision sign-off changes). If the window is longer than 366 days, split it into chunks of up to 366 days and join them. Save each raw response to `raw/YYYY-MM-DD/`.
 2. **Catalog.** Call `GET /api/v1/models` for each model's details (such as `hugging_face_id`, `created`, pricing, supported parameters, input modalities). Also save this week's task-type snapshot (`/api/v1/classifications/task`) and top apps (`/api/v1/datasets/app-rankings`). All saved to `raw/YYYY-MM-DD/`.
 3. **Classify.** For each model ID: record `is_free` from the `:free` suffix, then strip the suffix so variants count with their base model. Look up the base model in the registry and attach every dimension. Add new models to the registry and list blank fields for review.
 4. **Aggregate.** For each dimension, sum tokens per value per week and per month. Share = a value's tokens / all labeled tokens.
@@ -70,12 +78,13 @@ The pipeline makes 4 OpenRouter calls and runs 5 steps, each in its own small Py
 **Fixed method (never changes week to week):**
 
 - Weeks run Monday to Sunday, UTC. The current unfinished week is always dropped.
-- Jan 1–4 2026 (Thursday to Sunday) is charted as a partial week and labeled "partial week."
+- The window is the last 52 complete weeks. No partial weeks are charted, except Jan 1–4 2026 under the fallback, labeled "partial week."
+- In `monthly.csv`, the first month is usually partial and is marked that way.
 - Variants like `:free` count with their base model; the free flag is kept as its own dimension.
 - Tokens are used as reported. Providers use different tokenizers, so posts compare shares and trends, not exact totals, and the footer says so.
 - Labels come only from the registry, never guessed at run time.
 
-**API limits:** the run uses 4 calls (5 once chunking starts in 2027). OpenRouter allows 30 calls per minute and 500 per day, so reruns are safe. Endpoint names and limits are confirmed against the live API in build step 2.
+**API limits:** the run uses 4 calls. OpenRouter allows 30 calls per minute and 500 per day, so reruns are safe. Endpoint names and limits are confirmed against the live API in build step 2.
 
 ## Model registry and dimensions
 
@@ -113,18 +122,20 @@ The main chart is a 100% stacked area of weekly token share: open-weight on the 
 | Element | Content | Style |
 | --- | --- | --- |
 | Headline | The finding, written from the data, e.g. "Open-weight models now carry {share}% of OpenRouter tokens" | Bold, 44 px, left-aligned |
-| Subtitle | "Weekly share of tokens, {dimension}, {first month} to {last month} {year}" | Regular, 24 px, grey |
+| Subtitle | "Weekly share of tokens, {dimension}, {first month} {year} to {last month} {year}" | Regular, 24 px, grey |
 | Chart area | x = week, y = 0 to 100% | About 65% of the image height |
 | 50% line | Dashed reference line (two-way splits only) | Thin, dark grey |
 | Crossover marker | Dot and short label on the first week a band passed 50% | Only if a crossover exists |
-| Partial week | Jan 1–4 point marked with a light hatch and "partial week" note | Small, grey |
+| Partial week | Only under the fallback: Jan 1–4 point marked with a light hatch and "partial week" note | Small, grey |
 | End labels | Latest share of each band at its right edge | Bold, band color |
 | Footer left | "Source: OpenRouter (openrouter.ai/rankings), as of {as\_of}. Top-50 coverage {x}%. Shares, not exact token counts." | 16 px, grey |
-| Footer right | Branding (see Decisions) | 16 px |
+| Footer right | "Created by Daniel Wipert \| Chorus AI Systems" | 16 px, charcoal |
 
 **Style rules:**
 
-- Two colors for two-way splits: one strong (open), one muted (closed). Multi-value charts use a fixed palette of 7 (top 6 + "all others" in grey). All colors pass a color-blind check.
+- Brand colors are Chorus AI Systems: blue `#0088B0`, magenta `#D5006C`, yellow `#F2C400`, charcoal `#1F1E1C`.
+- Two colors for two-way splits: Chorus blue `#0088B0` (open) and a soft warm grey (closed; exact hex picked in step 6). Magenta is the accent for the crossover marker. All text is charcoal. Yellow is never used for text on white (contrast 1.7:1).
+- Blue and magenta are never used as a two-way pair, because they look alike to people with red-blindness (protanopia). Multi-value charts use a fixed palette of 7 (top 6 + "all others" in grey). All colors pass a color-blind check.
 - No legend box; end labels name the bands.
 - Light horizontal gridlines at 25%, 50%, 75%. No vertical gridlines, no border.
 - X-axis labeled by month (Jan, Feb, Mar), not by week.
@@ -158,7 +169,7 @@ A hard check stops the run with a plain-English message. A soft check lets the r
 | API key present | Hard | `OPENROUTER_API_KEY` is set in `.env` |
 | API responds | Hard | Status 200; retry up to 3 times, 10 seconds apart, on errors or 429s |
 | Data is fresh | Hard | `meta.end_date` is within 2 days of today |
-| No missing days | Hard | Every day from Jan 1 to the end date has rows |
+| No missing days | Hard | Every day from the window start to the end date has rows |
 | Labels complete | Soft + NOT READY | Zero unknown values on required dimensions |
 | Sources complete | Soft + NOT READY | No blank `_source` field for a filled value |
 | Coverage | Soft | Warn if labeled tokens are under 80% of all tokens |
@@ -225,12 +236,12 @@ The build runs in three phases after a sign-off gate, so Dan can post from phase
 
 **Gate: spec sign-off**
 
-- [ ] **0. Approve the six decisions** in the table below. Check: every row says Approved or Changed.
+- [x] **0. Approve the six decisions** in the table below. Check: every row says Approved or Changed. Done Oct 7, 2026.
 
 **Phase 1: accurate open vs closed and company charts**
 
 - [ ] **1. Set up the folder.** Virtual environment, `requirements.txt`, `.env` with the key, `.gitignore`. Check: `python -c "import pandas, matplotlib"` runs with no error.
-- [ ] **2. Fetch.** `fetch.py` for all four endpoints, with chunking and retries. Check: raw files appear in `raw/` with today's date, and endpoint names and limits match the live docs.
+- [ ] **2. Fetch.** `fetch.py` for all four endpoints, with chunking and retries. Check: raw files appear in `raw/` with today's date, endpoint names and limits match the live docs, and we know how far back daily data goes (this decides the rolling window or the fallback).
 - [ ] **3. Registry.** `classify.py`; fill `labs.csv` and weights for every company in 2026's top 50. Check: zero unknown weights or companies.
 - [ ] **4. Aggregate.** `aggregate.py`. Check: open share is roughly 41% in mid-March and past 50% by early June, and the latest top 5 match openrouter.ai/rankings.
 - [ ] **5. Checks.** `checks.py`. Check: a wrong key stops the run with a clear message, and a blank label sets NOT READY.
@@ -246,7 +257,7 @@ The build runs in three phases after a sign-off gate, so Dan can post from phase
 **Phase 3: extra content and automation**
 
 - [ ] **11. Size, launch curve, task mix.** Check: at least 4 weekly task snapshots exist.
-- [ ] **12. Schedule it.** Scheduled task or GitHub Actions. Check: 2 unattended runs in a row are READY TO POST.
+- [ ] **12. Schedule it.** GitHub Actions, with the API key stored as a repo secret. Check: 2 unattended runs in a row are READY TO POST.
 
 The March and June figures in step 4 come from [an analysis of OpenRouter daily data](https://capitalandcompute.net/blog/open-source-llms-overtake-2026/); they are a sanity check, not a target.
 
@@ -256,12 +267,12 @@ Six choices need Dan's sign-off before build step 1. Each has a proposed default
 
 | Decision | Proposed default | Other options | Status |
 | --- | --- | --- | --- |
-| Branding in footer | Dan's name | Leucothea Consulting, Chorus AI, or a newsletter name | Needs Dan |
-| Brand colors | Neutral color-blind-safe pair, picked in step 6 | Dan supplies hex codes | Needs Dan |
-| Time window | 2026 year to date | Rolling 52 weeks, or from Jan 2025 | Needs Dan |
-| Price tier cutoffs | Budget under $0.50, mid $0.50–$5, premium over $5 per million tokens (input and output averaged) | Dan's own cutoffs, fixed once set | Needs Dan |
-| Country of a company | Headquarters | Where it was founded, or the parent company's country | Needs Dan |
-| Run location (phase 3) | Manual on Dan's computer | Scheduled task or GitHub Actions | Needs Dan |
+| Branding in footer | "Created by Daniel Wipert \| Chorus AI Systems" | Leucothea Consulting, Chorus AI, or a newsletter name | Changed |
+| Brand colors | Chorus AI Systems palette: open = blue `#0088B0`, closed = soft warm grey (hex picked in step 6), accent = magenta `#D5006C`, text = charcoal `#1F1E1C` | Neutral pair picked in step 6 | Changed |
+| Time window | Rolling 52 weeks; if the API has no data before 2026-01-01, start there and roll once 52 weeks exist | 2026 year to date, or from Jan 2025 | Changed |
+| Price tier cutoffs | Budget under $0.50, mid $0.50–$5, premium over $5 per million tokens (input and output averaged) | Dan's own cutoffs, fixed once set | Approved |
+| Country of a company | Headquarters | Where it was founded, or the parent company's country | Approved |
+| Run location (phase 3) | GitHub Actions (manual runs until 4 clean weeks) | Manual on Dan's computer, or scheduled task | Changed |
 
 Once all six rows are Approved or Changed, this spec is final and build step 1 starts.
 
