@@ -1,4 +1,4 @@
-# The weekly run. For now (build steps 2-5) it fetches data, labels and totals it, and runs the checks; later steps add
+# The weekly run. For now (build steps 2-6) it fetches data, labels and totals it, runs the checks and draws the charts; later steps add
 # the rest of the pipeline. Start it from the Actions tab with "Run workflow".
 name: Weekly run
 
@@ -41,11 +41,14 @@ jobs:
       - name: Checks (READY / NOT READY TO POST)
         run: python checks.py
 
+      - name: Draw charts
+        run: python -m charts
+
       - name: Save results to the repo
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add raw/ registry/
+          git add raw/ registry/ output/
           if git diff --cached --quiet; then
             echo "Nothing new to save."
           else

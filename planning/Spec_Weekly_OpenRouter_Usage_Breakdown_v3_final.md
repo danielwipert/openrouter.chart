@@ -144,16 +144,16 @@ The main chart is a 100% stacked area of weekly token share: open-weight on the 
 | Subtitle | "Weekly share of tokens, {dimension}, {first month} {year} to {last month} {year}" | Regular, 24 px, grey |
 | Chart area | x = week, y = 0 to 100% | About 65% of the image height |
 | 50% line | Dashed reference line (two-way splits only) | Thin, dark grey |
-| Crossover marker | Dot and short label on the first week a band passed 50% | Only if a crossover exists |
+| Crossover marker | Dot and short label on the week a band passed 50% and stayed above it ("Above 50% since Apr 27"). A short blip over 50% that falls back (Feb 2026) isn't marked | Only if the band is above 50% now |
 | Partial week | Only under the fallback: Jan 1–4 point marked with a light hatch and "partial week" note | Small, grey |
-| End labels | Latest share of each band at its right edge | Bold, band color |
+| End labels | Latest share of each band at its right edge | Bold, in a darker shade of the band color so the text stays readable (blue `#006F90`, grey `#6B675F`) |
 | Footer left | "Source: OpenRouter (openrouter.ai/rankings), as of {as\_of}. Top-50 coverage {x}%. Shares, not exact token counts." The open vs closed chart adds "Excludes stealth models ({x}%)." | 16 px, grey |
 | Footer right | "Created by Daniel Wipert \| Chorus AI Systems" | 16 px, charcoal |
 
 **Style rules:**
 
 - Brand colors are Chorus AI Systems: blue `#0088B0`, magenta `#D5006C`, yellow `#F2C400`, charcoal `#1F1E1C`.
-- Two colors for two-way splits: Chorus blue `#0088B0` (open) and a soft warm grey (closed; exact hex picked in step 6). Magenta is the accent for the crossover marker. All text is charcoal. Yellow is never used for text on white (contrast 1.7:1).
+- Two colors for two-way splits: Chorus blue `#0088B0` (open) and soft warm grey `#BDB7AC` (closed, picked in step 6; color-blind separation ΔE 18 against the blue). Magenta is the accent for the crossover marker. All text is charcoal. Yellow is never used for text on white (contrast 1.7:1).
 - Blue and magenta are never used as a two-way pair, because they look alike to people with red-blindness (protanopia). Multi-value charts use a fixed palette of 7 (top 6 + "all others" in grey). All colors pass a color-blind check.
 - No legend box; end labels name the bands.
 - Light horizontal gridlines at 25%, 50%, 75%. No vertical gridlines, no border.
@@ -161,6 +161,8 @@ The main chart is a 100% stacked area of weekly token share: open-weight on the 
 - Font: Inter, stored in `fonts/` so it renders the same on any computer.
 - White background, exported at 1080 x 1080 and 1080 x 1350 px.
 - Every size, color and text string lives in `style.yaml`, so the look changes without touching code.
+
+**Company leaderboard (step 6):** top 10 companies for the latest week, largest first, with the change in share points vs 4 weeks earlier ("new" if the company had no share then). "Stealth (undisclosed)" is a grey bar. If stealth is #1, the headline names the top named lab instead ("DeepSeek leads named labs on OpenRouter with 23.5% of tokens"). Headline numbers match the bar labels.
 
 **Built with:** matplotlib. It is stable, needs no browser, and gives exact control over every element.
 
@@ -260,7 +262,7 @@ The build runs in three phases after a sign-off gate, so Dan can post from phase
 - [x] **3. Registry.** `classify.py`; fill `labs.csv` and weights for every company in 2026's top 50. Check: zero unknown weights or companies. Done Oct 7, 2026: 254 models (194 by rule or catalog, 60 by hand with source links), 0% unknown.
 - [x] **4. Aggregate.** `aggregate.py`. Check: open share is roughly 41% in mid-March and past 50% by early June, and the latest top 5 match openrouter.ai/rankings. Done Oct 7, 2026: 42.4% open in the week of Mar 16, above 50% every week since Apr 27; Dan confirmed the top 5 match.
 - [x] **5. Checks.** `checks.py`. Check: a wrong key stops the run with a clear message, and a blank label sets NOT READY. Done Oct 7, 2026: a wrong key against the live API stops with "OpenRouter rejected the API key"; tests cover every hard check, NOT READY on a blank label or source, and each warning.
-- [ ] **6. First charts.** Weights share over time and company leaderboard. Check: Dan approves both on his phone.
+- [ ] **6. First charts.** Weights share over time and company leaderboard. Check: Dan approves both on a phone.
 - [ ] **7. One command.** `run_weekly.py`, captions, run report, `meta.json`, tests. Check: running twice on the same raw data gives identical files.
 
 **Phase 2: more dimensions**

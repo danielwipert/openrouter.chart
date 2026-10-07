@@ -1,0 +1,66 @@
+# Every size, color and text string for the charts (spec, "Chart design").
+# Change the look here; no code changes needed. Sizes are in pixels.
+
+sizes:
+  square:   {width: 1080, height: 1080}
+  portrait: {width: 1080, height: 1350}
+
+margins:          # space around the content
+  left: 64
+  right: 64
+  top: 64
+  bottom: 48
+
+fonts:
+  folder: fonts
+  regular: Inter-Regular.ttf
+  semibold: Inter-SemiBold.ttf
+  bold: Inter-Bold.ttf
+
+text_sizes:
+  headline: 44
+  subtitle: 24
+  axis: 20
+  end_label: 26
+  marker: 20
+  bar_label: 22
+  footer: 16
+
+colors:
+  background: "#FFFFFF"
+  text: "#1F1E1C"          # Chorus charcoal: headline, values, labels
+  text_muted: "#6B675F"    # subtitle, footer, axis labels (5.6:1 on white)
+  grid: "#E6E3DD"          # light gridlines at 25 / 50 / 75%
+  reference_line: "#5C5852"  # dashed 50% line
+  accent: "#D5006C"        # Chorus magenta: crossover marker
+  open: "#0088B0"          # Chorus blue: open-weight band (strong)
+  closed: "#BDB7AC"        # soft warm grey: closed-weight band (muted)
+  open_label: "#006F90"    # darker blue for end-label text (5.6:1 on white)
+  closed_label: "#6B675F"  # darker warm grey for end-label text
+  bar: "#0088B0"           # leaderboard bars
+  bar_muted: "#BDB7AC"     # leaderboard bar for "Stealth (undisclosed)"
+  up: "#1F1E1C"            # change arrows use text colors, never red/green
+  down: "#1F1E1C"
+
+layout:
+  headline_wrap: 34        # characters per headline line before wrapping
+  chart_height: 0.65       # share of the image height for the chart area
+  gap_after_subtitle: 36
+  end_label_space: 150     # room at the right of the share chart for end labels
+  leaderboard_rows: 10
+
+text:
+  footer_source: "Source: OpenRouter (openrouter.ai/rankings), as of {as_of}. Top-50 coverage {coverage}%. Shares, not exact token counts."
+  footer_stealth: "Excludes stealth models ({stealth}% of tokens in the latest week)."
+  branding: "Created by Daniel Wipert | Chorus AI Systems"
+  weights_share:
+    headline: "Open-weight models now carry {share}% of OpenRouter tokens"
+    subtitle: "Weekly share of tokens, open vs closed weights, {first} to {last}"
+    open: "Open"
+    closed: "Closed"
+    crossover: "Above 50% since {date}"
+  company_leaderboard:
+    headline: "{company} leads OpenRouter with {share}% of tokens"
+    headline_stealth_top: "{company} leads named labs on OpenRouter with {share}% of tokens"
+    subtitle: "Share of tokens by company, {week}"
+    change_header: "vs 4 wks ago"
