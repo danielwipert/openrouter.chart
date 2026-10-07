@@ -166,7 +166,7 @@ A hard check stops the run with a plain-English message. A soft check lets the r
 
 | Check | Type | Rule |
 | --- | --- | --- |
-| API key present | Hard | `OPENROUTER_API_KEY` is set in `.env` |
+| API key present | Hard | `OPENROUTER_API_KEY` is set (GitHub secret in Actions, or `.env` if run locally) |
 | API responds | Hard | Status 200; retry up to 3 times, 10 seconds apart, on errors or 429s |
 | Data is fresh | Hard | `meta.end_date` is within 2 days of today |
 | No missing days | Hard | Every day from the window start to the end date has rows |
@@ -179,21 +179,17 @@ A hard check stops the run with a plain-English message. A soft check lets the r
 **Code stability rules:**
 
 - Exact library versions pinned in `requirements.txt`.
-- API key only in `.env`, never in code; `.env` listed in `.gitignore`.
+- API key only in the `OPENROUTER_API_KEY` GitHub secret (or `.env` for a local run), never in code; `.env` listed in `.gitignore`.
 - The `meta` block saved with every output, as OpenRouter asks.
 - Tests check classify and aggregate against saved sample data, so changes can't quietly break the math.
 
 ## Running it weekly
 
-Run it by hand every Monday morning until there are 4 clean weeks, then consider automation. Monday is used because the previous Monday-to-Sunday week is complete by then.
+Everything runs on GitHub Actions; nothing is installed on Dan's computer (changed Oct 7, 2026). Until there are 4 clean weeks, Dan starts each Monday run by hand with the **Run workflow** button; after that, it runs on a schedule. Monday is used because the previous Monday-to-Sunday week is complete by then.
 
-**Phase 1 and 2, manual:**
+**Phase 1 and 2, started by hand:** on GitHub, open **Actions**, pick the weekly workflow, and click **Run workflow**. It runs `python run_weekly.py` in the cloud.
 
-```bash
-python run_weekly.py
-```
-
-Then: open `run_report.md`, confirm READY TO POST, look at the charts on a phone, edit `caption.md`, post.
+Then: open `run_report.md` in the repo, confirm READY TO POST, look at the charts on a phone, edit `caption.md`, post.
 
 **Phase 3, automatic (optional):**
 
@@ -240,7 +236,7 @@ The build runs in three phases after a sign-off gate, so Dan can post from phase
 
 **Phase 1: accurate open vs closed and company charts**
 
-- [ ] **1. Set up the folder.** Virtual environment, `requirements.txt`, `.env` with the key, `.gitignore`. Check: `python -c "import pandas, matplotlib"` runs with no error.
+- [ ] **1. Set up the folder.** `requirements.txt`, `.gitignore`, the `OPENROUTER_API_KEY` GitHub secret, and a **Setup check** GitHub Actions workflow. Check: the Setup check run is green (it runs `python -c "import pandas, matplotlib"` and confirms the secret exists).
 - [ ] **2. Fetch.** `fetch.py` for all four endpoints, with chunking and retries. Check: raw files appear in `raw/` with today's date, endpoint names and limits match the live docs, and we know how far back daily data goes (this decides the rolling window or the fallback).
 - [ ] **3. Registry.** `classify.py`; fill `labs.csv` and weights for every company in 2026's top 50. Check: zero unknown weights or companies.
 - [ ] **4. Aggregate.** `aggregate.py`. Check: open share is roughly 41% in mid-March and past 50% by early June, and the latest top 5 match openrouter.ai/rankings.
@@ -272,7 +268,7 @@ Six choices need Dan's sign-off before build step 1. Each has a proposed default
 | Time window | Rolling 52 weeks; if the API has no data before 2026-01-01, start there and roll once 52 weeks exist | 2026 year to date, or from Jan 2025 | Changed |
 | Price tier cutoffs | Budget under $0.50, mid $0.50–$5, premium over $5 per million tokens (input and output averaged) | Dan's own cutoffs, fixed once set | Approved |
 | Country of a company | Headquarters | Where it was founded, or the parent company's country | Approved |
-| Run location (phase 3) | GitHub Actions (manual runs until 4 clean weeks) | Manual on Dan's computer, or scheduled task | Changed |
+| Run location | GitHub Actions for every run: started by hand with the Run workflow button until 4 clean weeks, then scheduled | Manual on Dan's computer, or scheduled task | Changed |
 
 Once all six rows are Approved or Changed, this spec is final and build step 1 starts.
 

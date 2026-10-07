@@ -3,55 +3,26 @@
 Weekly LinkedIn-ready charts of OpenRouter token usage (open vs closed weights, company, and more).
 The full plan is in [`planning/Spec_Weekly_OpenRouter_Usage_Breakdown_v3_final.md`](planning/Spec_Weekly_OpenRouter_Usage_Breakdown_v3_final.md).
 
-## One-time setup
+Everything runs in the cloud on GitHub Actions. Nothing needs to be installed on your computer.
 
-You need Python 3.11 or newer. Check with `python --version` (Windows) or `python3 --version` (Mac).
+## One-time setup: add the API key
 
-### 1. Get the code
+The code reads your OpenRouter key from a GitHub secret. A secret is stored encrypted, never shown in logs, and never saved in the code.
 
-```bash
-git clone https://github.com/danielwipert/openrouter.chart.git
-cd openrouter.chart
-```
+1. Get a key at https://openrouter.ai/settings/keys.
+2. On GitHub, open this repo, then **Settings** > **Secrets and variables** > **Actions**.
+3. Click **New repository secret**.
+4. Name: `OPENROUTER_API_KEY`. Secret: paste your key. Click **Add secret**.
 
-### 2. Make a virtual environment
+## Checking it works
 
-A virtual environment is a private folder of libraries just for this project, so it can't clash with other Python projects.
+1. Open the **Actions** tab of this repo.
+2. Click **Setup check** on the left.
+3. Click **Run workflow**, then the green **Run workflow** button.
+4. After about a minute, a green tick means it worked. A red cross means something failed: click the run to see which step and why.
 
-Mac:
+The setup check also runs on its own after every code change.
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
+## Running locally (optional)
 
-Windows (PowerShell):
-
-```powershell
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-```
-
-You'll see `(.venv)` at the start of your prompt when it's active. Activate it again each time you open a new terminal.
-
-### 3. Install the libraries
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Add your API key
-
-1. Copy `.env.example` to a new file named `.env`.
-2. Get a key at https://openrouter.ai/settings/keys.
-3. Paste it after `OPENROUTER_API_KEY=` in `.env`, then save.
-
-`.env` is listed in `.gitignore`, so git never uploads it.
-
-### 5. Check it works
-
-```bash
-python -c "import pandas, matplotlib; print('OK')"
-```
-
-If it prints `OK`, setup is done.
+Not needed. If you ever want to: install Python 3.11+, run `pip install -r requirements.txt`, and copy `.env.example` to `.env` with your key in it.

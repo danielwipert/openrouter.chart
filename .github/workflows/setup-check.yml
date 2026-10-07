@@ -1,0 +1,36 @@
+# Build step 1 check: install the pinned libraries on a clean cloud machine
+# and confirm they import. Runs on every push, or by hand from the Actions tab.
+name: Setup check
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  setup-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install libraries
+        run: pip install -r requirements.txt
+
+      - name: Step 1 check
+        run: python -c "import pandas, matplotlib; print('OK')"
+
+      - name: API key secret is set
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          if [ -z "$OPENROUTER_API_KEY" ]; then
+            echo "::error::OPENROUTER_API_KEY secret is missing. Add it under Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          echo "API key secret found."
