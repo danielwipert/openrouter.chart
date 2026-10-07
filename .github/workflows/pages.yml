@@ -9,7 +9,7 @@ on:
     workflows: ["Weekly run"]
     types: [completed]
   push:
-    branches: [claude/inspiring-allen-yq2pp3]
+    branches: [main]
     paths: ["site/**", "site_build.py", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
