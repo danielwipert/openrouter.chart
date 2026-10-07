@@ -306,7 +306,7 @@ The build runs in three phases after a sign-off gate, so Dan can post from phase
   - **Free variant** = Free vs Paid from the `:free` suffix on each traffic row; it isn't stored in the registry.
   - Stealth models get "Undisclosed" for price tier, reasoning and input type, and are left out of those splits, as for weights.
   - 51 retired models (4.9% of tokens) aren't in today's catalog. Their four values were researched by hand from OpenRouter's model pages and archived price lists, each with a source link; 4 are marked low confidence (prices that changed while live).
-- [ ] **10. More charts.** Share race, rank changes, country leaderboard, extra share-over-time charts. Check: Dan approves each. Built Oct 7, 2026 (awaiting Dan's approval): 11 charts x 2 sizes per week, each defined by one entry under `charts:` in `style.yaml`.
+- [x] **10. More charts.** Share race, rank changes, country leaderboard, extra share-over-time charts. Check: Dan approves each. Done Oct 7, 2026, all approved by Dan: 11 charts x 2 sizes per week, each defined by one entry under `charts:` in `style.yaml`.
 
   - **Share over time** (weights, price tier, free, input type, reasoning): labels sit on each band where it is thickest; the latest share of the bottom band is in a marker; two-way splits add the dashed 50% line and the crossover note.
   - **Leaderboard** (company, country): country titles use the adjective ("Chinese labs"); stealth shows as "Undisclosed (stealth models)".
