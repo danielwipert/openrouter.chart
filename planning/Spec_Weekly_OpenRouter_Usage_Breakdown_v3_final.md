@@ -178,7 +178,7 @@ The main chart is a 100% stacked area of weekly token share: open-weight on the 
 - Magenta only for the kicker (a short rule plus text) and the 50% crossover dot. The yellow appears only in the thin brand stripe.
 - End values sit in pills in their band's color. Notes on the chart use the text color.
 - Leaderboard: the leading named company is a full Chorus blue bar with its value in a blue pill; other companies are a light blue tint; stealth is hatched. Up arrows are blue, down arrows grey, always with ▲/▼.
-- Themes: **light** (warm paper white `#FAF8F4`, the default) and **dark** (deep navy `#0F2430`).
+- Themes: **dark** (deep navy `#0F2430`), chosen by Dan, and **light** (warm paper white `#FAF8F4`).
 
 **Company leaderboard (step 6):** top companies for the latest week, largest first, with the change in share points vs 4 weeks earlier ("new" if the company had no share then). "Stealth (undisclosed)" is a grey bar. If stealth is #1, the headline names the top named lab instead ("DeepSeek leads named labs on OpenRouter with 23.5% of tokens"). Headline numbers match the bar labels.
 
@@ -280,7 +280,7 @@ The build runs in three phases after a sign-off gate, so Dan can post from phase
 - [x] **3. Registry.** `classify.py`; fill `labs.csv` and weights for every company in 2026's top 50. Check: zero unknown weights or companies. Done Oct 7, 2026: 254 models (194 by rule or catalog, 60 by hand with source links), 0% unknown.
 - [x] **4. Aggregate.** `aggregate.py`. Check: open share is roughly 41% in mid-March and past 50% by early June, and the latest top 5 match openrouter.ai/rankings. Done Oct 7, 2026: 42.4% open in the week of Mar 16, above 50% every week since Apr 27; Dan confirmed the top 5 match.
 - [x] **5. Checks.** `checks.py`. Check: a wrong key stops the run with a clear message, and a blank label sets NOT READY. Done Oct 7, 2026: a wrong key against the live API stops with "OpenRouter rejected the API key"; tests cover every hard check, NOT READY on a blank label or source, and each warning.
-- [ ] **6. First charts.** Weights share over time and company leaderboard. Check: Dan approves both on a phone.
+- [x] **6. First charts.** Weights share over time and company leaderboard. Check: Dan approves both on a phone. Done Oct 7, 2026: approved in the dark navy theme.
 - [ ] **7. One command.** `run_weekly.py`, captions, run report, `meta.json`, tests. Check: running twice on the same raw data gives identical files.
 
 **Phase 2: more dimensions**

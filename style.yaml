@@ -1,7 +1,7 @@
 # Every size, color and text string for the charts (spec, "Chart design").
 # Change the look here; no code changes needed. Sizes are in pixels.
 
-theme: light  # light or dark (colors below)
+theme: dark   # light or dark (colors below)
 
 sizes:
   square:   {width: 1080, height: 1080}
