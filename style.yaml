@@ -1,7 +1,9 @@
 # Every size, color and text string for the charts (spec, "Chart design").
 # Change the look here; no code changes needed. Sizes are in pixels.
+# Look: editorial news-magazine style (white page, pastel cyan vs rose,
+# labels on the data, light grey grid, small round markers with text inside).
 
-theme: dark   # light or dark (colors below)
+theme: paper
 
 sizes:
   square:   {width: 1080, height: 1080}
@@ -10,88 +12,53 @@ sizes:
 margins:
   left: 64
   right: 64
-  top: 56
+  top: 60
   bottom: 44
 
 fonts:
   folder: fonts
-  regular: Inter-Regular.ttf
-  semibold: Inter-SemiBold.ttf
-  bold: Inter-Bold.ttf
-  display: InterDisplay-ExtraBold.ttf   # headline
-  hero: InterDisplay-Black.ttf          # the big number
+  regular: FiraSans-Regular.ttf
+  medium: FiraSans-Medium.ttf
+  semibold: FiraSans-SemiBold.ttf
+  bold: FiraSans-Bold.ttf
 
 text_sizes:
-  kicker: 20
-  hero: 200
-  headline: 46
-  subtitle: 22
-  axis: 19
-  end_label: 30
-  callout: 19
-  bar_label: 24
-  bar_value: 26
-  rank: 22
-  footer: 15
+  title: 46
+  subtitle: 27
+  units: 21
+  axis: 21
+  label: 27          # labels written on the data
+  annotation: 21
+  bubble: 19
+  bar_label: 25
+  bar_value: 23
+  footer: 16
   branding: 17
 
 themes:
-  # One color family (Chorus blue) plus a single accent (magenta), used sparingly.
-  light:
-    background: "#FAF8F4"   # warm paper white
-    header_panel: null
-    header_text: "#1F1E1C"
-    header_muted: "#6E6A63"
-    text: "#1F1E1C"         # Chorus charcoal
-    text_muted: "#6E6A63"
-    grid: "#E6E1D8"
-    kicker_fill: null       # plain kicker with a short accent rule
-    kicker_text: "#C2005F"  # deep Chorus magenta
-    accent: "#D5006C"
-    hero: "#0088B0"
-    open_gradient: ["#006F90", "#0A95C0"]   # bottom -> top of the open band
-    closed: "#CFE3EA"       # pale tint of Chorus blue
-    on_closed: "#1F1E1C"    # text and lines drawn on the closed band
-    open_pill: ["#0088B0", "#FFFFFF"]       # [fill, text]
-    closed_pill: ["#CFE3EA", "#0B4A63"]
-    bar: "#9CCBDC"          # leaderboard bars
-    bar_lead: "#0088B0"     # the leading named company
-    bar_muted: "#E4E0D8"    # stealth (hatched)
-    lead_pill: ["#0088B0", "#FFFFFF"]
-    up: "#0B6E8E"
-    down: "#6E6A63"
-    stripe: ["#0088B0", "#D5006C", "#F2C400"]
-  dark:
-    background: "#0F2430"   # deep navy
-    header_panel: null
-    header_text: "#F4F2EE"
-    header_muted: "#9FB2BC"
-    text: "#F4F2EE"         # Chorus cream
-    text_muted: "#9FB2BC"
-    grid: "#24414F"
-    kicker_fill: null
-    kicker_text: "#FF5CA8"  # light magenta for contrast on navy
-    accent: "#D5006C"
-    hero: "#4CC3EA"
-    open_gradient: ["#0A7DA3", "#2FB0DC"]
-    closed: "#2A4655"       # muted navy
-    on_closed: "#F4F2EE"
-    open_pill: ["#2FB0DC", "#0F2430"]
-    closed_pill: ["#2A4655", "#F4F2EE"]
-    bar: "#2A6680"
-    bar_lead: "#4CC3EA"
-    bar_muted: "#1D3540"
-    lead_pill: ["#4CC3EA", "#0F2430"]
-    up: "#4CC3EA"
-    down: "#9FB2BC"
-    stripe: ["#0088B0", "#D5006C", "#F2C400"]
+  paper:
+    background: "#FFFFFF"
+    text: "#121212"
+    text_muted: "#5C5C5C"
+    grid: "#D9D9D9"
+    reference_line: "#121212"   # dashed 50% line
+    accent: "#C2185B"           # deep Chorus magenta: arrows and the crossover marker
+    open: "#6FCDE3"             # pastel cyan (open-weight band)
+    open_dark: "#0088B0"        # Chorus blue: open labels and markers
+    closed: "#F6A6AE"           # pastel rose (closed-weight band)
+    closed_dark: "#C2185B"      # deep magenta: closed labels
+    bar: "#6FCDE3"
+    bar_lead: "#0088B0"
+    bar_muted: "#CFCFCF"        # stealth
+    up: "#0088B0"
+    down: "#C2185B"
+    stripe: ["#0088B0", "#D5006C", "#F2C400"]   # Chorus rings in the footer mark
 
 layout:
-  stripe_height: 6
-  chart_height: 0.56       # share of the image height for the chart area
-  gap_after_subtitle: 40
-  end_label_space: 150
-  leaderboard_rows: 8
+  title_wrap: 33          # characters per title line
+  chart_height: 0.60      # share of the image height for the chart area
+  gap_after_subtitle: 34
+  leaderboard_rows: 10
 
 text:
   footer_source: "Source: OpenRouter (openrouter.ai/rankings), as of {as_of}. Top-50 coverage {coverage}%. Shares, not exact token counts."
@@ -99,19 +66,16 @@ text:
   branding_name: "Daniel Wipert"
   branding_company: "Chorus AI Systems"
   weights_share:
-    kicker: "OPEN VS CLOSED · OPENROUTER"
-    hero: "{share}%"
-    headline: "of tokens now run on open-weight models"
-    subtitle: "Weekly share of tokens, {first} to {last}"
-    open: "Open"
-    closed: "Closed"
-    crossover: "{date}: open passes 50%\nand never looks back"
-    peak: "Peak: {share}%"
+    title: "Open-weight models now carry {share}% of OpenRouter tokens"
+    subtitle: "Weekly share of tokens, open v closed weights, {first} to {last}"
+    units: "% of tokens"
+    open: "Open-weight"
+    closed: "Closed-weight"
+    crossover_bubble: "{date}"
+    crossover_note: "Open-weight models passed half of all tokens in the week of {date}, and have stayed above it since"
   company_leaderboard:
-    kicker: "WHO'S WINNING · OPENROUTER"
-    hero: "{share}%"
-    headline: "{company} leads OpenRouter"
-    headline_stealth_top: "{company} leads the named labs"
-    subtitle: "Share of tokens by company, {week}"
-    change_header: "VS 4 WKS AGO"
-    stealth_note: "maker not yet revealed"
+    title: "{company} leads OpenRouter with {share}% of tokens"
+    title_stealth_top: "{company} leads the named labs on OpenRouter with {share}% of tokens"
+    subtitle: "% of tokens by company, {week}"
+    change_header: "vs 4 wks ago"
+    stealth_label: "Stealth (maker undisclosed)"

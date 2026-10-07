@@ -1,5 +1,5 @@
-"""The shared frame every chart uses: brand stripe, kicker, big number + headline,
-subtitle, chart area and footer.
+"""The shared frame every chart uses: title, subtitle, units label, chart area
+and footer.
 
 All positions are worked out in pixels, top to bottom, so the layout is the same
 on any computer. Sizes, colors and text come from style.yaml.
@@ -14,11 +14,11 @@ matplotlib.use("Agg")  # draw to files only; no screen needed
 import matplotlib.pyplot as plt  # noqa: E402
 import yaml  # noqa: E402
 from matplotlib.font_manager import FontProperties  # noqa: E402
-from matplotlib.patches import Circle, Rectangle  # noqa: E402
+from matplotlib.patches import Circle  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
-LINE_HEIGHT = 1.15
-FONT_WEIGHTS = ("regular", "semibold", "bold", "display", "hero")
+LINE_HEIGHT = 1.18
+FONT_WEIGHTS = ("regular", "medium", "semibold", "bold")
 
 
 def load_style(path=ROOT / "style.yaml"):
@@ -46,7 +46,6 @@ class Frame:
         folder = ROOT / style["fonts"]["folder"]
         self.fonts = {w: FontProperties(fname=folder / style["fonts"][w]) for w in FONT_WEIGHTS}
         self.footer_top = self.margin["bottom"]
-        self._stripe()
         self.cursor = self.height - self.margin["top"]  # pixels from the bottom
 
     # --- helpers ---------------------------------------------------------------
@@ -64,69 +63,29 @@ class Frame:
     def width_of(self, artist):
         return artist.get_window_extent(self.renderer).width
 
-    def _rect(self, x, y, w, h, color, zorder=1):
-        self.fig.add_artist(Rectangle((x / self.width, y / self.height), w / self.width,
-                                      h / self.height, transform=self.fig.transFigure,
-                                      color=color, linewidth=0, zorder=zorder))
-
-    def _stripe(self):
-        """The Chorus color stripe across the top edge."""
-        colors = self.colors["stripe"]
-        h = self.style["layout"]["stripe_height"]
-        part = self.width / len(colors)
-        for i, color in enumerate(colors):
-            self._rect(i * part, self.height - h, part + 1, h, color)
-
     # --- top block -------------------------------------------------------------
 
-    def kicker(self, text):
-        """Small all-caps label above the headline: in a pill if the theme gives a
-        fill color, otherwise plain text after a short accent rule."""
-        size = self.sizes["kicker"]
-        left, mid = self.margin["left"], self.cursor - size * 0.55
-        if self.colors.get("kicker_fill"):
-            self.text(left + 10, mid, text, "bold", size, self.colors["kicker_text"],
-                      va="center", bbox={"boxstyle": "round,pad=0.45,rounding_size=0.9",
-                                         "facecolor": self.colors["kicker_fill"],
-                                         "edgecolor": "none"})
-        else:
-            self._rect(left, mid - 2, 36, 4, self.colors["accent"])
-            self.text(left + 50, mid, text, "bold", size, self.colors["kicker_text"],
-                      va="center")
-        self.cursor -= size * LINE_HEIGHT + 22
-
-    def hero(self, number, headline):
-        """A huge number with the headline set beside it."""
-        size = self.sizes["hero"]
-        big = self.text(self.margin["left"] - 8, self.cursor + size * 0.12, number, "hero",
-                        size, self.colors["hero"], va="top", linespacing=1.0)
-        x = self.margin["left"] + self.width_of(big) + 20
-        # Wrap the headline to the space left beside the number; shrink it if that
-        # would take more than three lines.
-        room = self.width - self.margin["right"] - x
-        hsize = self.sizes["headline"]
-        lines = textwrap.wrap(headline, max(8, int(room / (hsize * 0.48))))
-        while len(lines) > 3 and hsize > 28:
-            hsize -= 4
-            lines = textwrap.wrap(headline, max(8, int(room / (hsize * 0.48))))
-        block = len(lines) * hsize * LINE_HEIGHT
-        cap_mid = self.cursor - size * 0.40  # middle of the number's digits
-        self.text(x, cap_mid + block / 2, "\n".join(lines), "display", hsize,
-                  self.colors["header_text"], va="top")
-        self.cursor -= size * 0.95
+    def title(self, text):
+        size = self.sizes["title"]
+        lines = textwrap.wrap(text, self.style["layout"]["title_wrap"])
+        self.text(self.margin["left"], self.cursor, "\n".join(lines), "bold", size,
+                  self.colors["text"], va="top")
+        self.cursor -= len(lines) * size * LINE_HEIGHT + 10
 
     def subtitle(self, text):
-        """Subtitle, then the color block behind the whole top section (if the theme has one)."""
         size = self.sizes["subtitle"]
-        self.cursor -= 6
-        self.text(self.margin["left"], self.cursor, text, "regular", size,
-                  self.colors["header_muted"], va="top")
-        self.cursor -= size * LINE_HEIGHT
-        if self.colors.get("header_panel"):
-            self.cursor -= 30
-            self._rect(0, self.cursor, self.width, self.height - self.cursor,
-                       self.colors["header_panel"], zorder=-1)
-        self.cursor -= self.style["layout"]["gap_after_subtitle"]
+        wrap = int((self.width - self.margin["left"] - self.margin["right"]) / (size * 0.47))
+        lines = textwrap.wrap(text, wrap)
+        self.text(self.margin["left"], self.cursor, "\n".join(lines), "regular", size,
+                  self.colors["text"], va="top")
+        self.cursor -= len(lines) * size * LINE_HEIGHT + self.style["layout"]["gap_after_subtitle"]
+
+    def units(self, text):
+        """Small grey unit label above the chart's top-right corner."""
+        size = self.sizes["units"]
+        self.text(self.width - self.margin["right"], self.cursor, text, "regular", size,
+                  self.colors["text_muted"], va="top", ha="right")
+        self.cursor -= size * LINE_HEIGHT + 12
 
     # --- chart and footer --------------------------------------------------------
 
@@ -141,7 +100,6 @@ class Frame:
         width = self.width - left - self.margin["right"] - right_px
         ax = self.fig.add_axes([left / self.width, (self.cursor - height) / self.height,
                                 width / self.width, height / self.height])
-        ax.set_facecolor(self.colors["background"])
         ax.patch.set_alpha(0)
         for side in ax.spines.values():
             side.set_visible(False)
@@ -164,19 +122,14 @@ class Frame:
     def footer(self, source_text):
         bottom = self.margin["bottom"]
         size = self.sizes["footer"]
-        lines = textwrap.wrap(source_text, 74)
+        lines = textwrap.wrap(source_text, 78)
         self.text(self.margin["left"], bottom, "\n".join(lines), "regular", size,
                   self.colors["text_muted"], va="bottom")
-        self.footer_top = bottom + len(lines) * size * LINE_HEIGHT + 28
-        # Rule above the footer
-        self._rect(self.margin["left"], self.footer_top - 14,
-                   self.width - self.margin["left"] - self.margin["right"], 1,
-                   self.colors["grid"])
-        # Branding: rings + name / company, right-aligned
+        self.footer_top = bottom + len(lines) * size * LINE_HEIGHT + 30
         bsize = self.sizes["branding"]
         right = self.width - self.margin["right"]
         name = self.text(right, bottom + bsize * 1.25, self.style["text"]["branding_name"],
-                         "bold", bsize, self.colors["text"], va="bottom", ha="right")
+                         "semibold", bsize, self.colors["text"], va="bottom", ha="right")
         company = self.text(right, bottom, self.style["text"]["branding_company"], "regular",
                             bsize, self.colors["text_muted"], va="bottom", ha="right")
         block_w = max(self.width_of(name), self.width_of(company))

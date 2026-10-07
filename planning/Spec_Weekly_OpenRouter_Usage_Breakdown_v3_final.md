@@ -159,7 +159,7 @@ The main chart is a 100% stacked area of weekly token share: open-weight on the 
 - No legend box; end labels name the bands.
 - Light horizontal gridlines at 25%, 50%, 75%. No vertical gridlines, no border.
 - X-axis labeled by month (Jan, Feb, Mar), not by week.
-- Font: Inter, stored in `fonts/` so it renders the same on any computer.
+- Font: Fira Sans (since the Oct 7 restyle), stored in `fonts/` so it renders the same on any computer.
 - White background, exported at 1080 x 1080 and 1080 x 1350 px.
 - Every size, color and text string lives in `style.yaml`, so the look changes without touching code.
 
@@ -180,6 +180,16 @@ The main chart is a 100% stacked area of weekly token share: open-weight on the 
 - End values sit in pills in their band's color. Notes on the chart use the text color.
 - Leaderboard: the leading named company is a full Chorus blue bar with its value in a blue pill; other companies are a light blue tint; stealth is hatched. Up arrows are blue, down arrows grey, always with ▲/▼.
 - Themes: **dark** (deep navy `#0F2430`), chosen by Dan, and **light** (warm paper white `#FAF8F4`).
+
+**Editorial restyle (Oct 7, 2026, before step 9; replaces the redesign and color passes above):** Dan picked a news-magazine chart (The Economist's emissions chart) as the model. The look now is:
+
+- White page. Bold black title that states the finding, a regular subtitle, and a small grey unit label ("% of tokens") at the chart's top right.
+- Font: **Fira Sans** (free, OFL licence, stored in `fonts/`). It is the closest free match to the magazine's own proprietary font.
+- Pastel pair: cyan `#6FCDE3` (open) and rose `#F6A6AE` (closed), separated by a white line. Darker shades label the bands directly on the chart: Chorus blue `#0088B0` and deep magenta `#C2185B`. Color-blind check: ΔE 8.3 (target 8), with direct labels and a white gap as the second cue.
+- Round markers with white text inside: the latest share at the right edge (Chorus blue) and the 50% crossover date (deep magenta).
+- A black dashed 50% line, y-axis numbers on the right, white gridlines over the bands, and a short annotation starting with a magenta "→".
+- Leaderboard: names on the left, flat pastel cyan bars with the leader in Chorus blue and stealth in grey, a top axis with light grey vertical gridlines, values at the bar ends, and the change vs 4 weeks ago as +/− numbers (blue up, magenta down).
+- No brand stripe at the top; the Chorus ring mark with "Daniel Wipert / Chorus AI Systems" sits in the footer.
 
 **Company leaderboard (step 6):** top companies for the latest week, largest first, with the change in share points vs 4 weeks earlier ("new" if the company had no share then). "Stealth (undisclosed)" is a grey bar. If stealth is #1, the headline names the top named lab instead ("DeepSeek leads named labs on OpenRouter with 23.5% of tokens"). Headline numbers match the bar labels.
 

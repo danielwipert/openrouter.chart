@@ -3,7 +3,6 @@
 """
 
 import pandas as pd
-from matplotlib.patches import FancyBboxPatch
 
 from charts.frame import Frame
 
@@ -29,16 +28,16 @@ def leader(table):
 
 def headline(table, text):
     top, stealth_on_top = leader(table)
-    template = text["headline_stealth_top"] if stealth_on_top else text["headline"]
-    return template.format(company=top["value"])
+    template = text["title_stealth_top"] if stealth_on_top else text["title"]
+    return template.format(company=top["value"], share=f"{top['share'] * 100:.1f}")
 
 
 def change_text(points):
     if pd.isna(points):
-        return "NEW"
+        return "new"
     if round(points, 1) == 0:
         return "–"
-    return f"{'▲' if points > 0 else '▼'} {abs(points):.1f}"
+    return f"{'+' if points > 0 else '−'}{abs(points):.1f}"
 
 
 def render(weekly, footer_text, style, size):
@@ -52,55 +51,56 @@ def render(weekly, footer_text, style, size):
     week_end = week_start + pd.Timedelta(days=6)
 
     frame = Frame(style, size)
-    frame.kicker(text["kicker"])
-    frame.hero(text["hero"].format(share=f"{top['share'] * 100:.1f}"), headline(table, text))
+    frame.title(headline(table, text))
     frame.subtitle(text["subtitle"].format(
         week=f"{week_start.strftime('%b %-d')} to {week_end.strftime('%b %-d, %Y')}"))
     frame.footer(footer_text)
-    ax = frame.chart_area(left_px=56, right_px=110, below_px=0)
+    frame.cursor -= 44  # room for the axis numbers above the bars
+    ax = frame.chart_area(left_px=300, right_px=130, below_px=0)
 
     n = len(rows)
-    ax.set_xlim(0, rows["share"].max() * 1.18)
-    ax.set_ylim(n - 0.35, -0.75)  # rank 1 at the top
-    ax.set_xticks([])
-    ax.set_yticks([])
-    edge = ax.get_yaxis_transform()
-    right = 1.0 + 110 / ax.bbox.width
+    # Axis end: the next multiple of 5 points, leaving room for the value label
+    xmax = max(0.05, -(-(rows["share"].max() * 100 + 3) // 5) * 5 / 100)
+    ax.set_xlim(0, xmax)
+    ax.set_ylim(n - 0.4, -0.6)  # rank 1 at the top
 
-    ax.text(right, -0.75, text["change_header"], transform=edge, ha="right", va="bottom",
-            color=colors["text_muted"], fontproperties=frame.font("bold", sizes["footer"]))
+    # Top axis with light grey vertical gridlines
+    step = 0.05 if xmax <= 0.3 else 0.1
+    ticks = [i * step for i in range(int(round(xmax / step)))]  # last one left off: no clash
+    ax.xaxis.tick_top()
+    ax.set_xticks(ticks, [f"{t * 100:.0f}" for t in ticks])
+    for label in ax.get_xticklabels():
+        label.set_fontproperties(frame.font("regular", sizes["axis"]))
+        label.set_color(colors["text_muted"])
+    ax.tick_params(axis="x", length=0, pad=8)
+    ax.grid(axis="x", color=colors["grid"], linewidth=1)
+    ax.set_axisbelow(True)
+    ax.set_yticks([])
+
+    edge = ax.get_yaxis_transform()
+    ax.text(1.0 + 130 / ax.bbox.width, 1.0 + 8 / ax.bbox.height, text["change_header"],
+            transform=ax.transAxes, ha="right", va="bottom", color=colors["text_muted"],
+            fontproperties=frame.font("regular", sizes["axis"]))
     for i, row in rows.iterrows():
         is_top = row["value"] == top["value"]
         is_stealth = row["value"] == STEALTH
-        y, h = i + 0.12, 0.44
         color = (colors["bar_muted"] if is_stealth else
                  colors["bar_lead"] if is_top else colors["bar"])
-        ax.add_patch(FancyBboxPatch((0, y - h / 2), row["share"], h, mutation_aspect=0.05,
-                                    boxstyle="round,pad=0,rounding_size=0.004", linewidth=0,
-                                    facecolor=color, hatch="///" if is_stealth else None,
-                                    edgecolor=colors["text_muted"] if is_stealth else "none"))
-        # Rank number, name above the bar, value at its end, change at the right
-        ax.text(-56 / ax.bbox.width, y, f"{i + 1:02d}", transform=edge, ha="left",
-                va="center", color=colors["text_muted"],
-                fontproperties=frame.font("hero", sizes["rank"]))
-        name = row["value"] + (f"  ·  {text['stealth_note']}" if is_stealth else "")
-        ax.text(0, i - 0.16, name, ha="left", va="bottom", color=colors["text"],
-                fontproperties=frame.font("bold" if is_top else "semibold",
+        ax.barh(i, row["share"], height=0.62, color=color, linewidth=0, zorder=2)
+        name = text["stealth_label"] if is_stealth else row["value"]
+        ax.text(-16 / ax.bbox.width, i, name, transform=edge, ha="right", va="center",
+                color=colors["text"],
+                fontproperties=frame.font("semibold" if is_top else "regular",
                                           sizes["bar_label"]))
-        value = {"ha": "left", "va": "center", "fontproperties":
-                 frame.font("hero", sizes["bar_value"]), "zorder": 4}
-        if is_top:
-            fill, ink = colors["lead_pill"]
-            ax.annotate(f"{row['share']:.1%}", (row["share"], y), xytext=(14, 0),
-                        textcoords="offset points", color=ink, **value,
-                        bbox={"boxstyle": "round,pad=0.35,rounding_size=0.5",
-                              "facecolor": fill, "edgecolor": "none"})
-        else:
-            ax.annotate(f"{row['share']:.1%}", (row["share"], y), xytext=(10, 0),
-                        textcoords="offset points", color=colors["text"], **value)
+        ax.annotate(f"{row['share'] * 100:.1f}", (row["share"], i), xytext=(8, 0),
+                    textcoords="offset points", ha="left", va="center", zorder=3,
+                    color=colors["open_dark"] if is_top else colors["text"],
+                    fontproperties=frame.font("semibold" if is_top else "regular",
+                                              sizes["bar_value"]))
         points = (row["share"] - row["before"]) * 100
-        ax.text(right, y, change_text(points), transform=edge, ha="right", va="center",
+        ax.text(1.0 + 130 / ax.bbox.width, i, change_text(points), transform=edge,
+                ha="right", va="center",
                 color=(colors["text_muted"] if pd.isna(points) or round(points, 1) == 0 else
                        colors["up"] if points > 0 else colors["down"]),
-                fontproperties=frame.font("bold", sizes["axis"]))
+                fontproperties=frame.font("medium", sizes["bar_value"]))
     return frame
