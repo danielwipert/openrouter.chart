@@ -80,7 +80,9 @@ The pipeline makes 4 OpenRouter calls and runs 5 steps, each in its own small Py
 - Endpoint names match: `/datasets/rankings-daily`, `/models`, `/classifications/task`, `/datasets/app-rankings`. Limits are 30 calls per minute and 500 per day.
 - Daily rankings start on 2025-01-01, cover the top 50 models per day plus one `other` row, and reject windows over 366 days.
 - Rankings rows name models by `model_permaslug` (e.g. `openai/gpt-4o-2024-05-13`). This matches the catalog's `canonical_slug` field, not its `id`. Classify (step 3) joins on `canonical_slug`.
-- In the catalog, `:free` appears only in `id`; the `canonical_slug` of a free variant has no suffix. Whether rankings rows can tell free traffic apart is checked against real data in step 3, before the Free variant dimension (step 9) is built.
+- Rankings rows do tell free traffic apart: free variants appear as `{permaslug}:free` (e.g. `deepseek/deepseek-r1-0528:free`). Classify records `is_free`, strips the suffix, then joins on `canonical_slug`. In the catalog, `:free` appears only in `id`.
+- First real fetch (Oct 7, 2026): 366 days with exactly 51 rows each (top 50 + `other`), 278 distinct model slugs. `other` is 6.7% of tokens.
+- After stripping `:free`, 66 slugs (9.8% of tokens) are not in today's catalog, so step 3 labels them by hand. 5.2% of tokens are stealth models (`stealth/...`, `openrouter/...-alpha`), whose company and weights are undisclosed; last week's #1 model was `stealth/space-bunny-alpha`. The other 4.6% are retired models such as `x-ai/grok-code-fast-1`.
 - Rankings and app rankings need the API key; the model catalog is public.
 - The data is licensed CC BY 4.0. Charts carry the citation line; files that republish the data itself (such as a shared `weekly.csv`) also add "Licensed under CC BY 4.0."
 
@@ -246,7 +248,7 @@ The build runs in three phases after a sign-off gate, so Dan can post from phase
 **Phase 1: accurate open vs closed and company charts**
 
 - [x] **1. Set up the folder.** `requirements.txt`, `.gitignore`, the `OPENROUTER_API_KEY` GitHub secret, and a **Setup check** GitHub Actions workflow. Check: the Setup check run is green (it runs `python -c "import pandas, matplotlib"` and confirms the secret exists). Done Oct 7, 2026.
-- [ ] **2. Fetch.** `fetch.py` for all four endpoints, with chunking and retries. Check: raw files appear in `raw/` with today's date, endpoint names and limits match the live docs, and we know how far back daily data goes (this decides the rolling window or the fallback).
+- [x] **2. Fetch.** `fetch.py` for all four endpoints, with chunking and retries. Check: raw files appear in `raw/` with today's date, endpoint names and limits match the live docs, and we know how far back daily data goes (this decides the rolling window or the fallback). Done Oct 7, 2026.
 - [ ] **3. Registry.** `classify.py`; fill `labs.csv` and weights for every company in 2026's top 50. Check: zero unknown weights or companies.
 - [ ] **4. Aggregate.** `aggregate.py`. Check: open share is roughly 41% in mid-March and past 50% by early June, and the latest top 5 match openrouter.ai/rankings.
 - [ ] **5. Checks.** `checks.py`. Check: a wrong key stops the run with a clear message, and a blank label sets NOT READY.
