@@ -21,15 +21,21 @@ model's labels change only when Dan edits the CSV.
 import json
 import re
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
 
 REGISTRY_DIR = Path("registry")
 RAW_DIR = Path("raw")
-REQUIRED = ["company", "weights", "country", "family"]  # required dimensions (phases 1-2)
-MODEL_COLUMNS = ["model_id", "company", "company_source", "weights", "weights_source",
-                 "country", "country_source", "family", "family_source", "first_seen"]
+REQUIRED = ["company", "weights", "country", "family",  # required dimensions (phases 1-2)
+            "release_date", "price_tier", "reasoning", "input_type"]
+MODEL_COLUMNS = (["model_id"] + [c for field in REQUIRED for c in (field, f"{field}_source")]
+                 + ["first_seen"])
+# Price tier cutoffs in $ per million tokens, input and output averaged (spec, Decisions)
+BUDGET_UNDER = 0.50
+MID_UP_TO = 5.00
+UNDISCLOSED = "Undisclosed"  # stealth models: price, reasoning and input type unknown
 OTHER = "other"  # the API's row for everything outside the daily top 50
 UNKNOWN = "unknown"
 
@@ -109,6 +115,63 @@ def family_rule(model_id, families):
     return "", ""
 
 
+def is_stealth(model_id, labs):
+    return (labs.get(model_id.split("/")[0]) or {}).get("default_weights") == "stealth"
+
+
+def release_rule(model_id, catalog, labs, first_seen):
+    entry = catalog.get(model_id)
+    if entry and entry.get("created"):
+        day = datetime.fromtimestamp(entry["created"], timezone.utc).date().isoformat()
+        return day, "catalog: created (date added to OpenRouter)"
+    if is_stealth(model_id, labs) and first_seen:
+        return first_seen, "rule: first day in OpenRouter data (stealth model)"
+    return "", ""
+
+
+def price_tier(average):
+    """Budget under $0.50, Mid $0.50 to $5, Premium over $5 (per million tokens)."""
+    if average < BUDGET_UNDER:
+        return "Budget"
+    return "Mid" if average <= MID_UP_TO else "Premium"
+
+
+def price_rule(model_id, catalog, labs):
+    entry = catalog.get(model_id)
+    if entry and entry.get("pricing"):
+        per_m_in = float(entry["pricing"].get("prompt", 0)) * 1e6
+        per_m_out = float(entry["pricing"].get("completion", 0)) * 1e6
+        # Embedding models have no output price: use the input price alone
+        average = per_m_in if per_m_out == 0 else (per_m_in + per_m_out) / 2
+        return price_tier(average), (f"catalog: pricing ${average:.2f}/M average "
+                                     f"(in ${per_m_in:.2f}, out ${per_m_out:.2f})")
+    if is_stealth(model_id, labs):
+        return UNDISCLOSED, "rule: stealth model"
+    return "", ""
+
+
+def reasoning_rule(model_id, catalog, labs):
+    entry = catalog.get(model_id)
+    if entry and entry.get("supported_parameters") is not None:
+        params = set(entry["supported_parameters"])
+        found = bool(params & {"reasoning", "include_reasoning"})
+        return ("Yes" if found else "No"), "catalog: supported_parameters"
+    if is_stealth(model_id, labs):
+        return UNDISCLOSED, "rule: stealth model"
+    return "", ""
+
+
+def input_rule(model_id, catalog, labs):
+    entry = catalog.get(model_id)
+    modalities = ((entry or {}).get("architecture") or {}).get("input_modalities")
+    if modalities:
+        value = "Text only" if set(modalities) == {"text"} else "Multimodal"
+        return value, f"catalog: input_modalities {'+'.join(sorted(modalities))}"
+    if is_stealth(model_id, labs):
+        return UNDISCLOSED, "rule: stealth model"
+    return "", ""
+
+
 def update_registry(models, labs, catalog, first_seen, families=None):
     """Add new models and fill blank fields. Returns (models, list of new model IDs)."""
     labs = {row["prefix"]: row for row in labs.to_dict("records")}
@@ -132,6 +195,16 @@ def update_registry(models, labs, catalog, first_seen, families=None):
             models.loc[i, ["country", "country_source"]] = country_rule(row["model_id"], labs)
         if not row["family"]:
             models.loc[i, ["family", "family_source"]] = family_rule(row["model_id"], families)
+        model_id = row["model_id"]
+        if not row["release_date"]:
+            models.loc[i, ["release_date", "release_date_source"]] = release_rule(
+                model_id, catalog, labs, row["first_seen"] or first_seen.get(model_id, ""))
+        if not row["price_tier"]:
+            models.loc[i, ["price_tier", "price_tier_source"]] = price_rule(model_id, catalog, labs)
+        if not row["reasoning"]:
+            models.loc[i, ["reasoning", "reasoning_source"]] = reasoning_rule(model_id, catalog, labs)
+        if not row["input_type"]:
+            models.loc[i, ["input_type", "input_type_source"]] = input_rule(model_id, catalog, labs)
     return models.sort_values("model_id", ignore_index=True), new_ids
 
 
@@ -152,6 +225,9 @@ def classify(rankings, models):
     for column in REQUIRED:
         df[column] = df[column].fillna("").replace("", UNKNOWN)
         df.loc[is_other, column] = OTHER
+    # Free variant comes from the ':free' suffix on each row, not from the registry
+    df["free"] = df["is_free"].map({True: "Free", False: "Paid"})
+    df.loc[is_other, "free"] = OTHER
     return df
 
 

@@ -19,17 +19,17 @@ def make_classified(open_tokens=60, closed_tokens=40, unknown_model=False):
     for day in DAYS:
         rows.append({"date": day, "slug": "ds/v3", "model_id": "ds/v3", "tokens": open_tokens,
                      "is_free": False, "weights": "open", "company": "DeepSeek",
-                     "country": "China", "family": "DeepSeek V3"})
+                     "country": "China", "family": "DeepSeek V3", "release_date": "2026-01-01", "price_tier": "Mid", "reasoning": "No", "input_type": "Text only", "free": "Paid"})
         rows.append({"date": day, "slug": "oa/gpt", "model_id": "oa/gpt", "tokens": closed_tokens,
                      "is_free": False, "weights": "closed", "company": "OpenAI",
-                     "country": "United States", "family": "GPT"})
+                     "country": "United States", "family": "GPT", "release_date": "2026-01-01", "price_tier": "Mid", "reasoning": "No", "input_type": "Text only", "free": "Paid"})
         rows.append({"date": day, "slug": "other", "model_id": "other", "tokens": 10,
                      "is_free": False, "weights": "other", "company": "other",
-                     "country": "other", "family": "other"})
+                     "country": "other", "family": "other", "release_date": "2026-01-01", "price_tier": "Mid", "reasoning": "No", "input_type": "Text only", "free": "Paid"})
     if unknown_model:
         rows.append({"date": DAYS[-1], "slug": "new/model", "model_id": "new/model", "tokens": 5,
                      "is_free": False, "weights": "unknown", "company": "unknown",
-                     "country": "unknown", "family": "unknown"})
+                     "country": "unknown", "family": "unknown", "release_date": "2026-01-01", "price_tier": "Mid", "reasoning": "No", "input_type": "Text only", "free": "Paid"})
     return pd.DataFrame(rows)
 
 
@@ -78,7 +78,11 @@ def test_clean_data_is_ready():
     models = pd.DataFrame([{"model_id": "ds/v3", "company": "DeepSeek", "company_source": "rule: x",
                             "weights": "open", "weights_source": "catalog: x",
                             "country": "China", "country_source": "rule: x",
-                            "family": "DeepSeek V3", "family_source": "rule: x"}])
+                            "family": "DeepSeek V3", "family_source": "rule: x",
+                            "release_date": "2026-01-01", "release_date_source": "catalog: x",
+                            "price_tier": "Mid", "price_tier_source": "catalog: x",
+                            "reasoning": "No", "reasoning_source": "catalog: x",
+                            "input_type": "Text only", "input_type_source": "catalog: x"}])
     result = [checks.check_labels(classified), checks.check_sources(models)]
     assert checks.is_ready(result)
 
@@ -94,7 +98,11 @@ def test_blank_source_sets_not_ready():
     models = pd.DataFrame([{"model_id": "ds/v3", "company": "DeepSeek", "company_source": "",
                             "weights": "open", "weights_source": "catalog: x",
                             "country": "China", "country_source": "rule: x",
-                            "family": "DeepSeek V3", "family_source": "rule: x"}])
+                            "family": "DeepSeek V3", "family_source": "rule: x",
+                            "release_date": "2026-01-01", "release_date_source": "catalog: x",
+                            "price_tier": "Mid", "price_tier_source": "catalog: x",
+                            "reasoning": "No", "reasoning_source": "catalog: x",
+                            "input_type": "Text only", "input_type_source": "catalog: x"}])
     result = [checks.check_sources(models)]
     assert not checks.is_ready(result)
     assert "ds/v3 (company)" in result[0].detail

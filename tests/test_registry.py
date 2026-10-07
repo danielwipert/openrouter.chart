@@ -34,6 +34,11 @@ def test_manual_sources_include_a_link():
 
 def test_values_are_from_the_allowed_lists():
     assert set(MODELS["weights"]) <= {"open", "closed", "stealth", ""}
+    assert set(MODELS["price_tier"]) <= {"Budget", "Mid", "Premium", "Undisclosed", ""}
+    assert set(MODELS["reasoning"]) <= {"Yes", "No", "Undisclosed", ""}
+    assert set(MODELS["input_type"]) <= {"Text only", "Multimodal", "Undisclosed", ""}
+    dates = MODELS.loc[MODELS["release_date"] != "", "release_date"]
+    assert dates.str.fullmatch(r"20\d\d-\d\d-\d\d").all()
     assert set(LABS["default_weights"]) <= {"closed", "stealth", ""}
 
 

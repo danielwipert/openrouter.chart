@@ -28,9 +28,11 @@ def make_raw(root):
     meta = {"as_of": f"{FETCH_DAY}T02:00:00.000Z", "version": "v1",
             "start_date": start.isoformat(), "end_date": end.isoformat()}
     (folder / "rankings_daily_01.json").write_text(json.dumps({"data": rows, "meta": meta}))
+    facts = {"created": 1735689600, "pricing": {"prompt": "0.000001", "completion": "0.000002"},
+             "supported_parameters": ["reasoning"], "architecture": {"input_modalities": ["text"]}}
     (folder / "models.json").write_text(json.dumps({"data": [
-        {"id": "ds/v3", "canonical_slug": "ds/v3", "hugging_face_id": "ds/V3"},
-        {"id": "oa/gpt", "canonical_slug": "oa/gpt", "hugging_face_id": None}]}))
+        {"id": "ds/v3", "canonical_slug": "ds/v3", "hugging_face_id": "ds/V3", **facts},
+        {"id": "oa/gpt", "canonical_slug": "oa/gpt", "hugging_face_id": None, **facts}]}))
     return folder
 
 

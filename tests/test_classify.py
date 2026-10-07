@@ -74,8 +74,9 @@ def test_classify_joins_free_variants_to_base_and_flags_unknowns():
     assert list(out["is_free"]) == [False, True, False, False]
     assert list(out["weights"]) == ["open", "open", "unknown", "other"]
     # 20 of the 100 top-50 tokens have unknown weights; 'other' is not counted
-    assert classify.unknown_report(out) == {"company": 0.0, "weights": 0.2,
-                                            "country": 0.0, "family": 0.0}
+    report = classify.unknown_report(out)
+    assert {k: report[k] for k in ("company", "weights", "country", "family")} == {
+        "company": 0.0, "weights": 0.2, "country": 0.0, "family": 0.0}
 
 
 def test_run_reads_raw_folder_and_saves_registry(tmp_path):
@@ -117,3 +118,37 @@ def test_old_registry_gets_new_columns_filled():
     row = models.iloc[0]
     assert (row["country"], row["family"]) == ("United States", "GPT")
     assert row["country_source"] == "rule: labs.csv prefix openai"
+
+
+def test_catalog_rules():
+    labs = {r["prefix"]: r for r in LABS.to_dict("records")}
+    catalog = {"a/x": {"created": 1767225600,  # 2026-01-01 UTC
+                       "pricing": {"prompt": "0.000001", "completion": "0.000004"},
+                       "supported_parameters": ["tools", "reasoning"],
+                       "architecture": {"input_modalities": ["text", "image"]}},
+               "a/emb": {"pricing": {"prompt": "0.0000002", "completion": "0"},
+                         "supported_parameters": [], "architecture": {"input_modalities": ["text"]}}}
+    assert classify.release_rule("a/x", catalog, labs, "")[0] == "2026-01-01"
+    assert classify.release_rule("stealth/s", catalog, labs, "2026-09-01")[0] == "2026-09-01"
+    tier, source = classify.price_rule("a/x", catalog, labs)
+    assert tier == "Mid" and "$2.50/M average" in source       # (1 + 4) / 2
+    assert classify.price_rule("a/emb", catalog, labs)[0] == "Budget"  # input price only: $0.20
+    assert classify.price_rule("stealth/s", catalog, labs)[0] == "Undisclosed"
+    assert classify.reasoning_rule("a/x", catalog, labs)[0] == "Yes"
+    assert classify.reasoning_rule("a/emb", catalog, labs)[0] == "No"
+    assert classify.input_rule("a/x", catalog, labs)[0] == "Multimodal"
+    assert classify.input_rule("a/emb", catalog, labs)[0] == "Text only"
+    assert classify.price_rule("missing/m", catalog, labs) == ("", "")
+
+
+def test_price_tier_cutoffs():
+    assert [classify.price_tier(p) for p in (0, 0.49, 0.50, 5.00, 5.01)] == [
+        "Budget", "Budget", "Mid", "Mid", "Premium"]
+
+
+def test_free_flag_becomes_its_own_dimension():
+    rankings = pd.DataFrame([{"date": "2026-01-01", "slug": "deepseek/v3:free", "tokens": 5},
+                             {"date": "2026-01-01", "slug": "deepseek/v3", "tokens": 5},
+                             {"date": "2026-01-01", "slug": "other", "tokens": 5}])
+    models, _ = classify.update_registry(EMPTY, LABS, CATALOG, classify.first_seen_dates(rankings))
+    assert list(classify.classify(rankings, models)["free"]) == ["Free", "Paid", "other"]
