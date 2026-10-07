@@ -41,9 +41,9 @@ A run is **READY TO POST** only when all five rules pass. The run always finishe
 | --- | --- | --- |
 | Every named model is labeled | 100% of top-50 tokens have a value on every required dimension; zero "unknown" | `checks.py`, every run |
 | Long tail is disclosed | The "other" share is printed on every chart | Footer shows "Top-50 coverage: x%" |
-| Matches OpenRouter | The week's top 5 models match openrouter.ai/rankings, token totals within 1% | Dan spot-checks the first Monday of each month and ticks it in the report |
+| Matches OpenRouter | The week's top 5 models match openrouter.ai/rankings, token totals within 1% | Dan spot-checks the first Monday of each month and ticks it in the report. The run can't see the tick, so this rule doesn't change the READY status; Dan doesn't post until he has ticked it on those Mondays |
 | Every label has a source | Each registry field says where it came from: catalog, rule, or manual with a link | Test fails if a source is blank |
-| Same input, same output | Rerunning on saved raw data gives identical numbers | Automated test |
+| Same input, same output | Rerunning on saved raw data gives identical numbers | Automated test, plus a re-aggregation check in every run |
 
 **Required dimensions** for phase 1 are weights and company. Each later dimension becomes required in the phase that adds it.
 
@@ -192,8 +192,8 @@ A hard check stops the run with a plain-English message. A soft check lets the r
 | Labels complete | Soft + NOT READY | Zero unknown values on required dimensions |
 | Sources complete | Soft + NOT READY | No blank `_source` field for a filled value |
 | Coverage | Soft | Warn if labeled tokens are under 80% of all tokens |
-| Big jump | Soft | Warn if any two-way share moves more than 10 points in one week |
-| History restated | Soft | Warn if any past week's share moved more than 1 point since the previous run (OpenRouter may restate figures) |
+| Big jump | Soft | Warn if any two-way share moves more than 10 points in the latest week |
+| History restated | Soft | Warn if any past week's share moved more than 1 point since the previous run (OpenRouter may restate figures). The previous run's figures are rebuilt from its `raw/` folder with today's registry, so a label change doesn't look like a restatement |
 
 **Code stability rules:**
 
@@ -258,8 +258,8 @@ The build runs in three phases after a sign-off gate, so Dan can post from phase
 - [x] **1. Set up the folder.** `requirements.txt`, `.gitignore`, the `OPENROUTER_API_KEY` GitHub secret, and a **Setup check** GitHub Actions workflow. Check: the Setup check run is green (it runs `python -c "import pandas, matplotlib"` and confirms the secret exists). Done Oct 7, 2026.
 - [x] **2. Fetch.** `fetch.py` for all four endpoints, with chunking and retries. Check: raw files appear in `raw/` with today's date, endpoint names and limits match the live docs, and we know how far back daily data goes (this decides the rolling window or the fallback). Done Oct 7, 2026.
 - [x] **3. Registry.** `classify.py`; fill `labs.csv` and weights for every company in 2026's top 50. Check: zero unknown weights or companies. Done Oct 7, 2026: 254 models (194 by rule or catalog, 60 by hand with source links), 0% unknown.
-- [ ] **4. Aggregate.** `aggregate.py`. Check: open share is roughly 41% in mid-March and past 50% by early June, and the latest top 5 match openrouter.ai/rankings.
-- [ ] **5. Checks.** `checks.py`. Check: a wrong key stops the run with a clear message, and a blank label sets NOT READY.
+- [x] **4. Aggregate.** `aggregate.py`. Check: open share is roughly 41% in mid-March and past 50% by early June, and the latest top 5 match openrouter.ai/rankings. Done Oct 7, 2026: 42.4% open in the week of Mar 16, above 50% every week since Apr 27; Dan confirmed the top 5 match.
+- [x] **5. Checks.** `checks.py`. Check: a wrong key stops the run with a clear message, and a blank label sets NOT READY. Done Oct 7, 2026: a wrong key against the live API stops with "OpenRouter rejected the API key"; tests cover every hard check, NOT READY on a blank label or source, and each warning.
 - [ ] **6. First charts.** Weights share over time and company leaderboard. Check: Dan approves both on his phone.
 - [ ] **7. One command.** `run_weekly.py`, captions, run report, `meta.json`, tests. Check: running twice on the same raw data gives identical files.
 

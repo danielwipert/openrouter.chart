@@ -1,4 +1,4 @@
-# The weekly run. For now (build steps 2-4) it fetches data, labels models and totals them; later steps add
+# The weekly run. For now (build steps 2-5) it fetches data, labels and totals it, and runs the checks; later steps add
 # the rest of the pipeline. Start it from the Actions tab with "Run workflow".
 name: Weekly run
 
@@ -37,6 +37,9 @@ jobs:
 
       - name: Weekly and monthly totals
         run: python aggregate.py
+
+      - name: Checks (READY / NOT READY TO POST)
+        run: python checks.py
 
       - name: Save results to the repo
         run: |

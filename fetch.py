@@ -79,6 +79,7 @@ def get(session, path, params=None):
 
 
 def save(folder, name, response):
+    folder.mkdir(parents=True, exist_ok=True)  # only once there is something to save
     (folder / name).write_text(response.text, encoding="utf-8")
     print(f"  saved {folder / name}")
     return response.json()
@@ -89,7 +90,6 @@ def fetch_all(api_key, today, raw_dir=RAW_DIR, session=None):
     session = session or requests.Session()
     session.headers["Authorization"] = f"Bearer {api_key}"
     folder = raw_dir / today.isoformat()
-    folder.mkdir(parents=True, exist_ok=True)
 
     start, end = fetch_window(today)
     rows, metas = [], []
