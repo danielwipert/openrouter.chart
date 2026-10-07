@@ -1,4 +1,4 @@
-# The weekly run. For now (build step 2) it only fetches data; later steps add
+# The weekly run. For now (build steps 2-3) it fetches data and labels models; later steps add
 # the rest of the pipeline. Start it from the Actions tab with "Run workflow".
 name: Weekly run
 
@@ -32,14 +32,17 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: python fetch.py
 
+      - name: Label models (adds new ones to the registry)
+        run: python classify.py
+
       - name: Save results to the repo
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add raw/
+          git add raw/ registry/
           if git diff --cached --quiet; then
             echo "Nothing new to save."
           else
-            git commit -m "Weekly run: raw data for $(date -u +%Y-%m-%d)"
+            git commit -m "Weekly run: data and registry for $(date -u +%Y-%m-%d)"
             git push
           fi

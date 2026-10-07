@@ -1,0 +1,29 @@
+prefix,company,company_source,country,country_source,default_weights,default_weights_source
+alibaba,Alibaba,manual: https://www.alibabacloud.com,,,,
+anthropic,Anthropic,manual: https://www.anthropic.com,,,closed,manual: https://www.anthropic.com/claude (API-only; no public weights)
+arcee-ai,Arcee AI,manual: https://www.arcee.ai,,,,
+baai,BAAI,manual: https://www.baai.ac.cn/en,,,,
+bytedance-seed,ByteDance,manual: https://seed.bytedance.com,,,,
+cohere,Cohere,manual: https://cohere.com,,,,
+deepseek,DeepSeek,manual: https://www.deepseek.com,,,,
+google,Google,manual: https://deepmind.google,,,closed,manual: https://deepmind.google/models/gemini/ (Gemini is API-only; open Gemma models carry a Hugging Face ID)
+meta,Meta,manual: https://ai.meta.com,,,,
+meta-llama,Meta,manual: https://ai.meta.com,,,,
+microsoft,Microsoft,manual: https://www.microsoft.com/en-us/ai,,,,
+minimax,MiniMax,manual: https://www.minimax.io,,,,
+mistralai,Mistral AI,manual: https://mistral.ai,,,,
+moonshotai,Moonshot AI,manual: https://www.moonshot.ai,,,,
+nvidia,NVIDIA,manual: https://www.nvidia.com/en-us/ai/,,,,
+openai,OpenAI,manual: https://openai.com,,,closed,manual: https://platform.openai.com/docs/models (GPT models are API-only; open gpt-oss models carry a Hugging Face ID)
+openrouter,Stealth (undisclosed),manual: https://openrouter.ai/docs/guides/routing/model-variants (cloaked '-alpha' test models; maker undisclosed),,,stealth,manual: https://openrouter.ai/docs/guides/routing/model-variants (maker and weights undisclosed)
+perplexity,Perplexity,manual: https://www.perplexity.ai,,,,
+poolside,Poolside,manual: https://poolside.ai,,,,
+qwen,Alibaba,manual: https://qwen.ai,,,,
+stealth,Stealth (undisclosed),manual: https://openrouter.ai/rankings (stealth test models; maker undisclosed),,,stealth,manual: https://openrouter.ai/rankings (maker and weights undisclosed)
+stepfun,StepFun,manual: https://www.stepfun.com,,,,
+tencent,Tencent,manual: https://hunyuan.tencent.com,,,,
+thinkingmachines,Thinking Machines Lab,manual: https://thinkingmachines.ai,,,,
+upstage,Upstage,manual: https://www.upstage.ai,,,,
+x-ai,xAI,manual: https://x.ai,,,closed,manual: https://x.ai/api (Grok models are API-only)
+xiaomi,Xiaomi,manual: https://mimo.xiaomi.com,,,,
+z-ai,Z.ai,manual: https://z.ai,,,,
