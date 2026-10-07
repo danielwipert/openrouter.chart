@@ -1,7 +1,7 @@
 # Every size, color and text string for the charts (spec, "Chart design").
 # Change the look here; no code changes needed. Sizes are in pixels.
 
-theme: dark   # dark or light (colors below)
+theme: light  # light or dark (colors below)
 
 sizes:
   square:   {width: 1080, height: 1080}
@@ -36,55 +36,58 @@ text_sizes:
   branding: 17
 
 themes:
-  dark:
-    background: "#1F1E1C"   # Chorus charcoal
-    header_panel: null      # color block behind the top section, or null
-    header_text: "#F4F2EE"
-    header_muted: "#A8A39A"
-    text: "#F4F2EE"         # Chorus cream
-    text_muted: "#A8A39A"
-    grid: "#3A3834"
-    kicker_fill: "#D5006C"  # magenta pill
-    kicker_text: "#FFFFFF"
-    accent: "#D5006C"
-    hero: "#33B5DE"
-    open: "#0088B0"
-    open_gradient: ["#00607E", "#33B5DE"]   # bottom -> top of the open band
-    closed: "#F2C400"       # Chorus yellow
-    open_pill: ["#0088B0", "#FFFFFF"]       # [fill, text]
-    closed_pill: ["#F2C400", "#1F1E1C"]
-    bar_gradient: ["#0088B0", "#D5006C"]    # bars: blue -> magenta, left to right
-    bar_muted: "#4A4741"
-    lead_pill: ["#F2C400", "#1F1E1C"]
-    up: "#33B5DE"
-    down: "#F0519A"
-    stripe: ["#0088B0", "#D5006C", "#F2C400"]
+  # One color family (Chorus blue) plus a single accent (magenta), used sparingly.
   light:
-    background: "#F4F2EE"   # Chorus cream
-    header_panel: "#1F1E1C" # charcoal color block behind the top section
-    header_text: "#F4F2EE"
-    header_muted: "#B9B4AA"
-    text: "#1F1E1C"
-    text_muted: "#6B675F"
-    grid: "#DEDAD2"
-    kicker_fill: "#F2C400"
-    kicker_text: "#1F1E1C"
+    background: "#FAF8F4"   # warm paper white
+    header_panel: null
+    header_text: "#1F1E1C"
+    header_muted: "#6E6A63"
+    text: "#1F1E1C"         # Chorus charcoal
+    text_muted: "#6E6A63"
+    grid: "#E6E1D8"
+    kicker_fill: null       # plain kicker with a short accent rule
+    kicker_text: "#C2005F"  # deep Chorus magenta
     accent: "#D5006C"
-    hero: "#F2C400"
-    open: "#0088B0"
-    open_gradient: ["#006F90", "#2BA9D3"]
-    closed: "#DDA600"       # deeper gold: Chorus yellow is too pale on cream
-    open_pill: ["#0088B0", "#FFFFFF"]
-    closed_pill: ["#DDA600", "#1F1E1C"]
-    bar_gradient: ["#0088B0", "#D5006C"]
-    bar_muted: "#CFCAC0"
-    lead_pill: ["#1F1E1C", "#F2C400"]
-    up: "#006F90"
-    down: "#B8005D"
+    hero: "#0088B0"
+    open_gradient: ["#006F90", "#0A95C0"]   # bottom -> top of the open band
+    closed: "#CFE3EA"       # pale tint of Chorus blue
+    on_closed: "#1F1E1C"    # text and lines drawn on the closed band
+    open_pill: ["#0088B0", "#FFFFFF"]       # [fill, text]
+    closed_pill: ["#CFE3EA", "#0B4A63"]
+    bar: "#9CCBDC"          # leaderboard bars
+    bar_lead: "#0088B0"     # the leading named company
+    bar_muted: "#E4E0D8"    # stealth (hatched)
+    lead_pill: ["#0088B0", "#FFFFFF"]
+    up: "#0B6E8E"
+    down: "#6E6A63"
+    stripe: ["#0088B0", "#D5006C", "#F2C400"]
+  dark:
+    background: "#0F2430"   # deep navy
+    header_panel: null
+    header_text: "#F4F2EE"
+    header_muted: "#9FB2BC"
+    text: "#F4F2EE"         # Chorus cream
+    text_muted: "#9FB2BC"
+    grid: "#24414F"
+    kicker_fill: null
+    kicker_text: "#FF5CA8"  # light magenta for contrast on navy
+    accent: "#D5006C"
+    hero: "#4CC3EA"
+    open_gradient: ["#0A7DA3", "#2FB0DC"]
+    closed: "#2A4655"       # muted navy
+    on_closed: "#F4F2EE"
+    open_pill: ["#2FB0DC", "#0F2430"]
+    closed_pill: ["#2A4655", "#F4F2EE"]
+    bar: "#2A6680"
+    bar_lead: "#4CC3EA"
+    bar_muted: "#1D3540"
+    lead_pill: ["#4CC3EA", "#0F2430"]
+    up: "#4CC3EA"
+    down: "#9FB2BC"
     stripe: ["#0088B0", "#D5006C", "#F2C400"]
 
 layout:
-  stripe_height: 10
+  stripe_height: 6
   chart_height: 0.56       # share of the image height for the chart area
   gap_after_subtitle: 40
   end_label_space: 150

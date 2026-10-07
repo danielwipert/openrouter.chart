@@ -2,9 +2,7 @@
 4 weeks earlier (spec, "Content library"). Phase 1 draws company.
 """
 
-import numpy as np
 import pandas as pd
-from matplotlib.colors import LinearSegmentedColormap
 from matplotlib.patches import FancyBboxPatch
 
 from charts.frame import Frame
@@ -71,23 +69,16 @@ def render(weekly, footer_text, style, size):
 
     ax.text(right, -0.75, text["change_header"], transform=edge, ha="right", va="bottom",
             color=colors["text_muted"], fontproperties=frame.font("bold", sizes["footer"]))
-    ramp = LinearSegmentedColormap.from_list("bars", colors["bar_gradient"])
-    gradient = np.linspace(0, 1, 256).reshape(1, -1)
-    xmax = ax.get_xlim()[1]
     for i, row in rows.iterrows():
         is_top = row["value"] == top["value"]
         is_stealth = row["value"] == STEALTH
         y, h = i + 0.12, 0.44
-        bar = FancyBboxPatch((0, y - h / 2), row["share"], h, mutation_aspect=0.05,
-                             boxstyle="round,pad=0,rounding_size=0.004", linewidth=0,
-                             facecolor=colors["bar_muted"] if is_stealth else "none",
-                             hatch="///" if is_stealth else None,
-                             edgecolor=colors["text_muted"] if is_stealth else "none")
-        ax.add_patch(bar)
-        if not is_stealth:  # blue -> magenta across the full width, clipped to the bar
-            image = ax.imshow(gradient, cmap=ramp, extent=[0, xmax, y - h / 2, y + h / 2],
-                              aspect="auto", zorder=2)
-            image.set_clip_path(bar)
+        color = (colors["bar_muted"] if is_stealth else
+                 colors["bar_lead"] if is_top else colors["bar"])
+        ax.add_patch(FancyBboxPatch((0, y - h / 2), row["share"], h, mutation_aspect=0.05,
+                                    boxstyle="round,pad=0,rounding_size=0.004", linewidth=0,
+                                    facecolor=color, hatch="///" if is_stealth else None,
+                                    edgecolor=colors["text_muted"] if is_stealth else "none"))
         # Rank number, name above the bar, value at its end, change at the right
         ax.text(-56 / ax.bbox.width, y, f"{i + 1:02d}", transform=edge, ha="left",
                 va="center", color=colors["text_muted"],

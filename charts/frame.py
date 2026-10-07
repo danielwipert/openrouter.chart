@@ -80,12 +80,19 @@ class Frame:
     # --- top block -------------------------------------------------------------
 
     def kicker(self, text):
-        """Small all-caps label in a colored pill above the headline."""
+        """Small all-caps label above the headline: in a pill if the theme gives a
+        fill color, otherwise plain text after a short accent rule."""
         size = self.sizes["kicker"]
-        self.text(self.margin["left"] + 10, self.cursor - size * 0.55, text, "bold", size,
-                  self.colors["kicker_text"], va="center",
-                  bbox={"boxstyle": "round,pad=0.45,rounding_size=0.9",
-                        "facecolor": self.colors["kicker_fill"], "edgecolor": "none"})
+        left, mid = self.margin["left"], self.cursor - size * 0.55
+        if self.colors.get("kicker_fill"):
+            self.text(left + 10, mid, text, "bold", size, self.colors["kicker_text"],
+                      va="center", bbox={"boxstyle": "round,pad=0.45,rounding_size=0.9",
+                                         "facecolor": self.colors["kicker_fill"],
+                                         "edgecolor": "none"})
+        else:
+            self._rect(left, mid - 2, 36, 4, self.colors["accent"])
+            self.text(left + 50, mid, text, "bold", size, self.colors["kicker_text"],
+                      va="center")
         self.cursor -= size * LINE_HEIGHT + 22
 
     def hero(self, number, headline):

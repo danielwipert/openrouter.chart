@@ -43,7 +43,7 @@ def month_ticks(ax, start, end, frame):
 def callout(ax, frame, xy, text, offset, ha):
     """Annotation with a thin leader line. It sits on the closed band, so it uses
     the ink color that reads on that band."""
-    ink = frame.colors["closed_pill"][1]
+    ink = frame.colors["on_closed"]
     ax.annotate(text, xy, xytext=offset, textcoords="offset points", ha=ha, va="bottom",
                 color=ink, linespacing=1.2,
                 fontproperties=frame.font("bold", frame.sizes["callout"]),
@@ -76,7 +76,7 @@ def render(weekly, footer_text, style, size):
                       extent=[xn[0], xn[-1], 0, 1], aspect="auto", zorder=1)
     image.set_clip_path(shape.get_paths()[0], transform=ax.transData)
     ax.plot(xn, open_, color=colors["background"], linewidth=2.5, zorder=2)
-    ink = colors["closed_pill"][1]  # reads on the closed band
+    ink = colors["on_closed"]  # reads on the closed band
     ax.axhline(0.5, color=ink, linewidth=1.2, linestyle=(0, (5, 4)), alpha=0.8, zorder=3)
     ax.text(xn[0], 0.5, " 50%", va="bottom", ha="left", color=ink, zorder=3,
             fontproperties=frame.font("semibold", sizes["axis"]))
