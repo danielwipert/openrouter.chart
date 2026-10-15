@@ -1,22 +1,22 @@
-# NOT READY TO POST (2026-W41)
+# READY TO POST (2026-W41)
 
-- **FAIL** Labels complete: Unknown weights: 0.45% of top-50 tokens, size: 0.45% of top-50 tokens. Fill in registry/models.csv for: stepfun/step-5-preview-20261008
+- **PASS** Labels complete: Zero unknown values on company, weights, country, family, release_date, price_tier, reasoning, input_type, size
 - **PASS** Sources complete: Every label has a source
 - **PASS** Same input, same output: Re-aggregating the same data gave identical numbers
-- **PASS** Long tail disclosed: Top-50 coverage for the footer: 88.3%
-- **PASS** Coverage: Labeled tokens are 88.3% of all tokens in the latest week (warn under 80%)
-- **PASS** Big jump: Open share moved +1.8 points in the latest week (warn over 10)
+- **PASS** Long tail disclosed: Top-50 coverage for the footer: 93.4%
+- **PASS** Coverage: Labeled tokens are 93.4% of all tokens in the latest week (warn under 80%)
+- **PASS** Big jump: Open share moved +3.3 points in the latest week (warn over 10)
 - **PASS** History restated: No past week's share moved more than 1 point
 - [ ] Dan: on the first Monday of the month, the top 5 match openrouter.ai/rankings (token totals within 1%)
 
 ## New models this week
 
 - anthropic/claude-haiku-5.5-20261007: Anthropic, closed (rule: labs.csv default for anthropic)
-- stepfun/step-5-preview-20261008: StepFun, no weights (no source)
+- stepfun/step-5-preview-20261008: StepFun, open (manual: https://huggingface.co/stepfun-ai/Step-5-Preview (weights on HF, posted 2026-10-15))
 
 ## Blank registry fields
 
-- stepfun/step-5-preview-20261008: weights, size
+- None
 
 ## Low-confidence labels to re-check monthly
 

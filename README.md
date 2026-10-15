@@ -29,6 +29,8 @@ The **Weekly run** starts by itself every Monday at 13:07 UTC (8:07 a.m. Central
 
 - **Green tick:** READY TO POST.
 - **Red cross:** GitHub emails you. Either a hard check stopped the run (the log says why, e.g. a rejected API key), or the results were saved but are NOT READY TO POST (the run report says why).
+- **Alert issue:** a red run also opens a GitHub issue called **Weekly run failed**, assigned to you, so you get an email and a GitHub app notification. It closes by itself after the next green run.
+- **Didn't run at all:** every Tuesday the **Weekly run watchdog** checks that the Weekly run started. If it didn't, it opens an issue called **Weekly run did not start**.
 
 Then:
 

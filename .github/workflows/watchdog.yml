@@ -1,0 +1,36 @@
+# Backup alert: if the Weekly run did not start at all this week (GitHub's
+# scheduler skipped it, or the schedule was turned off), open a GitHub issue
+# assigned to the repo owner so GitHub emails you. Runs every Tuesday.
+name: Weekly run watchdog
+
+on:
+  schedule:
+    - cron: "7 15 * * 2"  # Tuesdays 15:07 UTC, a day after the Weekly run
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  issues: write
+
+jobs:
+  watchdog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the Weekly run started in the last 2 days
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          since="$(date -u -d '2 days ago' +%Y-%m-%d)"
+          runs="$(gh run list --workflow weekly-run.yml --created ">=$since" --json databaseId --jq 'length')"
+          echo "Weekly runs since $since: $runs"
+          if [ "$runs" -gt 0 ]; then
+            exit 0
+          fi
+          body="The Weekly run did not start since $since. Start it by hand: Actions tab > Weekly run > Run workflow. Close this issue once it is green."
+          open_issue="$(gh issue list --state open --search 'in:title "Weekly run did not start"' --json number --jq '.[0].number')"
+          if [ -n "$open_issue" ]; then
+            gh issue comment "$open_issue" --body "$body"
+          else
+            gh issue create --title "Weekly run did not start" --body "$body" --assignee "${{ github.repository_owner }}"
+          fi

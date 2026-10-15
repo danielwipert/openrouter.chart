@@ -13,6 +13,7 @@ on:
 
 permissions:
   contents: write  # lets the run save raw/, registry/ and output/ back to the repo
+  issues: write    # lets a failed run open an alert issue for you
 
 concurrency:
   group: weekly-run  # never two runs at once
@@ -64,3 +65,35 @@ jobs:
             echo "::error::$status. Open $report in the repo to see why."
             exit 1
           fi
+
+      # Alert: any red run opens a GitHub issue assigned to the repo owner, so
+      # GitHub sends an email and a phone notification. If an alert is already
+      # open, it adds a comment instead of opening a second one.
+      - name: Alert on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          report="$(ls -d output/*/ 2>/dev/null | sort | tail -1)run_report.md"
+          status="$(head -1 "$report" 2>/dev/null || echo "No run report")"
+          body="The Weekly run failed: $RUN_URL
+
+          Newest run report ($report): $status
+
+          Open the run link to see which step failed. This issue closes by itself after the next green run."
+          open_issue="$(gh issue list --state open --search 'in:title "Weekly run failed"' --json number --jq '.[0].number')"
+          if [ -n "$open_issue" ]; then
+            gh issue comment "$open_issue" --body "$body"
+          else
+            gh issue create --title "Weekly run failed" --body "$body" --assignee "${{ github.repository_owner }}"
+          fi
+
+      - name: Close old alerts after a green run
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for n in $(gh issue list --state open --search 'in:title "Weekly run failed" OR in:title "Weekly run did not start"' --json number --jq '.[].number'); do
+            gh issue close "$n" --comment "Fixed: this run was green. ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          done
