@@ -8,6 +8,7 @@ pattern,family
 ^google/gemini-.*flash-lite,Gemini Flash-Lite
 ^google/gemini-.*flash,Gemini Flash
 ^google/gemini-.*pro,Gemini Pro
+^google/gemini-.*argon,Gemini Argon
 ^google/gemini-embedding,Gemini Embedding
 ^google/gemma,Gemma
 ^openai/gpt-oss,gpt-oss
@@ -47,6 +48,7 @@ pattern,family
 ^x-ai/grok-.*fast,Grok Fast
 ^x-ai/grok-,Grok
 ^meta/muse-spark,Muse Spark
+^meta/muse-wonder,Muse Wonder
 ^meta-llama/llama,Llama
 ^mistralai/codestral,Codestral
 ^mistralai/devstral,Devstral
@@ -83,3 +85,4 @@ pattern,family
 ^intfloat/,E5
 ^sentence-transformers/,MiniLM
 ^perplexity/pplx-embed,pplx-embed
+^perplexity/pplx-decider,pplx-decider

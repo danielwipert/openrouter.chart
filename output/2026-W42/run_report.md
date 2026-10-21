@@ -1,11 +1,11 @@
-# NOT READY TO POST (2026-W42)
+# READY TO POST (2026-W42)
 
-- **FAIL** Labels complete: Unknown weights: 0.04% of top-50 tokens, family: 0.04% of top-50 tokens, release_date: 0.03% of top-50 tokens, price_tier: 0.03% of top-50 tokens, reasoning: 0.03% of top-50 tokens, input_type: 0.03% of top-50 tokens, size: 0.07% of top-50 tokens. Fill in registry/models.csv for: google/gemini-4-argon-20261013, meta/muse-wonder-20261012, mistralai/mistral-large-4-0-20261006, nvidia/nemotron-3.5-super-vl-20261015, perplexity/pplx-decider-v1.1-27b-20261006, typesafe/jev-1.14-20261014, xiaomi/mimo-v2.6-pro-ultraspeed-20260921
+- **PASS** Labels complete: Zero unknown values on company, weights, country, family, release_date, price_tier, reasoning, input_type, size
 - **PASS** Sources complete: Every label has a source
 - **PASS** Same input, same output: Re-aggregating the same data gave identical numbers
-- **PASS** Long tail disclosed: Top-50 coverage for the footer: 92.5%
-- **PASS** Coverage: Labeled tokens are 92.5% of all tokens in the latest week (warn under 80%)
-- **PASS** Big jump: Open share moved +0.6 points in the latest week (warn over 10)
+- **PASS** Long tail disclosed: Top-50 coverage for the footer: 93.0%
+- **PASS** Coverage: Labeled tokens are 93.0% of all tokens in the latest week (warn under 80%)
+- **PASS** Big jump: Open share moved +0.3 points in the latest week (warn over 10)
 - **PASS** History restated: No past week's share moved more than 1 point
 - [ ] Dan: on the first Monday of the month, the top 5 match openrouter.ai/rankings (token totals within 1%)
 
@@ -13,27 +13,22 @@
 
 - deepseek/deepseek-v4.1-flash-20261017: DeepSeek, open (catalog: hugging_face_id deepseek-ai/DeepSeek-V4.1-Flash-1017)
 - google/gemini-4-argon-20261013: Google, closed (rule: labs.csv default for google)
-- meta/muse-wonder-20261012: Meta, no weights (no source)
-- mistralai/mistral-large-4-0-20261006: Mistral AI, no weights (no source)
+- meta/muse-wonder-20261012: Meta, closed (manual: https://betanews.com/article/muse-wonder-frontier-model-developers/ (API only; neither Wonder model ships downloadable weights))
+- mistralai/mistral-large-4-0-20261006: Mistral AI, closed (manual: https://letsdatascience.com/news/mistral-debuts-large-4-open-weight-model-preview-cbf9e0b5 (low confidence: API-only preview; Mistral plans to release weights in late October 2026, about Oct 27; switch to open with size Large (1.05T total parameters) once they are on Hugging Face))
 - nvidia/nemotron-3.5-super-vl-20261015: NVIDIA, open (catalog: hugging_face_id nvidia/NVIDIA-Nemotron-3.5-Super-VL)
-- perplexity/pplx-decider-v1.1-27b-20261006: Perplexity, no weights (no source)
-- typesafe/jev-1.14-20261014: TypeSafe AI, no weights (no source)
-- xiaomi/mimo-v2.6-pro-ultraspeed-20260921: Xiaomi, no weights (no source)
+- perplexity/pplx-decider-v1.1-27b-20261006: Perplexity, open (manual: https://huggingface.co/perplexity-ai/pplx-decider-v1.1-27b (Apache-2.0 weights on HF))
+- typesafe/jev-1.14-20261014: TypeSafe AI, closed (manual: https://openrouter.ai/typesafe/jev-1.14 (API-only structured decision model; no weights on HF))
+- xiaomi/mimo-v2.6-pro-ultraspeed-20260921: Xiaomi, open (manual: https://openrouter.ai/xiaomi/mimo-v2.6-pro-ultraspeed (fast serving of the same 1T MiMo-V2.6-Pro checkpoint, whose weights are at huggingface.co/XiaomiMiMo/MiMo-V2.6-Pro-RL))
 
 ## Blank registry fields
 
-- google/gemini-4-argon-20261013: family
-- meta/muse-wonder-20261012: weights, family, size
-- mistralai/mistral-large-4-0-20261006: weights, size
-- nvidia/nemotron-3.5-super-vl-20261015: size
-- perplexity/pplx-decider-v1.1-27b-20261006: weights, family, release_date, price_tier, reasoning, input_type, size
-- typesafe/jev-1.14-20261014: weights, release_date, price_tier, reasoning, input_type, size
-- xiaomi/mimo-v2.6-pro-ultraspeed-20260921: weights, size
+- None
 
 ## Low-confidence labels to re-check monthly
 
 - inclusionai/ling-3.0-flash-sante-20260904
 - inclusionai/ling-3.1-flash-20261002
+- mistralai/mistral-large-4-0-20261006
 - qwen/qwen3-coder-plus
 - qwen/qwen3.5-flash-20260224
 - qwen/qwen3.5-plus-20260216

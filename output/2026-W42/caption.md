@@ -4,9 +4,9 @@ Templates are in captions/. Edit the wording before posting.
 
 ## weights_share
 
-Open-weight models now carry 76% of tokens on OpenRouter.
+Open-weight models now carry 75% of tokens on OpenRouter.
 
-That's up 0.6 points since last week. Open-weight models passed 50% in the week of Apr 27 and have stayed above it since. The peak in the last 52 weeks was 77%.
+That's up 0.3 points since last week. Open-weight models passed 50% in the week of Apr 27 and have stayed above it since. The peak in the last 52 weeks was 77%.
 
 What's driving it: DeepSeek, Z.ai and Xiaomi lead the open-weight models this week.
 
@@ -69,7 +69,7 @@ Source: OpenRouter (openrouter.ai/rankings), as of Oct 19, 2026.
 
 ## size_share
 
-95% of open-weight tokens on OpenRouter go to Large models.
+94% of open-weight tokens on OpenRouter go to Large models.
 
 [One or two sentences on why it matters.]
 
