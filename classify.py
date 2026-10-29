@@ -11,8 +11,9 @@ matching pattern in families.csv.
 
 Weights rule, in order (spec, "Model registry and dimensions"):
   a manual label in models.csv wins; else a Hugging Face ID in the catalog means
-  open; else the lab's default in labs.csv (closed, or stealth); else blank,
-  which goes on the review list.
+  open; else the lab's default in labs.csv (closed, or stealth); else a repo with
+  exactly the model's name in the lab's own Hugging Face account means open
+  (hf_weights.py); else blank, which goes on the review list.
 
 The run only fills blank registry fields. It never changes a filled one, so a
 model's labels change only when Dan edits the CSV.
@@ -26,6 +27,7 @@ from pathlib import Path
 
 import pandas as pd
 
+import hf_weights
 import sizes
 
 REGISTRY_DIR = Path("registry")
@@ -255,6 +257,7 @@ def run(folder, registry_dir=REGISTRY_DIR):
     families = read_csv(registry_dir / "families.csv")
     models, new_ids = update_registry(models, labs, load_catalog(folder),
                                       first_seen_dates(rankings), families)
+    models = hf_weights.fill_weights(models, labs, folder)
     models = sizes.fill_sizes(models, folder)
     save_models(models, registry_dir)
     return classify(rankings, models), models, new_ids
