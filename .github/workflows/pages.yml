@@ -1,5 +1,6 @@
 # Publish the website to GitHub Pages: https://danielwipert.github.io/openrouter.chart/
-# Runs after every successful Weekly run, when the site's code changes, or by hand.
+# Runs after every successful Weekly run, when the site's code or a week's results
+# change on main (e.g. merging a labeling fix), or by hand.
 # Only READY TO POST weeks are published (site_build.py), and a red Weekly run
 # publishes nothing, so the site always shows the last good week.
 name: Publish website
@@ -10,7 +11,7 @@ on:
     types: [completed]
   push:
     branches: [main]
-    paths: ["site/**", "site_build.py", ".github/workflows/pages.yml"]
+    paths: ["site/**", "site_build.py", ".github/workflows/pages.yml", "output/**"]
   workflow_dispatch:
 
 permissions:
