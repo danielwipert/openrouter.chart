@@ -4,6 +4,24 @@ A scheduled Claude task follows this every Monday evening, after the Weekly run.
 You can follow it by hand too. The task never merges anything: it opens a pull
 request, and Dan reviews and merges it.
 
+## The scheduled task
+
+Set up once in Claude Code on the web as a scheduled task with this repo selected
+(so it can push and open pull requests), Mondays at 5:41 p.m. Central. Its
+instructions:
+
+> You are the Monday follow-up for this repo's Weekly run. Read LABELING.md on
+> main and follow it step by step. Today's Weekly run is the newest "Weekly run"
+> workflow run on main created today: if it is still running, wait for it (don't
+> start a second one); if none started today, start one on main and wait for it.
+> If changes are needed, branch from the newest main as claude/labels-YYYY-MM-DD,
+> commit, push, and open one pull request as step 6 describes. Never merge, never
+> push to main, and never change pipeline code unless step 1 says a clear bug in
+> this repo stopped the run. Finish with a short plain-English summary for Dan:
+> the run's result, each model labeled and how, the judgment calls to check, and
+> the pull request link. If the week was already READY TO POST and nothing
+> needed re-checking, say so in one line.
+
 ## 1. Look at this week's Weekly run
 
 Open the newest **Weekly run** on `main` (Actions tab).
