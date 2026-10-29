@@ -100,7 +100,9 @@ def fetch_all(api_key, today, raw_dir=RAW_DIR, session=None):
         rows += body["data"]
         metas.append(body["meta"])
 
-    save(folder, "models.json", get(session, "/models"))
+    # output_modalities=all: the plain /models list only has text-output models,
+    # which leaves out embedding and "decisions" models that are in the rankings
+    save(folder, "models.json", get(session, "/models", {"output_modalities": "all"}))
     save(folder, "task_classifications.json", get(session, "/classifications/task"))
     week_start, week_end = last_complete_week(today)
     save(folder, "app_rankings.json", get(session, "/datasets/app-rankings", {

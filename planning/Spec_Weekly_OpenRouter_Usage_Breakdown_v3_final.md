@@ -70,7 +70,7 @@ Raw API responses are saved once in `raw/` by date (see Data pipeline) rather th
 The pipeline makes 4 OpenRouter calls and runs 5 steps, each in its own small Python file so one can be fixed without touching the others.
 
 1. **Fetch.** Call `GET /api/v1/datasets/rankings-daily` for the rolling window: from the Monday 52 weeks before the last complete week through the last completed UTC day (see the fallback under Decision sign-off changes). If the window is longer than 366 days, split it into chunks of up to 366 days and join them. Save each raw response to `raw/YYYY-MM-DD/`.
-2. **Catalog.** Call `GET /api/v1/models` for each model's details (such as `hugging_face_id`, `created`, pricing, supported parameters, input modalities). Also save this week's task-type snapshot (`/api/v1/classifications/task`) and top apps (`/api/v1/datasets/app-rankings`). All saved to `raw/YYYY-MM-DD/`.
+2. **Catalog.** Call `GET /api/v1/models?output_modalities=all` (the plain list leaves out embedding and "decisions" models) for each model's details (such as `hugging_face_id`, `created`, pricing, supported parameters, input modalities). Also save this week's task-type snapshot (`/api/v1/classifications/task`) and top apps (`/api/v1/datasets/app-rankings`). All saved to `raw/YYYY-MM-DD/`.
 3. **Classify.** For each model ID: record `is_free` from the `:free` suffix, then strip the suffix so variants count with their base model. Look up the base model in the registry and attach every dimension. Add new models to the registry and list blank fields for review.
 4. **Aggregate.** For each dimension, sum tokens per value per week and per month. Share = a value's tokens / all labeled tokens.
 5. **Render.** Build the charts, CSVs, captions, `meta.json` and run report from the aggregated tables.
@@ -121,7 +121,7 @@ Every fact about every model lives in a permanent registry of three CSV files Da
 - `families.csv`: one row per family: a text pattern (such as `claude-sonnet`) and the family name. Patterns are checked top to bottom; the first match wins.
 - **Family rule (step 8, Dan's choice): brand + tier.** Where a lab sells named tiers, each tier is its own family (Claude Opus / Sonnet / Haiku / Fable, Gemini Pro / Flash / Flash-Lite, GPT / GPT Mini & Nano / GPT Codex / GPT Sol / Luna / Terra / Astra, Qwen Max / Plus / Flash / Coder / VL, DeepSeek Pro / Flash / V3 / R1). Labs with one line stay one family (Kimi, MiniMax, Hunyuan). Patterns are regular expressions matched against the full model ID (e.g. `^anthropic/.*sonnet`), so one lab's pattern can't catch another lab's model.
 
-**Weights rule, in order:** a manual label in `models.csv` wins; else a Hugging Face ID means open; else a lab default of closed (or stealth) in `labs.csv` applies; else unknown, which goes on the review list and marks the run NOT READY.
+**Weights rule, in order:** a manual label in `models.csv` wins; else a Hugging Face ID means open; else a lab default of closed (or stealth) in `labs.csv` applies; else a repo with exactly the model's name in the lab's own Hugging Face account (`hf_org` in `labs.csv`) means open; else unknown, which goes on the review list and marks the run NOT READY.
 
 **Rules added in build step 3 (Oct 7, 2026):**
 

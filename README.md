@@ -40,13 +40,13 @@ Then:
    - `caption.md`: draft posts with this week's numbers. Edit before posting.
    - `weekly.csv`, `monthly.csv`: the numbers behind the charts.
    - `meta.json`: which data was used.
-2. If the report lists a new model with a blank label, fill it in `registry/models.csv` (with a source link) and run again by hand.
+2. If the report lists a new model with a blank label, fill it in `registry/models.csv` (with a source link) and run again by hand. A scheduled Claude task does this for you every Monday and opens a pull request; how it decides is in [`LABELING.md`](LABELING.md).
 
 ## The website
 
 **https://danielwipert.github.io/openrouter.chart/** shows the newest READY TO POST week's charts, the headline numbers, the method, CSV downloads and an archive of past weeks.
 
-- It republishes itself after every successful Weekly run (the **Publish website** workflow). A NOT READY week is never published; the site keeps the last good week.
+- It republishes itself after every successful Weekly run, and when a merged pull request changes a week's results (the **Publish website** workflow). A NOT READY week is never published; the site keeps the last good week.
 - Wording and sections: `site/site.yaml`. Look: `site/site.css`. Page layout: `site/template.html`.
 - One-time setup: **Settings > Pages > Build and deployment > Source: GitHub Actions**.
 

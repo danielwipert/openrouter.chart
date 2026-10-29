@@ -1,30 +1,29 @@
-# NOT READY TO POST (2026-W43)
+# READY TO POST (2026-W43)
 
-- **FAIL** Labels complete: Unknown weights: 0.03% of top-50 tokens, release_date: 0.00% of top-50 tokens, price_tier: 0.00% of top-50 tokens, reasoning: 0.00% of top-50 tokens, input_type: 0.00% of top-50 tokens, size: 0.03% of top-50 tokens. Fill in registry/models.csv for: moonshotai/kimi-k3.1-pro-20261023, openai/gpt-6-luna-decisions-20261006
+- **PASS** Labels complete: Zero unknown values on company, weights, country, family, release_date, price_tier, reasoning, input_type, size
 - **PASS** Sources complete: Every label has a source
 - **PASS** Same input, same output: Re-aggregating the same data gave identical numbers
-- **PASS** Long tail disclosed: Top-50 coverage for the footer: 93.5%
-- **PASS** Coverage: Labeled tokens are 93.5% of all tokens in the latest week (warn under 80%)
-- **PASS** Big jump: Open share moved +0.3 points in the latest week (warn over 10)
+- **PASS** Long tail disclosed: Top-50 coverage for the footer: 93.8%
+- **PASS** Coverage: Labeled tokens are 93.8% of all tokens in the latest week (warn under 80%)
+- **PASS** Big jump: Open share moved +0.0 points in the latest week (warn over 10)
 - **PASS** History restated: No past week's share moved more than 1 point
 - [ ] Dan: on the first Monday of the month, the top 5 match openrouter.ai/rankings (token totals within 1%)
 
 ## New models this week
 
 - minimax/minimax-m3.1-flash-20261019: MiniMax, open (catalog: hugging_face_id MiniMaxAI/MiniMax-M3.1-Flash)
-- moonshotai/kimi-k3.1-pro-20261023: Moonshot AI, no weights (no source)
+- moonshotai/kimi-k3.1-pro-20261023: Moonshot AI, closed (manual: https://www.marktechpost.com/2026/10/23/moonshot-ai-kimi-k3-1-pro-open-weight-model/ (low confidence: API-only for now; Moonshot promised open weights by Nov 4, 2026; switch to open with size Large (2.8T total parameters) once they are on Hugging Face under moonshotai))
 - openai/gpt-6-luna-decisions-20261006: OpenAI, closed (rule: labs.csv default for openai)
 
 ## Blank registry fields
 
-- moonshotai/kimi-k3.1-pro-20261023: weights, size
-- openai/gpt-6-luna-decisions-20261006: release_date, price_tier, reasoning, input_type
+- None
 
 ## Low-confidence labels to re-check monthly
 
 - inclusionai/ling-3.0-flash-sante-20260904
 - inclusionai/ling-3.1-flash-20261002
-- mistralai/mistral-large-4-0-20261006
+- moonshotai/kimi-k3.1-pro-20261023
 - qwen/qwen3-coder-plus
 - qwen/qwen3.5-flash-20260224
 - qwen/qwen3.5-plus-20260216
@@ -64,4 +63,4 @@
 - charts/task_mix_square.png
 - charts/task_mix_portrait.png
 
-Task snapshots saved so far: 4 (the task mix change column needs one from about 4 weeks earlier)
+Task snapshots saved so far: 5 (the task mix change column needs one from about 4 weeks earlier)

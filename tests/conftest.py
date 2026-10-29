@@ -1,5 +1,6 @@
 import pytest
 
+import hf_weights
 import sizes
 
 
@@ -7,3 +8,4 @@ import sizes
 def no_hugging_face_calls(monkeypatch):
     """Tests never call Hugging Face: every repo is 'not listed' unless a test says so."""
     monkeypatch.setattr(sizes, "hf_lookup", lambda repo: None)
+    monkeypatch.setattr(hf_weights, "hf_search", lambda org, name: [])

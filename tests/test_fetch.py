@@ -61,9 +61,11 @@ class FakeSession:
         self.responses = list(responses)
         self.calls = 0
         self.headers = {}
+        self.asked = []
 
     def get(self, url, params=None, timeout=None):
         self.calls += 1
+        self.asked.append((url.removeprefix(fetch.BASE_URL), params))
         item = self.responses.pop(0)
         if isinstance(item, Exception):
             raise item
@@ -112,3 +114,5 @@ def test_fetch_all_saves_every_file(tmp_path):
     assert summary["rows"] == 1
     assert summary["as_of"] == "2026-10-12T02:00:00.000Z"
     assert session.headers["Authorization"] == "Bearer key"
+    # the full catalog, not just text-output models
+    assert ("/models", {"output_modalities": "all"}) in session.asked
