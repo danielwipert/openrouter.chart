@@ -63,4 +63,4 @@
 - charts/task_mix_square.png
 - charts/task_mix_portrait.png
 
-Task snapshots saved so far: 4 (the task mix change column needs one from about 4 weeks earlier)
+Task snapshots saved so far: 5 (the task mix change column needs one from about 4 weeks earlier)
