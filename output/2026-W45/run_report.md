@@ -1,22 +1,22 @@
-# NOT READY TO POST (2026-W45)
+# READY TO POST (2026-W45)
 
-- **FAIL** Labels complete: Unknown size: 0.48% of top-50 tokens. Fill in registry/models.csv for: tencent/hy4-20261104
+- **PASS** Labels complete: Zero unknown values on company, weights, country, family, release_date, price_tier, reasoning, input_type, size
 - **PASS** Sources complete: Every label has a source
 - **PASS** Same input, same output: Re-aggregating the same data gave identical numbers
 - **PASS** Long tail disclosed: Top-50 coverage for the footer: 94.5%
 - **PASS** Coverage: Labeled tokens are 94.5% of all tokens in the latest week (warn under 80%)
-- **PASS** Big jump: Open share moved +2.5 points in the latest week (warn over 10)
+- **PASS** Big jump: Open share moved -4.1 points in the latest week (warn over 10)
 - **PASS** History restated: No past week's share moved more than 1 point
 - [ ] Dan: on the first Monday of the month, the top 5 match openrouter.ai/rankings (token totals within 1%)
 
 ## New models this week
 
 - stealth/crouton-alpha: Stealth (undisclosed), stealth (rule: labs.csv default for stealth)
-- tencent/hy4-20261104: Tencent, open (catalog: hugging_face_id tencent/Hy4)
+- tencent/hy4-20261104: Tencent, closed (manual: https://huggingface.co/tencent/Hy4 (low confidence: OpenRouter's catalog lists hugging_face_id tencent/Hy4 but that repo is not public as of 2026-11-09 (HTTP 401; only Hy4-preview and Hy4-preview-FP8 exist in the tencent account); API-only for now; switch to open with size Large (preview is 780B total parameters; confirm the final count) once tencent/Hy4 is on Hugging Face))
 
 ## Blank registry fields
 
-- tencent/hy4-20261104: size
+- None
 
 ## Low-confidence labels to re-check monthly
 
@@ -29,6 +29,7 @@
 - qwen/qwen3.6-flash
 - qwen/qwen3.8-max-20260803
 - qwen/qwen3.8-max-20260902
+- tencent/hy4-20261104
 - z-ai/glm-5.3-flashx-20260918
 
 ## Charts
