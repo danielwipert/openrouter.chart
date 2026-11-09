@@ -4,9 +4,9 @@ Templates are in captions/. Edit the wording before posting.
 
 ## weights_share
 
-Open-weight models now carry 69% of tokens on OpenRouter.
+Open-weight models now carry 72% of tokens on OpenRouter.
 
-That's down 4.1 points since last week. Open-weight models passed 50% in the week of Apr 27 and have stayed above it since. The peak in the last 52 weeks was 77%.
+That's down 3.1 points since last week. Open-weight models passed 50% in the week of Apr 27 and have stayed above it since. The peak in the last 52 weeks was 77%.
 
 What's driving it: DeepSeek, Z.ai and NVIDIA lead the open-weight models this week.
 

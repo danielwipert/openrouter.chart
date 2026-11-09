@@ -5,7 +5,7 @@
 - **PASS** Same input, same output: Re-aggregating the same data gave identical numbers
 - **PASS** Long tail disclosed: Top-50 coverage for the footer: 94.5%
 - **PASS** Coverage: Labeled tokens are 94.5% of all tokens in the latest week (warn under 80%)
-- **PASS** Big jump: Open share moved -4.1 points in the latest week (warn over 10)
+- **PASS** Big jump: Open share moved -3.1 points in the latest week (warn over 10)
 - **PASS** History restated: No past week's share moved more than 1 point
 - [ ] Dan: on the first Monday of the month, the top 5 match openrouter.ai/rankings (token totals within 1%)
 
@@ -22,7 +22,6 @@
 
 - inclusionai/ling-3.0-flash-sante-20260904
 - inclusionai/ling-3.1-flash-20261002
-- moonshotai/kimi-k3.1-pro-20261023
 - qwen/qwen3-coder-plus
 - qwen/qwen3.5-flash-20260224
 - qwen/qwen3.5-plus-20260216
