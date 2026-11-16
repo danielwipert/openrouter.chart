@@ -1,0 +1,23 @@
+{
+  "data_week": "2026-W46",
+  "window": {
+    "start": "2025-11-17",
+    "end": "2026-11-15"
+  },
+  "api_meta": [
+    {
+      "as_of": "2026-11-16T22:52:02.137Z",
+      "version": "v1",
+      "start_date": "2025-11-17",
+      "end_date": "2026-11-15"
+    }
+  ],
+  "raw_files": [
+    "raw/2026-11-16/app_rankings.json",
+    "raw/2026-11-16/fetch_summary.json",
+    "raw/2026-11-16/hf_sizes.json",
+    "raw/2026-11-16/models.json",
+    "raw/2026-11-16/rankings_daily_01.json",
+    "raw/2026-11-16/task_classifications.json"
+  ]
+}
