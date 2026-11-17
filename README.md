@@ -27,10 +27,10 @@ The setup check also runs on its own after every code change.
 
 The **Weekly run** starts by itself every Monday at 13:07 UTC (8:07 a.m. Central in summer, 7:07 a.m. in winter). You can also start it any time: **Actions** tab, **Weekly run**, **Run workflow**.
 
-- **Green tick:** READY TO POST.
-- **Red cross:** GitHub emails you. Either a hard check stopped the run (the log says why, e.g. a rejected API key), or the results were saved but are NOT READY TO POST (the run report says why).
-- **Alert issue:** a red run also opens a GitHub issue called **Weekly run failed**, assigned to you, so you get an email and a GitHub app notification. It closes by itself after the next green run.
-- **Didn't run at all:** every Tuesday the **Weekly run watchdog** checks that the Weekly run started. If it didn't, it opens an issue called **Weekly run did not start**.
+- **Green tick:** the run worked. If new models came in with blank labels, the week is NOT READY TO POST for a few hours: that's normal, and the run shows a warning, not a red cross.
+- **Monday evening:** a scheduled Claude task fills the blank labels (see [LABELING.md](LABELING.md)), rebuilds, and merges its own pull request once every test passes and the week is READY TO POST. The website then republishes by itself.
+- **Red cross:** GitHub emails you. A hard check stopped the run (the log says why, e.g. a rejected API key) or a step crashed. It also opens a GitHub issue called **Weekly run failed**, assigned to you. It closes by itself after the next green run.
+- **Tuesday safety net:** the **Weekly run watchdog** checks that the Weekly run started and that the newest week is READY TO POST. If not, it opens an issue called **Weekly run did not start** or **Week not ready to post**. No issue means nothing needs you.
 
 Then:
 

@@ -54,16 +54,19 @@ jobs:
             git push
           fi
 
-      # NOT READY TO POST still saves everything above, then turns the run red
-      # so GitHub emails you. The report says what to fix.
-      - name: Check READY TO POST
+      # NOT READY TO POST (new models with blank labels) is normal and is NOT a
+      # failure: the Monday evening labeling task fills the labels and merges
+      # the fix by itself, and the website then republishes. Only a real
+      # failure (bad key, stale data, a crash) turns this run red.
+      # Safety net: the Tuesday watchdog opens an issue if the week is still
+      # NOT READY by then.
+      - name: Note READY TO POST
         run: |
           report="$(ls -d output/*/ | sort | tail -1)run_report.md"
           status="$(head -1 "$report")"
           echo "$status"
           if echo "$status" | grep -q "NOT READY"; then
-            echo "::error::$status. Open $report in the repo to see why."
-            exit 1
+            echo "::warning::$status. The Monday evening labeling task will fill the blank labels."
           fi
 
       # Alert: any red run opens a GitHub issue assigned to the repo owner, so
