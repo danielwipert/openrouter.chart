@@ -1,0 +1,83 @@
+# Merge the Monday labeling pull request by itself, so nobody has to.
+# Runs when a claude/labels-... pull request is opened or updated. It merges
+# only when all of these are true:
+#   1. the pull request changes nothing but data (registry/, output/, raw/),
+#   2. every test passes,
+#   3. the newest week's run report says READY TO POST.
+# Otherwise it leaves the pull request open, and the Tuesday watchdog opens a
+# "Week not ready to post" issue for Dan.
+name: Auto-merge labeling fix
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [main]
+
+permissions:
+  contents: write       # merge the pull request
+  pull-requests: write
+  actions: write        # start "Publish website" after the merge
+
+concurrency:
+  group: auto-merge-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  auto-merge:
+    if: >-
+      startsWith(github.head_ref, 'claude/labels-') &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      !github.event.pull_request.draft
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the pull request's code
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install libraries
+        run: pip install -r requirements.txt
+
+      - name: 1. Only data changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          files="$(gh pr diff "$PR" --name-only)"
+          echo "$files"
+          other="$(echo "$files" | grep -vE '^(registry|output|raw)/' || true)"
+          if [ -n "$other" ]; then
+            echo "::error::This pull request changes more than data, so it needs a person to merge it:"
+            echo "$other"
+            exit 1
+          fi
+
+      - name: 2. Tests pass
+        run: python -m pytest -q
+
+      - name: 3. Newest week is READY TO POST
+        run: |
+          report="$(ls -d output/*/ | sort | tail -1)run_report.md"
+          status="$(head -1 "$report")"
+          echo "$status"
+          if ! echo "$status" | grep -q "READY TO POST" || echo "$status" | grep -q "NOT READY"; then
+            echo "::error::$status, so this pull request is left open."
+            exit 1
+          fi
+
+      - name: Merge, then republish the website
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          gh pr merge "$PR" --merge --match-head-commit "$SHA"
+          # A merge made by this workflow doesn't start other workflows by
+          # itself, so start the website publish directly.
+          gh workflow run pages.yml --ref main

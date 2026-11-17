@@ -1,11 +1,11 @@
 # Labeling playbook: fixing a NOT READY week
 
 A scheduled Claude task follows this every Monday evening, after the Weekly run.
-You can follow it by hand too. The task opens a pull request and **merges it
-itself** once every test passes and the week is READY TO POST (step 6), so the
-website republishes with no work from Dan. If it can't get the week to READY TO
-POST, it leaves the pull request open, and the Tuesday watchdog opens an issue
-for Dan.
+You can follow it by hand too. The task opens a pull request; it never merges.
+The **Auto-merge labeling fix** workflow then merges it by itself when it changes
+only data, every test passes, and the week is READY TO POST (step 6), and the
+website republishes. Nobody has to merge anything. If a check fails, the pull
+request stays open and the Tuesday watchdog opens an issue for Dan.
 
 ## The scheduled task
 
@@ -18,13 +18,12 @@ instructions:
 > workflow run on main created today: if it is still running, wait for it (don't
 > start a second one); if none started today, start one on main and wait for it.
 > If changes are needed, branch from the newest main as claude/labels-YYYY-MM-DD,
-> commit, push, open one pull request, and merge it yourself exactly as step 6
-> describes (only when every test passes and the week is READY TO POST). Never
-> push straight to main, and never change pipeline code unless step 1 says a
-> clear bug in this repo stopped the run. Finish with a short plain-English
-> summary for Dan: the run's result, each model labeled and how, the judgment
-> calls made, and the pull request link and whether it was merged. If the week
-> was already READY TO POST and nothing needed re-checking, say so in one line.
+> commit, push, and open one pull request as step 6 describes. Never merge, never
+> push to main, and never change pipeline code unless step 1 says a clear bug in
+> this repo stopped the run. Finish with a short plain-English summary for Dan:
+> the run's result, each model labeled and how, the judgment calls to check, and
+> the pull request link. If the week was already READY TO POST and nothing
+> needed re-checking, say so in one line.
 
 ## 1. Look at this week's Weekly run
 
@@ -119,21 +118,20 @@ The report's first line must say **READY TO POST** and every test must pass.
 Commit everything the rebuild changed, chart images included: the charts show
 the new labels.
 
-## 6. Open a pull request and merge it
+## 6. Open a pull request
 
 Branch from `main`, commit `registry/` and `output/`, push, and open a pull
 request titled `Label N new models and rebuild <week> (now READY TO POST)`.
 In the description, list each model with its labels in one line, then a
 **Judgment calls** section, then any **Follow-ups** (dates to re-check).
 
-**Then merge it yourself** (a normal merge commit) when all three are true:
+Don't merge it yourself. The **Auto-merge labeling fix** workflow merges a
+`claude/labels-...` pull request by itself when:
 
-1. `python -m pytest -q` passed in step 5.
-2. The rebuilt report's first line says **READY TO POST**.
-3. The pull request's **setup-check** is green (wait for it to finish).
+1. it changes only `registry/`, `output/` or `raw/`,
+2. every test passes, and
+3. the newest week's run report says **READY TO POST**.
 
-If any of them fails, don't merge: leave the pull request open and say why in
-its description. The Tuesday watchdog then opens an issue for Dan.
-
-After the merge, the website republishes by itself. Dan can still overrule any
-judgment call later by editing `registry/models.csv`.
+It then republishes the website. If a check fails, the pull request stays open
+and the Tuesday watchdog opens a **Week not ready to post** issue. Dan can still
+overrule any judgment call later by editing `registry/models.csv`.
