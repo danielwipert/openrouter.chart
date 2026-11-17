@@ -9,6 +9,7 @@ pattern,family
 ^google/gemini-.*flash,Gemini Flash
 ^google/gemini-.*pro,Gemini Pro
 ^google/gemini-.*argon,Gemini Argon
+^google/gemini-.*carbon,Gemini Carbon
 ^google/gemini-embedding,Gemini Embedding
 ^google/gemma,Gemma
 ^openai/gpt-oss,gpt-oss
@@ -49,6 +50,7 @@ pattern,family
 ^x-ai/grok-,Grok
 ^meta/muse-spark,Muse Spark
 ^meta/muse-wonder,Muse Wonder
+^meta/muse-ember,Muse Ember
 ^meta-llama/llama,Llama
 ^mistralai/codestral,Codestral
 ^mistralai/devstral,Devstral
@@ -62,6 +64,8 @@ pattern,family
 ^nvidia/nemotron-.*ultra,Nemotron Ultra
 ^nvidia/nemotron-.*lightning,Nemotron Lightning
 ^tencent/hy,Hunyuan
+^baidu/ernie,ERNIE
+^particle-ai/particle,Particle
 ^inclusionai/ring,Ring
 ^inclusionai/ling-.*flash,Ling Flash
 ^inclusionai/ling,Ling

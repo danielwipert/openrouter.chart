@@ -1,44 +1,39 @@
-# NOT READY TO POST (2026-W46)
+# READY TO POST (2026-W46)
 
-- **FAIL** Labels complete: Unknown company: 0.08% of top-50 tokens, weights: 0.03% of top-50 tokens, country: 0.08% of top-50 tokens, family: 0.12% of top-50 tokens, size: 1.18% of top-50 tokens. Fill in registry/models.csv for: baidu/ernie-5.5-flash-preview-20261110, google/gemini-4-carbon-20261110, inclusionai/ling-3.2-flash-20261113, meta/muse-ember-20261109, particle-ai/particle-1-20261027, tencent/hy4-20261104
+- **PASS** Labels complete: Zero unknown values on company, weights, country, family, release_date, price_tier, reasoning, input_type, size
 - **PASS** Sources complete: Every label has a source
 - **PASS** Same input, same output: Re-aggregating the same data gave identical numbers
-- **PASS** Long tail disclosed: Top-50 coverage for the footer: 93.5%
-- **PASS** Coverage: Labeled tokens are 93.5% of all tokens in the latest week (warn under 80%)
-- **PASS** Big jump: Open share moved +0.5 points in the latest week (warn over 10)
+- **PASS** Long tail disclosed: Top-50 coverage for the footer: 93.9%
+- **PASS** Coverage: Labeled tokens are 93.9% of all tokens in the latest week (warn under 80%)
+- **PASS** Big jump: Open share moved -3.9 points in the latest week (warn over 10)
 - **PASS** History restated: No past week's share moved more than 1 point
 - [ ] Dan: on the first Monday of the month, the top 5 match openrouter.ai/rankings (token totals within 1%)
 
 ## New models this week
 
 - anthropic/claude-fable-5.2-20261109: Anthropic, closed (rule: labs.csv default for anthropic)
-- baidu/ernie-5.5-flash-preview-20261110: no company, open (catalog: hugging_face_id baidu/ERNIE-5.5-Flash-Preview)
+- baidu/ernie-5.5-flash-preview-20261110: Baidu, closed (manual: https://phemex.com/news/article/baidu-releases-ernie-55-flash-preview-with-opensource-weights-coming-before-nov-25-103149 (low confidence: API-only for now; catalog lists baidu/ERNIE-5.5-Flash-Preview but that repo is not public on Hugging Face as of Nov 16 (only ERNIE-5.5-Flash-Base is); Baidu promised open weights before Nov 25, 2026; switch to open with size Large (280B total parameters) once they are on Hugging Face under baidu))
 - google/gemini-4-carbon-20261110: Google, closed (rule: labs.csv default for google)
-- inclusionai/ling-3.2-flash-20261113: inclusionAI (Ant Group), open (catalog: hugging_face_id inclusionAI/Ling-3.2-flash)
-- meta/muse-ember-20261109: Meta, no weights (no source)
-- particle-ai/particle-1-20261027: no company, no weights (no source)
+- inclusionai/ling-3.2-flash-20261113: inclusionAI (Ant Group), closed (manual: https://www.llmreference.com/model/ling-3.2-flash (low confidence: API-only (free trial) for now; catalog lists inclusionAI/Ling-3.2-flash but that repo is not public on Hugging Face as of Nov 16; earlier Ling Flash models were opened after their trials; switch to open with size Large (560B total parameters) once they are on Hugging Face under inclusionAI))
+- meta/muse-ember-20261109: Meta, closed (manual: https://thenewstack.io/meta-muse-ember-launch/ (API only via Meta Model API and Muse Code; Meta keeps Ember weights private))
+- particle-ai/particle-1-20261027: Particle AI, closed (manual: https://runtimewire.com/article/suhail-doshi-particle-particle-1 (API only; a LoRA post-train of open DeepSeek V4.1 Flash but the adapter is not released; nothing on Hugging Face))
 - thinkingmachines/inkling-2-small-20261107: Thinking Machines Lab, open (catalog: hugging_face_id thinkingmachines/Inkling-2-Small)
 
 ## Blank registry fields
 
-- baidu/ernie-5.5-flash-preview-20261110: company, country, family, size
-- google/gemini-4-carbon-20261110: family
-- inclusionai/ling-3.2-flash-20261113: size
-- meta/muse-ember-20261109: weights, family, size
-- particle-ai/particle-1-20261027: company, weights, country, family, size
-- tencent/hy4-20261104: size
+- None
 
 ## Low-confidence labels to re-check monthly
 
-- inclusionai/ling-3.0-flash-sante-20260904
-- inclusionai/ling-3.1-flash-20261002
-- moonshotai/kimi-k3.1-pro-20261023
+- baidu/ernie-5.5-flash-preview-20261110
+- inclusionai/ling-3.2-flash-20261113
 - qwen/qwen3-coder-plus
 - qwen/qwen3.5-flash-20260224
 - qwen/qwen3.5-plus-20260216
 - qwen/qwen3.6-flash
 - qwen/qwen3.8-max-20260803
 - qwen/qwen3.8-max-20260902
+- tencent/hy4-20261104
 - z-ai/glm-5.3-flashx-20260918
 
 ## Charts
