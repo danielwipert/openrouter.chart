@@ -59,34 +59,31 @@ def main():
 
     frame = Frame(style, "square")
     frame.title("Tencent's Hy4 doubled its OpenRouter traffic in two weeks")
-    frame.subtitle("Weekly tokens for Hy4 preview and Hy4 combined, and rank among "
-                   "all models, Aug 24 to Nov 15, 2026")
+    frame.subtitle("Weekly tokens, Hy4 preview and Hy4 combined, Aug to Nov 2026")
     key_y = frame.cursor
     frame.units("trillion tokens per week")
-    frame.footer("Source: OpenRouter (openrouter.ai/rankings), as of Nov 16, 2026. Weeks start "
-                 "Monday; the first week is partial (preview added Aug 27). Rank counts each "
-                 "model version separately.")
-    ax = frame.chart_area(left_px=40, below_px=150)
+    frame.footer("Source: OpenRouter (openrouter.ai/rankings), as of Nov 16, 2026. "
+                 "Weeks start Monday.")
+    ax = frame.chart_area(left_px=40, below_px=70)
 
     # Key on the units line, left side
     kx = frame.margin["left"]
-    for label, color in [("Hy4 preview (open weights)", c["open"]),
-                         ("Hy4 (weights promised)", c["open_dark"])]:
+    for label, color in [("Hy4 preview", c["open"]), ("Hy4", c["open_dark"])]:
         frame.fig.patches.append(Rectangle(
             (kx / frame.width, (key_y - 19) / frame.height), 16 / frame.width,
             16 / frame.height, transform=frame.fig.transFigure, facecolor=color,
             edgecolor="none"))
         txt = frame.text(kx + 24, key_y - 11, label, "regular", sz["units"], c["text"],
                          va="center")
-        kx += 24 + frame.width_of(txt) + 28
+        kx += 24 + frame.width_of(txt) + 32
 
-    bw = 0.66
+    bw = 0.62
     ax.bar(x, t["preview"], bw, color=c["open"], edgecolor=c["background"], linewidth=2,
            zorder=3)
     ax.bar(x, t["full"], bw, bottom=t["preview"], color=c["open_dark"],
            edgecolor=c["background"], linewidth=2, zorder=3)
 
-    ymax = 21
+    ymax = 22
     ax.set_xlim(-0.6, n - 0.4)
     ax.set_ylim(0, ymax)
     ax.set_yticks([0, 5, 10, 15, 20], ["0", "5", "10", "15", "20"])
@@ -100,56 +97,33 @@ def main():
     ax.grid(axis="y", color=c["grid"], linewidth=1, zorder=0)
     ax.set_axisbelow(True)
 
-    # Rank row under the dates, with its own label; the top-2 weeks in bold
-    ax.text(-0.6, -0.205 * ymax, "Rank among all models that week", ha="left",
-            va="center", color=c["text_muted"], clip_on=False,
-            fontproperties=frame.font("regular", sz["annotation"]))
-    for xi, r in zip(x, t["rank"]):
-        top = r <= 2
-        ax.text(xi, -0.275 * ymax, f"#{r}", ha="center", va="center", clip_on=False,
-                color=c["text"] if top else c["text_muted"],
-                fontproperties=frame.font("bold" if top else "regular", sz["axis"]))
-
-    def value(xi, total, weight="semibold"):
-        ax.text(xi, total + 0.3, f"{total:.1f}", ha="center", va="bottom", color=c["text"],
-                fontproperties=frame.font(weight, sz["bar_value"]), zorder=5)
-
     ann = frame.font("regular", sz["annotation"])
     ann_b = frame.font("semibold", sz["annotation"])
-    lh = 1.05  # annotation line height in data units
+    lh = 1.15  # annotation line height in data units
 
-    # Values on the bars the story is about
-    peak_i = int(np.argmax(t["total"].iloc[:-3]))
+    # The two numbers the title is about
     settled_i = list(t.index).index(pd.Timestamp("2026-10-26"))
-    value(peak_i, t["total"].iloc[peak_i])
-    value(settled_i, settled["total"])
-    value(n - 1, last["total"], "bold")
+    for xi, total, weight in [(settled_i, settled["total"], "semibold"),
+                              (n - 1, last["total"], "bold")]:
+        ax.text(xi, total + 0.35, f"{total:.1f}", ha="center", va="bottom", color=c["text"],
+                fontproperties=frame.font(weight, sz["bar_value"]), zorder=5)
 
-    # Preview launch, beside the first peak
-    tx, ty = peak_i + 0.55, 19.4
-    ax.text(tx, ty, "Aug 27: open-weight preview", ha="left", va="center", color=c["text"],
+    # Preview launch, beside its peak
+    peak_i = int(np.argmax(t["total"].iloc[:-3]))
+    tx, ty = peak_i + 0.5, t["total"].iloc[peak_i] + 0.4
+    ax.text(tx, ty, "Aug 27: preview launches,", ha="left", va="center", color=c["text"],
             fontproperties=ann_b)
-    ax.text(tx, ty - lh, "hits #1 on OpenRouter", ha="left", va="center",
+    ax.text(tx, ty - lh, "hits #1 within a week", ha="left", va="center",
             color=c["text_muted"], fontproperties=ann)
-    ax.text(tx, ty - 2 * lh, "within a week", ha="left", va="center",
-            color=c["text_muted"], fontproperties=ann)
-    # Settles
-    ax.text(6.6, 9.7, "then settles near 9T a week", ha="center", va="center",
-            color=c["text_muted"], fontproperties=ann)
-    # Full release, left of its bar
-    tx, ty = n - 2.42, 14.4
-    ax.text(tx, ty, "Nov 4: full Hy4", ha="right", va="center", color=c["accent"],
+    # Full release, left of its first bar
+    tx, ty = n - 2 - bw / 2 - 0.15, 13.6
+    ax.text(tx, ty, "Nov 4: full Hy4 launches", ha="right", va="center", color=c["accent"],
             fontproperties=ann_b)
-    ax.text(tx, ty - lh, "adds vision and computer use,", ha="right", va="center",
+    ax.text(tx, ty - lh, "at a 50% discount", ha="right", va="center",
             color=c["text_muted"], fontproperties=ann)
-    ax.text(tx, ty - 2 * lh, "at a 50% launch discount", ha="right", va="center",
-            color=c["text_muted"], fontproperties=ann)
-    # Latest week: new high, to the left of its bar
-    left = n - 1 - bw / 2 - 0.12
-    ax.text(left, last["total"] + 0.55, "New high,", ha="right", va="center",
-            color=c["text"], fontproperties=ann_b, zorder=5)
-    ax.text(left, last["total"] - 0.5, f"{last['share'] * 100:.1f}% of all tokens",
-            ha="right", va="center", color=c["text_muted"], fontproperties=ann, zorder=5)
+    # Latest week
+    ax.text(n - 1 - bw / 2 - 0.15, last["total"] + 0.9, "New high, #2 model", ha="right",
+            va="center", color=c["text"], fontproperties=ann_b, zorder=5)
 
     print(t.round(2).to_string())
     print("saved", frame.save(OUT))
