@@ -1,6 +1,10 @@
-# Backup alert: if the Weekly run did not start at all this week (GitHub's
-# scheduler skipped it, or the schedule was turned off), open a GitHub issue
-# assigned to the repo owner so GitHub emails you. Runs every Tuesday.
+# Backup alert, every Tuesday (the day after the Weekly run and the Monday
+# evening labeling task). It opens a GitHub issue assigned to the repo owner,
+# so GitHub emails you, only when something needs you:
+#   1. the Weekly run did not start at all this week, or
+#   2. the newest week on main is still NOT READY TO POST (the labeling task
+#      could not fix it by itself).
+# When everything is fine it closes its old issues and you hear nothing.
 name: Weekly run watchdog
 
 on:
@@ -10,12 +14,16 @@ on:
 
 permissions:
   actions: read
+  contents: read
   issues: write
 
 jobs:
   watchdog:
     runs-on: ubuntu-latest
     steps:
+      - name: Get the code (including the newest weekly results)
+        uses: actions/checkout@v4
+
       - name: Check the Weekly run started in the last 2 days
         env:
           GH_TOKEN: ${{ github.token }}
@@ -33,4 +41,28 @@ jobs:
             gh issue comment "$open_issue" --body "$body"
           else
             gh issue create --title "Weekly run did not start" --body "$body" --assignee "${{ github.repository_owner }}"
+          fi
+
+      - name: Check the newest week is READY TO POST
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          report="$(ls -d output/*/ | sort | tail -1)run_report.md"
+          status="$(head -1 "$report")"
+          echo "$status"
+          open_issue="$(gh issue list --state open --search 'in:title "Week not ready to post"' --json number --jq '.[0].number')"
+          if ! echo "$status" | grep -q "NOT READY"; then
+            if [ -n "$open_issue" ]; then
+              gh issue close "$open_issue" --comment "Fixed: $status"
+            fi
+            exit 0
+          fi
+          body="The newest week is still $status, and the Monday evening labeling task did not fix it.
+          See $report on main for what is blank, and look for an open pull request named claude/labels-... that may need a decision.
+          This issue closes by itself once the week is READY TO POST."
+          if [ -n "$open_issue" ]; then
+            gh issue comment "$open_issue" --body "$body"
+          else
+            gh issue create --title "Week not ready to post" --body "$body" --assignee "${{ github.repository_owner }}"
           fi

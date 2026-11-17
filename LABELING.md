@@ -1,8 +1,11 @@
 # Labeling playbook: fixing a NOT READY week
 
 A scheduled Claude task follows this every Monday evening, after the Weekly run.
-You can follow it by hand too. The task never merges anything: it opens a pull
-request, and Dan reviews and merges it.
+You can follow it by hand too. The task opens a pull request; it never merges.
+The **Auto-merge labeling fix** workflow then merges it by itself when it changes
+only data, every test passes, and the week is READY TO POST (step 6), and the
+website republishes. Nobody has to merge anything. If a check fails, the pull
+request stays open and the Tuesday watchdog opens an issue for Dan.
 
 ## The scheduled task
 
@@ -29,9 +32,13 @@ Open the newest **Weekly run** on `main` (Actions tab).
 | What you see | What to do |
 |---|---|
 | No run today | Start one: **Actions** > **Weekly run** > **Run workflow** on `main`. Wait for it. |
-| Green (READY TO POST) | Only do step 4 (re-check low-confidence labels). If nothing changed, stop: no pull request. |
-| Red, run report says **NOT READY TO POST** | Steps 2 to 6. The report is `output/<week>/run_report.md`. |
+| Green, report says READY TO POST | Only do step 4 (re-check low-confidence labels). If nothing changed, stop: no pull request. |
+| Green with a warning, or the run report says **NOT READY TO POST** | Steps 2 to 6. The report is `output/<week>/run_report.md`. |
 | Red, a **hard check** stopped the run (log says "Run stopped" or "Fetch stopped") | Read the log. A rejected key, stale data or missing days are not labeling problems: report what the log says and stop. Fix only a clear bug in this repo's code. |
+
+**Older fixes still open:** if an earlier `claude/labels-...` pull request is
+still open, carry its label changes into this week's branch (newer sources win),
+then close the old pull request with a comment pointing to the new one.
 
 ## 2. Fill in every blank label
 
@@ -118,4 +125,13 @@ request titled `Label N new models and rebuild <week> (now READY TO POST)`.
 In the description, list each model with its labels in one line, then a
 **Judgment calls** section, then any **Follow-ups** (dates to re-check).
 
-After Dan merges it, the website republishes by itself.
+Don't merge it yourself. The **Auto-merge labeling fix** workflow merges a
+`claude/labels-...` pull request by itself when:
+
+1. it changes only `registry/`, `output/` or `raw/`,
+2. every test passes, and
+3. the newest week's run report says **READY TO POST**.
+
+It then republishes the website. If a check fails, the pull request stays open
+and the Tuesday watchdog opens a **Week not ready to post** issue. Dan can still
+overrule any judgment call later by editing `registry/models.csv`.
