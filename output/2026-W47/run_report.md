@@ -1,11 +1,11 @@
-# NOT READY TO POST (2026-W47)
+# READY TO POST (2026-W47)
 
-- **FAIL** Labels complete: Unknown weights: 0.04% of top-50 tokens, family: 0.02% of top-50 tokens, size: 0.04% of top-50 tokens. Fill in registry/models.csv for: google/gemini-4-hydrogen-20261112, google/gemini-4-neon-20261118, qwen/qwen4-max-20261115
+- **PASS** Labels complete: Zero unknown values on company, weights, country, family, release_date, price_tier, reasoning, input_type, size
 - **PASS** Sources complete: Every label has a source
 - **PASS** Same input, same output: Re-aggregating the same data gave identical numbers
-- **PASS** Long tail disclosed: Top-50 coverage for the footer: 94.9%
-- **PASS** Coverage: Labeled tokens are 94.9% of all tokens in the latest week (warn under 80%)
-- **WARN** Big jump: Open share moved +13.7 points in the latest week (warn over 10)
+- **PASS** Long tail disclosed: Top-50 coverage for the footer: 95.3%
+- **PASS** Coverage: Labeled tokens are 95.3% of all tokens in the latest week (warn under 80%)
+- **PASS** Big jump: Open share moved +6.3 points in the latest week (warn over 10)
 - **PASS** History restated: No past week's share moved more than 1 point
 - [ ] Dan: on the first Monday of the month, the top 5 match openrouter.ai/rankings (token totals within 1%)
 
@@ -14,15 +14,13 @@
 - google/gemini-4-hydrogen-20261112: Google, closed (rule: labs.csv default for google)
 - google/gemini-4-neon-20261118: Google, closed (rule: labs.csv default for google)
 - openai/gpt-6.2-sol-20261117: OpenAI, closed (rule: labs.csv default for openai)
-- qwen/qwen4-max-20261115: Alibaba, no weights (no source)
+- qwen/qwen4-max-20261115: Alibaba, closed (manual: https://finance.yahoo.com/technology/ai/articles/alibaba-qwen4-max-won-t-000611623.html (API only; Alibaba says Qwen4-Max will not be open-weights; no Qwen4 repo under Qwen on Hugging Face as of Nov 23; only smaller Qwen4 models are promised as open))
 - tencent/hy4-flash-20261116: Tencent, open (catalog: hugging_face_id tencent/Hy4-flash)
 - thinkingmachines/inkling-2-mini-20261120: Thinking Machines Lab, open (catalog: hugging_face_id thinkingmachines/Inkling-2-Mini)
 
 ## Blank registry fields
 
-- google/gemini-4-hydrogen-20261112: family
-- google/gemini-4-neon-20261118: family
-- qwen/qwen4-max-20261115: weights, size
+- None
 
 ## Low-confidence labels to re-check monthly
 
@@ -34,7 +32,6 @@
 - qwen/qwen3.6-flash
 - qwen/qwen3.8-max-20260803
 - qwen/qwen3.8-max-20260902
-- tencent/hy4-20261104
 - z-ai/glm-5.3-flashx-20260918
 
 ## Charts
