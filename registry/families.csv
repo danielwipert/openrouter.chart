@@ -10,6 +10,8 @@ pattern,family
 ^google/gemini-.*pro,Gemini Pro
 ^google/gemini-.*argon,Gemini Argon
 ^google/gemini-.*carbon,Gemini Carbon
+^google/gemini-.*hydrogen,Gemini Hydrogen
+^google/gemini-.*neon,Gemini Neon
 ^google/gemini-embedding,Gemini Embedding
 ^google/gemma,Gemma
 ^openai/gpt-oss,gpt-oss
