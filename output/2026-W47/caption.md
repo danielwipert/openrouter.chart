@@ -13,7 +13,7 @@ What's driving it: Tencent, DeepSeek and Z.ai lead the open-weight models this w
 Worth knowing: stealth models (unreleased models tested under code names) were 0% of tokens last week. They're left out of this split until their makers are revealed.
 
 Data: OpenRouter public traffic only, Nov 2025 to Nov 2026. Shares, not exact token counts.
-Source: OpenRouter (openrouter.ai/rankings), as of Nov 23, 2026.
+Source: OpenRouter (openrouter.ai/rankings), as of Nov 24, 2026.
 
 ## company_leaderboard
 
@@ -29,7 +29,7 @@ Top 5 for the week of Nov 16 to Nov 22, 2026:
 
 
 Data: OpenRouter public traffic only. Shares, not exact token counts.
-Source: OpenRouter (openrouter.ai/rankings), as of Nov 23, 2026.
+Source: OpenRouter (openrouter.ai/rankings), as of Nov 24, 2026.
 
 ## price_tier_share
 
@@ -38,7 +38,7 @@ Budget models now carry 84% of OpenRouter tokens.
 [One or two sentences on why it matters.]
 
 Data: OpenRouter public traffic only. Shares, not exact token counts.
-Source: OpenRouter (openrouter.ai/rankings), as of Nov 23, 2026.
+Source: OpenRouter (openrouter.ai/rankings), as of Nov 24, 2026.
 
 ## free_share
 
@@ -47,7 +47,7 @@ Free model versions carry 5% of OpenRouter tokens.
 [One or two sentences on why it matters.]
 
 Data: OpenRouter public traffic only. Shares, not exact token counts.
-Source: OpenRouter (openrouter.ai/rankings), as of Nov 23, 2026.
+Source: OpenRouter (openrouter.ai/rankings), as of Nov 24, 2026.
 
 ## input_type_share
 
@@ -56,7 +56,7 @@ Multimodal models carry 92% of OpenRouter tokens.
 [One or two sentences on why it matters.]
 
 Data: OpenRouter public traffic only. Shares, not exact token counts.
-Source: OpenRouter (openrouter.ai/rankings), as of Nov 23, 2026.
+Source: OpenRouter (openrouter.ai/rankings), as of Nov 24, 2026.
 
 ## reasoning_share
 
@@ -65,7 +65,7 @@ Source: OpenRouter (openrouter.ai/rankings), as of Nov 23, 2026.
 [One or two sentences on why it matters.]
 
 Data: OpenRouter public traffic only. Shares, not exact token counts.
-Source: OpenRouter (openrouter.ai/rankings), as of Nov 23, 2026.
+Source: OpenRouter (openrouter.ai/rankings), as of Nov 24, 2026.
 
 ## size_share
 
@@ -74,7 +74,7 @@ Source: OpenRouter (openrouter.ai/rankings), as of Nov 23, 2026.
 [One or two sentences on why it matters.]
 
 Data: OpenRouter public traffic only. Shares, not exact token counts.
-Source: OpenRouter (openrouter.ai/rankings), as of Nov 23, 2026.
+Source: OpenRouter (openrouter.ai/rankings), as of Nov 24, 2026.
 
 ## country_leaderboard
 
@@ -83,7 +83,7 @@ Chinese labs carry 81.2% of OpenRouter tokens.
 [One or two sentences on why it matters.]
 
 Data: OpenRouter public traffic only. Shares, not exact token counts.
-Source: OpenRouter (openrouter.ai/rankings), as of Nov 23, 2026.
+Source: OpenRouter (openrouter.ai/rankings), as of Nov 24, 2026.
 
 ## company_race
 
@@ -92,7 +92,7 @@ DeepSeek rose from 7% to 37% of OpenRouter tokens in a year.
 [One or two sentences on why it matters.]
 
 Data: OpenRouter public traffic only. Shares, not exact token counts.
-Source: OpenRouter (openrouter.ai/rankings), as of Nov 23, 2026.
+Source: OpenRouter (openrouter.ai/rankings), as of Nov 24, 2026.
 
 ## family_race
 
@@ -101,7 +101,7 @@ DeepSeek Flash went from almost nothing to 37% of OpenRouter tokens in a year.
 [One or two sentences on why it matters.]
 
 Data: OpenRouter public traffic only. Shares, not exact token counts.
-Source: OpenRouter (openrouter.ai/rankings), as of Nov 23, 2026.
+Source: OpenRouter (openrouter.ai/rankings), as of Nov 24, 2026.
 
 ## company_ranks
 
@@ -110,7 +110,7 @@ Z.ai climbed from No. 10 to No. 2 among OpenRouter's labs.
 [One or two sentences on why it matters.]
 
 Data: OpenRouter public traffic only. Shares, not exact token counts.
-Source: OpenRouter (openrouter.ai/rankings), as of Nov 23, 2026.
+Source: OpenRouter (openrouter.ai/rankings), as of Nov 24, 2026.
 
 ## family_ranks
 
@@ -119,7 +119,7 @@ Claude Opus climbed from No. 10 to No. 7 among model families.
 [One or two sentences on why it matters.]
 
 Data: OpenRouter public traffic only. Shares, not exact token counts.
-Source: OpenRouter (openrouter.ai/rankings), as of Nov 23, 2026.
+Source: OpenRouter (openrouter.ai/rankings), as of Nov 24, 2026.
 
 ## launch_curve
 
@@ -128,7 +128,7 @@ Hy4 flash hit 35% of OpenRouter tokens in its first week.
 [One or two sentences on why it matters.]
 
 Data: OpenRouter public traffic only. Shares, not exact token counts.
-Source: OpenRouter (openrouter.ai/rankings), as of Nov 23, 2026.
+Source: OpenRouter (openrouter.ai/rankings), as of Nov 24, 2026.
 
 ## task_mix
 
@@ -137,4 +137,4 @@ Workflow Execution is the top use of OpenRouter, with 24% of classified tokens.
 [One or two sentences on why it matters.]
 
 Data: OpenRouter public traffic only. Shares, not exact token counts.
-Source: OpenRouter (openrouter.ai/rankings), as of Nov 23, 2026.
+Source: OpenRouter (openrouter.ai/rankings), as of Nov 24, 2026.
